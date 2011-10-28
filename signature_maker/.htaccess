@@ -1,0 +1,19 @@
+<Files "config.php">
+Order Allow,Deny
+Deny from All
+</Files>
+
+<Files "sql">
+Order Allow,Deny
+Deny from All
+</Files>
+
+<Files "ps">
+Order Allow,Deny
+Deny from All
+</Files>
+
+<Files "readme.txt">
+Order Allow,Deny
+Deny from All
+</Files>
