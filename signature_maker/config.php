@@ -3,7 +3,7 @@
     $server_name = "";
 
     //Dati di connessione ai servers (per aggiungere un nuovo server basta copiare un blocco e cambiare la chiave
-    //con l'acronimo del nuovo server, il campo "$realm_name" sarà visualizzato in firma.
+    //con l'acronimo del nuovo server), il campo "$realm_name" sarà visualizzato in firma.
     //Dati di connessione al database del primo server.
     $realm_name[""]  = "";
     $host[""]        = "";
@@ -40,7 +40,7 @@
     $dim_errore_caricamento  = @filesize("images/$errore_caricamento"); //Dimensione del file.
 
     //Messaggio d'errore stampato in caso non venga inserito il nome del pg nell'apposito campo.
-    $error_pg = "Inserire un nome di un personaggio di WIS!";
+    $error_pg = "Inserire un nome valido di un personaggio!";
 
     //Link generico all'armory, %s rappresenterà il nome del server, %p il nome del personaggio. (ES: http://miosito/character-sheet.xml?r=MioServer&cn=MioPG)
     $armory_template_link = "http://miosito/character-sheet.xml?r=%s&cn=%p";
@@ -194,7 +194,7 @@
     $tab_names[11][2] = "Restoration";
 
     //Vettore contenente le stats da stampare,
-    //"name" sarà visualizzato nel menu a tendina dell"index,
+    //"name" sarà visualizzato nel menu a tendina dell'index,
     //"field_name" sarà il nome del campo da ricercare nel database,
     //"text" è il testo da stampare in firma con il valore della stat al posto di %s.
     $stats["maxhealth"]["name"]                = "Health";
