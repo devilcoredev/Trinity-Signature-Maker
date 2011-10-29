@@ -45,9 +45,6 @@
     //Link generico all'armory, %s rappresenterà il nome del server, %p il nome del personaggio. (ES: http://miosito/character-sheet.xml?r=MioServer&cn=MioPG)
     $armory_template_link = "http://miosito/character-sheet.xml?r=%s&cn=%p";
 
-    //Sfondo del sito (verrà adattato alla pagina).
-    $site_background = "blank.png";
-
     //Tempo in secondi dopo il quale le firme vengono cancellate automaticamente se non usate.
     $image_expire_time = 10 * 60;
 
