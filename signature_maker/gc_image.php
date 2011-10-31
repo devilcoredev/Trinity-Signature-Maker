@@ -605,16 +605,17 @@
 
                         $quey_string = @getOrderQueryString($_SERVER['QUERY_STRING']);
                         //Salvo un record identificativo su DB.
-                        @mysql_query("REPLACE INTO immaginisalvate VALUES ($pg_GUID, '" . @strtoupper($_GET["server"]) . "', '$quey_string', '$img_save_name', UNIX_TIMESTAMP());", $connessione);
+                        @mysql_query("REPLACE INTO immaginisalvate VALUES ($pg_GUID, '" . @mysql_real_escape_string(@strtoupper($_GET["server"])) . "', '$quey_string', '$img_save_name', UNIX_TIMESTAMP());", $connessione);
                     }
                     @mysql_close($connessione);
                 }
             //FINE SALVATAGGIO DELL'IMMAGINE.
 
-            //Dealloco i colori.
-            @imagecolordeallocate($im, $gold);
-            @imagecolordeallocate($im, $ombra);
-            @imagecolordeallocate($im, $colore_testo);
+            //INIZIO DEALLOCAZIONE COLORI.
+                @imagecolordeallocate($im, $gold);
+                @imagecolordeallocate($im, $ombra);
+                @imagecolordeallocate($im, $colore_testo);
+            //FINE DEALLOCAZIONE COLORI.
 
             @imagepng($im);
             @imagedestroy($im);
