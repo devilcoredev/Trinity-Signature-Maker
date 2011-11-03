@@ -1,4 +1,7 @@
 <?php
+    //Disabilita tutti i logs d'errore.
+    error_reporting(0);
+
     //Nome del server mostrato nella firma (si consiglia di usare un acronimo).
     $server_name = "";
 
@@ -33,11 +36,11 @@
 
     //Nome dell'immagine mostrata quando i dati inseriti sono errati.
     $dati_errati      = "dati_errati.png";
-    $dim_dati_errati  = @filesize("images/$dati_errati"); //Dimensione del file.
+    $dim_dati_errati  = filesize("images/$dati_errati"); //Dimensione del file.
 
     //Nome dell'immagine mostrata quando la firma non viene caricata bene.
     $errore_caricamento      = "errore_caricamento.png";
-    $dim_errore_caricamento  = @filesize("images/$errore_caricamento"); //Dimensione del file.
+    $dim_errore_caricamento  = filesize("images/$errore_caricamento"); //Dimensione del file.
 
     //Messaggio d'errore stampato in caso non venga inserito il nome del pg nell'apposito campo.
     $error_pg = "Inserire un nome valido di un personaggio!";
@@ -85,32 +88,32 @@
     $fonts["jokerman"]["nome_pg"]           = 15;
     $fonts["jokerman"]["stats"]             = 7;
     $fonts["jokerman"]["addictional_info"]  = 9;
-    $fonts["jokerman"]["x"]                 = 215;
-    $fonts["jokerman"]["y"]                 = 50;
+    $fonts["jokerman"]['x']                 = 215;
+    $fonts["jokerman"]['y']                 = 50;
 
     $fonts["morpheus"]["text"]              = "Morpheus";
     $fonts["morpheus"]["name"]              = "MORPHEUS_0.TTF";
     $fonts["morpheus"]["nome_pg"]           = 16;
     $fonts["morpheus"]["stats"]             = 9;
     $fonts["morpheus"]["addictional_info"]  = 10;
-    $fonts["morpheus"]["x"]                 = 185;
-    $fonts["morpheus"]["y"]                 = 55;
+    $fonts["morpheus"]['x']                 = 185;
+    $fonts["morpheus"]['y']                 = 55;
 
     $fonts["verdana"]["text"]              = "Verdana";
     $fonts["verdana"]["name"]              = "verdanab.ttf";
     $fonts["verdana"]["nome_pg"]           = 15;
     $fonts["verdana"]["stats"]             = 6;
     $fonts["verdana"]["addictional_info"]  = 8;
-    $fonts["verdana"]["x"]                 = 210;
-    $fonts["verdana"]["y"]                 = 50;
+    $fonts["verdana"]['x']                 = 210;
+    $fonts["verdana"]['y']                 = 50;
 
     $fonts["flashd"]["text"]              = "Flash D";
     $fonts["flashd"]["name"]              = "FlashD.ttf";
     $fonts["flashd"]["nome_pg"]           = 20;
     $fonts["flashd"]["stats"]             = 9;
     $fonts["flashd"]["addictional_info"]  = 11;
-    $fonts["flashd"]["x"]                 = 190;
-    $fonts["flashd"]["y"]                 = 50;
+    $fonts["flashd"]['x']                 = 190;
+    $fonts["flashd"]['y']                 = 50;
 
     //Font di default (verdana).
     $font                  = $fonts["verdana"]["name"];
@@ -263,102 +266,102 @@
 
     //Una volta ogni 24 ore vengono riscritte le informazioni sugli achievements sul file di configurazione in modo da non leggerli sempre da db.
     $to_fill_achievements = false;
-    if($file = @fopen("custom/check_achievements.lock", 'r'))
+    if($file = fopen("custom/check_achievements.lock", 'r'))
     {
-        if(!@feof($file))
+        if(!feof($file))
         {
-            $time = @fgets($file, 255);
-            if($time < (@time() - (24*60*60)))
+            $time = fgets($file, 255);
+            if($time < (time() - (24*60*60)))
                 $to_fill_achievements = true;
         }else $to_fill_achievements = true;
-        @fclose($file);
+        fclose($file);
     }else $to_fill_achievements = true;
 
     if($to_fill_achievements)
     {
-        if($file = @fopen("custom/check_achievements.lock", 'w'))
+        if($file = fopen("custom/check_achievements.lock", 'w'))
         {
-            @fputs($file, @time());
-            @fclose($file);
+            fputs($file, time());
+            fclose($file);
         }
 
-        if($ach_file = @fopen("custom/achievements.php", 'w'))
+        if($ach_file = fopen("custom/achievements.php", 'w'))
         {
-            @fputs($ach_file, "<?php\r\n");
+            fputs($ach_file, "<?php\r\n");
 
             //Numero totale di achievements ottenibili (estratto da db).
             $num_ach = 0;
-            if($conn = @mysql_connect($site_host, $site_username, $site_password, true))
+            if($conn = mysql_connect($site_host, $site_username, $site_password, true))
             {
-                if(@mysql_select_db($site_database, $conn))
-                    if($result = @mysql_query("SELECT COUNT(*) AS numero FROM achievement WHERE points <> 0;", $conn))
+                if(mysql_select_db($site_database, $conn))
+                    if($result = mysql_query("SELECT COUNT(*) AS numero FROM achievement WHERE points <> 0;", $conn))
                     {
-                        if($row = @mysql_fetch_array($result, MYSQL_ASSOC)) //Seleziono solo gli achievements ottenibili (cioè quelli che danno punti) e li inserisco nel vettore $achievements.
+                        if($row = mysql_fetch_array($result, MYSQL_ASSOC)) //Seleziono solo gli achievements ottenibili (cioè quelli che danno punti) e li inserisco nel vettore $achievements.
                         {
                             $num_ach = $row["numero"];
-                            @fputs($ach_file, "    \$num_achievements = $num_ach;\r\n\r\n");
+                            fputs($ach_file, "    \$num_achievements = $num_ach;\r\n\r\n");
                         }
-                        @mysql_free_result($result);
+                        mysql_free_result($result);
                     }
-                @mysql_close($conn);
+                mysql_close($conn);
             }
 
             //Se ci sono achievements inserisco le ultime 2 voci di configurazione delle stats.
             if($num_ach)
             {
-                @fputs($ach_file, "    \$stats[\"achievements\"][\"name\"]             = \"Achievements\";\r\n");
-                @fputs($ach_file, "    \$stats[\"achievements\"][\"field_name\"]       = \"achievements\";\r\n");
-                @fputs($ach_file, "    \$stats[\"achievements\"][\"text\"]             = \"Ach.: %s/\$num_achievements\"; //Achievements ottenuti / Achievements ottenibili.\r\n");
-                @fputs($ach_file, "    \$stats[\"achievementpoints\"][\"name\"]        = \"Achievement Points\";\r\n");
-                @fputs($ach_file, "    \$stats[\"achievementpoints\"][\"field_name\"]  = \"achievementPoints\";\r\n");
-                @fputs($ach_file, "    \$stats[\"achievementpoints\"][\"text\"]        = \"Ach. Points: %s\";\r\n");
+                fputs($ach_file, "    \$stats[\"achievements\"][\"name\"]             = \"Achievements\";\r\n");
+                fputs($ach_file, "    \$stats[\"achievements\"][\"field_name\"]       = \"achievements\";\r\n");
+                fputs($ach_file, "    \$stats[\"achievements\"][\"text\"]             = \"Ach.: %s/\$num_achievements\"; //Achievements ottenuti / Achievements ottenibili.\r\n");
+                fputs($ach_file, "    \$stats[\"achievementpoints\"][\"name\"]        = \"Achievement Points\";\r\n");
+                fputs($ach_file, "    \$stats[\"achievementpoints\"][\"field_name\"]  = \"achievementPoints\";\r\n");
+                fputs($ach_file, "    \$stats[\"achievementpoints\"][\"text\"]        = \"Ach. Points: %s\";\r\n");
             }
 
-            @fputs($ach_file, "?>");
+            fputs($ach_file, "?>");
 
-            @fclose($file);
+            fclose($file);
         }
     }
 
-    if(@file_exists("custom/achievements.php"))
+    if(file_exists("custom/achievements.php"))
         include("custom/achievements.php");
 ?>
 <?php
     //Codice che cancella automaticamente tutte le immagini non usate per 10 minuti (controllo effettuato ogni 2 minuti per evitare lo spam).
     $todo_clean = false;
-    if($file = @fopen("custom/check_clean.lock", 'r'))
+    if($file = fopen("custom/check_clean.lock", 'r'))
     {
-        if(!@feof($file))
+        if(!feof($file))
         {
-            $time = @fgets($file, 255);
-            if($time < (@time() - 120))
+            $time = fgets($file, 255);
+            if($time < (time() - 120))
                 $todo_clean = true;
         }else $todo_clean = true;
-        @fclose($file);
+        fclose($file);
     }else $todo_clean = true;
 
     if($todo_clean)
     {
-        if($file = @fopen("custom/check_clean.lock", 'w'))
+        if($file = fopen("custom/check_clean.lock", 'w'))
         {
-            @fputs($file, @time());
-            @fclose($file);
+            fputs($file, time());
+            fclose($file);
         }
 
-        if($connessione = @mysql_connect($site_host, $site_username, $site_password, true))
+        if($connessione = mysql_connect($site_host, $site_username, $site_password, true))
         {
-            if(@mysql_select_db($site_database, $connessione))
+            if(mysql_select_db($site_database, $connessione))
             {
-                if($result = @mysql_query("SELECT * FROM immaginisalvate WHERE ultimaModifica < (UNIX_TIMESTAMP() - $image_expire_time);", $connessione))
+                if($result = mysql_query("SELECT * FROM immaginisalvate WHERE ultimaModifica < (UNIX_TIMESTAMP() - $image_expire_time);", $connessione))
                 {
-                    while($row = @mysql_fetch_array($result, MYSQL_ASSOC))
-                        if(@file_exists("saved/" . $row["nomeImmagine"]) && @is_file("saved/" . $row["nomeImmagine"]))
-                            @unlink("saved/" . $row["nomeImmagine"]);
-                    @mysql_free_result($result);
+                    while($row = mysql_fetch_array($result, MYSQL_ASSOC))
+                        if(file_exists("saved/" . $row["nomeImmagine"]) && is_file("saved/" . $row["nomeImmagine"]))
+                            unlink("saved/" . $row["nomeImmagine"]);
+                    mysql_free_result($result);
                 }
-                @mysql_query("DELETE FROM immaginisalvate WHERE ultimaModifica < (UNIX_TIMESTAMP() - $image_expire_time);", $connessione);
+                mysql_query("DELETE FROM immaginisalvate WHERE ultimaModifica < (UNIX_TIMESTAMP() - $image_expire_time);", $connessione);
             }
-            @mysql_close($connessione);
+            mysql_close($connessione);
         }
     }
 ?>
@@ -366,17 +369,17 @@
     //La funzione restituisce 0 se l'achievement non è valido (ad esempio achievement di first kill oppure Feast of Strenght) oppure i punti dell'achievement se è valido.
     function isValidAchievement($achievement_id, $host, $user, $pass, $db)
     {
-        if($my_conn = @mysql_connect($host, $user, $pass, true))
+        if($my_conn = mysql_connect($host, $user, $pass, true))
         {
-            if(@mysql_select_db($db, $my_conn))
-                if($my_result = @mysql_query("SELECT points FROM achievement WHERE ID = $achievement_id;", $my_conn))
+            if(mysql_select_db($db, $my_conn))
+                if($my_result = mysql_query("SELECT points FROM achievement WHERE ID = $achievement_id;", $my_conn))
                 {
-                    if($my_row = @mysql_fetch_array($my_result, MYSQL_ASSOC))
+                    if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
                     {
-                        @mysql_free_result($my_result);
+                        mysql_free_result($my_result);
                         return $my_row["points"];
                     }
-                    @mysql_free_result($my_result);
+                    mysql_free_result($my_result);
                 }
             mysql_close($my_conn);
         }
@@ -387,19 +390,19 @@
     //La funzione restituisce le informazioni su un dato talento.
     function getTalentInfo($spellId, $host, $user, $pass, $db)
     {
-        if($my_conn = @mysql_connect($host, $user, $pass, true))
+        if($my_conn = mysql_connect($host, $user, $pass, true))
         {
-            if(@mysql_select_db($db, $my_conn))
-                if($my_result = @mysql_query("SELECT rankId, tabPage FROM talent WHERE spellTalent = $spellId;", $my_conn))
+            if(mysql_select_db($db, $my_conn))
+                if($my_result = mysql_query("SELECT rankId, tabPage FROM talent WHERE spellTalent = $spellId;", $my_conn))
                 {
-                    if($my_row = @mysql_fetch_array($my_result, MYSQL_ASSOC))
+                    if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
                     {
-                        @mysql_free_result($my_result);
+                        mysql_free_result($my_result);
                         return $my_row;
                     }
-                    @mysql_free_result($my_result);
+                    mysql_free_result($my_result);
                 }
-            @mysql_close($my_conn);
+            mysql_close($my_conn);
         }
 
         return 0;

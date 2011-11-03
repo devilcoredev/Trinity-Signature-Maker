@@ -55,7 +55,7 @@
                 input.src = "images/<?php print $errore_caricamento; ?>";
 
                 //Visualizzo l'immagine e nascondo il caricamento.
-                input.style.display = 'block';
+                input.style.display = "block";
                 document.getElementById("caricamento").style.display = "none";
             }
 
