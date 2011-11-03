@@ -55,7 +55,7 @@
                 input.src = "images/<?php print $charging_error; ?>";
 
                 //Display the image and hide the loading.
-                input.style.display = 'block';
+                input.style.display = "block";
                 document.getElementById("loading").style.display = "none";
             }
 
