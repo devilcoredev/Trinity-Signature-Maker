@@ -37,7 +37,7 @@
                     <td>
                         <center>
                             <a name="ancora_testo">
-                            <input type="text" name="testo_font" size="15" style="text-align: center" onClick="selezionaTesto();"><br>(usa CTRL+C per copiare il colore)
+                            <input type="text" name="testo_font" size="15" style="text-align: center" onClick="selezionaTesto();"><br>(usa CTRL+C per copiare il font)
                         </center>
                     </td>
                 </tr>

@@ -34,7 +34,7 @@
             }
 
             //Funzione che switcha firma<->caricamento, se posta a true passa da caricamento a firma, altrimenti da firma a caricamento.
-            function switchimage(mode)
+            function switchImage(mode)
             {
                 document.getElementById("links").style.display        = (mode ? "block" : "none");
                 document.getElementById("firma").style.display        = (mode ? "block" : "none");
@@ -42,7 +42,7 @@
             }
 
             //Funzione richiamata quando le firme non vengono caricate correttamente.
-            function showerror(input)
+            function showError(input)
             {
                 //Azzero gli input.
                 document.getElementsByName("direct_link")[0].value         = '';
@@ -200,7 +200,7 @@
 
                     //Effettuo lo switch delle immagini solo se la firma non è stata già caricata.
                     if(!document.getElementById("firma").complete)
-                        switchimage(false);
+                        switchImage(false);
                 }else alert("<?php print $error_pg; ?>");
 
                 return true;
@@ -333,7 +333,7 @@
                     Elaborazione firma in corso...<br>
                     <img src="images/loading.gif"><br>
                 </div>
-                <img id="firma" src="" style="display: none" onLoad="switchimage(true);" onError="showerror(this);" onAbort="showerror(this);" onContextMenu="return false;"><br>
+                <img id="firma" src="" style="display: none" onLoad="switchImage(true);" onError="showError(this);" onAbort="showError(this);" onContextMenu="return false;"><br>
                 <table id="links" border="0">
                     <tr>
                         <td>Link diretto all'immagine:</td>
