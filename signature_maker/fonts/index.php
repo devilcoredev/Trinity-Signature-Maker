@@ -1,24 +1,24 @@
 <html>
     <head>
-        <title>Seleziona un font</title>
+        <title>Select a font</title>
         <script language="JavaScript">
-            function selezionaTesto()
+            function selectText()
             {
-                document.getElementsByName("testo_font")[0].focus();
-                document.getElementsByName("testo_font")[0].select();
+                document.getElementsByName("font_text")[0].focus();
+                document.getElementsByName("font_text")[0].select();
             }
 
-            function selecttesto(input)
+            function copyText(input)
             {
-                document.getElementsByName("testo_font")[0].value = input;
+                document.getElementsByName("font_text")[0].value = input;
                 open_field = input;
-                selezionaTesto();
+                selectText();
             }
         </script>
     </head>
     <body>
         <center>
-            <h3>Seleziona un font</h3>
+            <h3>Select a font</h3>
             <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" bordercolor="111111">
                 <?php
                     include("/../config.php");
@@ -28,7 +28,7 @@
                         if($count++) print "                ";
                         print "<tr>\n";
                         print "                    <td>\n";
-                        print "                        <center><a href=\"#ancora_testo\" onClick=\"selecttesto('$i');\"><img width=250 src=\"stampa_carattere.php?id_font=$i\"></a></center>\n";
+                        print "                        <center><a href=\"#text_link\" onClick=\"copyText('$i');\"><img width=250 src=\"print_font.php?id_font=$i\"></a></center>\n";
                         print "                    </td>\n";
                         print "                </tr>\n";
                     }
@@ -36,8 +36,8 @@
                 <tr>
                     <td>
                         <center>
-                            <a name="ancora_testo">
-                            <input type="text" name="testo_font" size="15" style="text-align: center" onClick="selezionaTesto();"><br>(usa CTRL+C per copiare il colore)
+                            <a name="text_link">
+                            <input type="text" name="font_text" size="15" style="text-align: center" onClick="selectText();"><br>(use CTRL+C to copy the font)
                         </center>
                     </td>
                 </tr>

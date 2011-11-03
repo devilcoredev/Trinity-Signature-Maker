@@ -1982,13 +1982,13 @@ INSERT INTO `chartitles` (`titleId`, `wowheadId`, `nameString`) VALUES
 
 
 
-DROP TABLE IF EXISTS `immaginisalvate`;
-CREATE TABLE IF NOT EXISTS `immaginisalvate` (
+DROP TABLE IF EXISTS `savedimages`;
+CREATE TABLE IF NOT EXISTS `savedimages` (
   `pgGUID` int(10) NOT NULL,
   `server` varchar(10) COLLATE utf8_bin NOT NULL,
   `queryString` varchar(255) COLLATE utf8_bin NOT NULL,
-  `nomeImmagine` varchar(255) COLLATE utf8_bin NOT NULL,
-  `ultimaModifica` int(12) NOT NULL,
+  `imageName` varchar(255) COLLATE utf8_bin NOT NULL,
+  `lastEdit` int(12) NOT NULL,
   PRIMARY KEY (`pgGUID`,`server`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 

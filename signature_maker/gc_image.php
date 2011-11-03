@@ -1,9 +1,9 @@
 <?php
-    //Inclusioni librerie.
+    //Library inclusion.
     include("config.php");
 ?>
 <?php
-    //INIZIO FUNZIONI STANDARD GD.
+    //STANDARD GD FUNCTION - START.
         function isGD2supported()
         {
             global $GD2;
@@ -56,9 +56,9 @@
                 return true;
             else return false;
         }
-    //FINE FUNZIONI STANDARD GD.
+    //STANDARD GD FUNCTION - END.
 
-    //Restituisce un numero decimale a partire da un numero esadecimale nella forma "HHHHHH".
+    //Returns a decimal number from a hex number in the form "HHHHHH".
     function GetRGBFromHex($input)
     {
         $input = @strtolower($input);
@@ -70,80 +70,80 @@
         return $vet;
     }
 
-    //Funzione che restituisce la query string ordinata alfabeticamente.
+    //Returns the queryString ordered alphabetically.
     function getOrderQueryString($input)
     {
         $output = '';
 
         $input = @strtolower($input);
-        $arr = @explode('&', $input); //Divido la query string in un array contenente chiave=valore.
-        $num_ele = @count($arr);
-        @sort($arr); //Ordino l'array in ordine alfabetico (in questo caso vengono ordinate solo le chiavi della querystring).
+        $arr = @explode('&', $input); //I divide the queryString into an array containing key = value.
+        $count_elements = @count($arr);
+        @sort($arr); //Sort the array in alphabetical order (in this case are ordered only the keys of the queryString).
 
-        for($i=0; $i<$num_ele; ++$i) //Ricostruisco la query string ordinata alfabeticamente.
+        for($i=0; $i<$count_elements; ++$i) //Reconstruct the queryString ordered alphabetically.
         {
             $output .= $arr[$i];
-            if($i < ($num_ele - 1))
+            if($i < ($count_elements - 1))
                 $output .= '&';
         }
 
-        return @mysql_real_escape_string($output); //Evita le SQL-Injection.
+        return @mysql_real_escape_string($output); //To avoid SQL-Injections.
     }
 
-    //Funzione che effettua una conversione da UInt32 a float.
+    //Function that performs a conversion from UInt32 to float.
     function UInt32ToFloat($input)
     {
-        $bin_string = @decbin($input); //Mi ricavo la conversione binaria della cifra.
+        $bin_string = @decbin($input); //Decimal->Binary conversion.
         $len = @strlen($bin_string);
-        if($len > 32)
+        if($len > 32) //Invalid number.
             return -1;
 
         /*
-            La struttura del float a 32 bit è la seguente:
+            This is the structure of the 32-bits float:
                 +---+----------+-------------------------+
                 | x | xxxxxxxx | xxxxxxxxxxxxxxxxxxxxxxx |
                 +---+----------+-------------------------+
                   ^       ^                 ^
                 Sign  Exponent           Mantissa
 
-            Il bit di segno (Sign) è trascurabile poichè per gli unsigned non esiste.
-            La formula per calcolare il float a partire dal numero di bit è:
+            The sign bit (sign) is negligible because for unsigned it doesn't exist.
+            The formula to calculate the float from the number of bits is:
                     Sign    Exponent-Offset
             N = (-1)     * 2                * (1.Mantissa)
-            La lunghezze in bit dell'esponente sono le seguenti:
+            The length in bits of the exponent are the following:
              - Float 32 bit: 8 bits,
              - Float 64 bit: 11 bits,
              - Float 80 bit: 15 bits.
-            Le lunghezze in bit della mantissa sono le seguenti:
+            The length in bits of the mantissa are the following:
              - Float 32 bit: 23 bits,
              - Float 64 bit: 52 bits,
              - Float 80 bit: 64 bits.
-            Gli offset sono i seguenti:
+            The offsets are the following:
              - Float 32 bit: 127,
              - Float 64 bit: 1023,
              - Float 80 bit: 16383.
-            Poichè i numeri sono > 0 in questo caso possiamo trascurare il bit di segno, portando la formula a:
+            Because the numbers are > 0 in this case we can neglect the sign bit:
                  Exponent-Offset
             N = 2                * (1.Mantissa)
         */
 
-        for($i=0; $i<(32-$len); ++$i) //Completo la successione di bit, mettendo gli 0 in testa a quella che già ho.
+        for($i=0; $i<(32-$len); ++$i) //Complete the sequence of bits, putting the 0 in the head.
             $bin_string = '0' . $bin_string;
-        $exp = @intval(@substr($bin_string, 1, 8), 2); //Prendo i bit dell'esponente (8 a partire dalla posizione 1).
-        $mant = @intval(@substr($bin_string, 9), 2); //Prendo la mantissa (a partire dalla posizione 9, i restanti 23 bit).
-        $f_mant = @floatval("1.$mant"); //Mi ricavo 1.Mantissa.
+        $exp = @intval(@substr($bin_string, 1, 8), 2); //I take bits of the exponent (8 starting from position 1).
+        $mant = @intval(@substr($bin_string, 9), 2); //I take the mantissa (from position 9, the remaining 23 bits).
+        $f_mant = @floatval("1.$mant"); //Get 1.Mantissa.
 
-        return (@pow(2, $exp-127) * $f_mant) * 1.05; //Utilizzo la formula per ricavare il float (il valore è in difetto del 5% circa, applico la correzione forzata).
+        return (@pow(2, $exp-127) * $f_mant) * 1.05; //Use the formula for getting the float (value is about 5% at fault, i apply a forced correction).
     }
 
-    //La funzione ricava tutte le stats del PG, cerca prima nella tabella character_stats, se non trova nulla cerca in armory_character_stats.
+    //The function gets all the stats of the PG, searches first in the table character_stats, if it doesn't find anything searches in the table armory_character_stats.
     function fill_stats(&$input, $intput_conn, $guid)
     {
         $find_stats = false;
         $query = "SELECT maxhealth, maxpower1 AS mana, maxpower6 AS rune, maxpower7 AS runicPower, strength, agility, stamina, intellect, spirit,
                     armor, blockPct, dodgePct, parryPct, critPct, rangedCritPct, spellCritPct, attackPower, rangedAttackPower, spellPower,
                     resilience FROM character_stats WHERE guid = $guid;";
-        if($result = @mysql_query($query, $intput_conn)) //Armory interna (se abilitata).
+        if($result = @mysql_query($query, $intput_conn)) //Internal armory (if enabled).
         {
             if($row = @mysql_fetch_array($result, MYSQL_ASSOC))
             {
@@ -160,7 +160,7 @@
         {
             if($result = @mysql_query("SELECT data FROM armory_character_stats WHERE guid = $guid;", $intput_conn))
             {
-                if($row = @mysql_fetch_array($result, MYSQL_ASSOC)) //Shadez armory (solo se l'armory interna non è abilitata).
+                if($row = @mysql_fetch_array($result, MYSQL_ASSOC)) //Shadez armory (only if the internal armory is disabled).
                 {
                     $input_array = @explode(' ', $row["data"]);
 
@@ -184,11 +184,11 @@
                     $input["resilience"]         = $input_array[0x0006 + 0x008E + 0x043B + 0x0010];         //OBJECT_END + UNIT_END + PLAYER_FIELD_COMBAT_RATING_1 + CR_CRIT_TAKEN_SPELL.
 
                     $input["spellPower"]         = $input_array[0x0494];                                    //OBJECT_END + UNIT_END + PLAYER_FIELD_MOD_DAMAGE_DONE_POS.
-                    for($i=0x0495; $i<0x049A; ++$i) //Il valore minimo è lo spell power attuale del PG.
+                    for($i=0x0495; $i<0x049A; ++$i) //The min-value is the spell power.
                         $input["spellPower"]     = @min($input["spellPower"], $input_array[$i]);
 
                     $input["spellCritPct"]       = @UInt32ToFloat($input_array[0x0409]);                    //OBJECT_END + UNIT_END + PLAYER_SPELL_CRIT_PERCENTAGE1.
-                    for($i=0x040A; $i<0x0410; ++$i) //Il valore minimo è lo spell crit attuale del PG.
+                    for($i=0x040A; $i<0x0410; ++$i) //The min-value is the spell crit.
                         $input["spellCritPct"]   = @min($input["spellCritPct"], @UInt32ToFloat($input_array[$i]));
                 }
                 @mysql_free_result($result);
@@ -197,68 +197,68 @@
     }
 ?>
 <?php
-    //Variabili globali.
-    $do_next_step    = true;      //Si potrà procedere alle altre funzioni solo se $do_next_step = true.
-    $pg_name         = '';        //Nome del personaggio.
-    $name_string     = '';        //Nome del personaggio comprensivo di titolo.
-    $string_info     = '';        //Informazioni addizionali (razza, livello, classe).
-    $is_gif          = false;     //La variabile posta a false indica che l'immagine è png, altrimenti è gif.
-    $external_image  = false;     //La variabile indica se l'avar impostato è interno o esterno al sito.
-    $avatar_img      = '';        //Link all'avatar.
+    //Global variables.
+    $do_next_step    = true;      //You can go on only if $do_next_step = true.
+    $pg_name         = '';        //Character's name.
+    $name_string     = '';        //Character's name with his title.
+    $string_info     = '';        //Additional informations (race, level, class).
+    $is_gif          = false;     //The variable set to false indicates that the image is png, otherwise is gif.
+    $external_image  = false;     //The variable indicates if the chosen avatar is internal or external to the site.
+    $avatar_img      = '';        //Link to the avatar.
     $string_guild    = '';        //Rank, guild, realm, server.
-    $im              = FALSE;     //Link all'immagine.
-    $to_make_image   = true;      //Serve a controllare se l'immagine deve essere costruita.
-    $pg_GUID         = 0;         //ID univoco del personaggio.
-    $spec_name       = '';        //Nome della spec.
+    $im              = FALSE;     //Link to the image.
+    $to_make_image   = true;      //Indicates if the image should be built.
+    $pg_GUID         = 0;         //Unique ID of the character.
+    $spec_name       = '';        //Spec's name.
 ?>
 <?php
-    //Controllo preliminare sull'esistenda dell'immagine (se la stessa immagine esiste già non la rielaboro).
-    if($connessione = @mysql_connect($site_host, $site_username, $site_password, true))
+    //If the same image already exists i don't rebuild it.
+    if($connection = @mysql_connect($site_host, $site_username, $site_password, true))
     {
-        if(@mysql_select_db($site_database, $connessione))
+        if(@mysql_select_db($site_database, $connection))
         {
-            $query_string = @getOrderQueryString($_SERVER['QUERY_STRING']); //Controllo se esiste un'immagine salvata con la stessa query string.
-            if($result = @mysql_query("SELECT * FROM immaginisalvate WHERE queryString = '$query_string';", $connessione))
+            $query_string = @getOrderQueryString($_SERVER['QUERY_STRING']); //Check if exists an image with the same queryString.
+            if($result = @mysql_query("SELECT * FROM savedimages WHERE queryString = '$query_string';", $connection))
             {
                 if($row = @mysql_fetch_array($result, MYSQL_ASSOC))
-                    if(@file_exists("saved/" . $row["nomeImmagine"]))
+                    if(@file_exists("saved/" . $row["imageName"]))
                     {
                         $to_make_image = false;
-                        @mysql_query("UPDATE immaginisalvate SET ultimaModifica = UNIX_TIMESTAMP() WHERE queryString = '$query_string';", $connessione);
-                        @header("location: saved/" . $row["nomeImmagine"]); //Se l'immagine esiste faccio un redirect a quella preesistete.
+                        @mysql_query("UPDATE savedimages SET lastEdit = UNIX_TIMESTAMP() WHERE queryString = '$query_string';", $connection);
+                        @header("location: saved/" . $row["imageName"]); //If the image exists do a redirect to it.
                     }
                 @mysql_free_result($result);
             }
         }
-        @mysql_close($connessione);
+        @mysql_close($connection);
     }
 ?>
 <?php
-    //Recupero dei dati per la creazione dell'immagine.
+    //Recovery data for the creation image.
     if($to_make_image)
     {
-        if(@GDVersion()==0) //Nel sistema non esiste GC.
+        if(@GDVersion()==0) //On the system GD doesn't exist.
             $do_next_step = false;
 
         if($do_next_step)
         {
-            //L'utente ha selezionato uno sfondo diverso da quello di default (graduazione di rosso).
-            if(isset($_GET["sfondo"]) && $_GET["sfondo"]!='')
+            //The user has selected a different background than the default (red graduation).
+            if(isset($_GET["background"]) && $_GET["background"]!='')
             {
-                //Lo sfondo è un'immagine, (comincia con bg_), mi costruisco il link all'immagine.
-                if(!@strncmp($_GET["sfondo"], "bg_", 3))
+                //The background is an image, (it starts with bg_), i construct a link to the image.
+                if(!@strncmp($_GET["background"], "bg_", 3))
                 {
-                    //Tutti gli sfondi utilizzati per la firma sono in png, cominciano con bg_ e sono contenuti nella directory "images/bg".
-                    if(@file_exists("images/bg/" . $_GET["sfondo"] . ".png") && @is_file("images/bg/" . $_GET["sfondo"] . ".png"))
+                    //All wallpapers are used for signature are png, they start with bg_ and are contained in the directory "images/bg".
+                    if(@file_exists("images/bg/" . $_GET["background"] . ".png") && @is_file("images/bg/" . $_GET["background"] . ".png"))
                     {
                         $to_img = true;
-                        $img_name = $_GET["sfondo"];
+                        $img_name = $_GET["background"];
                     }
                 }
-                //Lo sfondo è un colore, cerco le 3 graduazioni nel codice esadecimale.
+                //The background is a color, search the 3 graduations in hexadecimal code.
                 else
                 {
-                    $bg_vet = @GetRGBFromHex($_GET["sfondo"]);
+                    $bg_vet = @GetRGBFromHex($_GET["background"]);
 
                     $to_img          = false;
                     $start_bg_red    = $bg_vet[0];
@@ -267,50 +267,50 @@
                 }
             }
 
-            //L'utente ha selezionato un colore di testo diverso da quello di default, elaboro il codice esadecimale.
-            if(isset($_GET["colore_testo"]) && $_GET["colore_testo"]!='')
-                $text_vet_color = @GetRGBFromHex($_GET["colore_testo"]);
+            //The user has selected a text color different from the default, estraggo il colore.
+            if(isset($_GET["text_color"]) && $_GET["text_color"]!='')
+                $text_vet_color = @GetRGBFromHex($_GET["text_color"]);
 
-            //L'utente ha selezionato un carattere per il testo diverso da quello di default, lo estraggo.
+            //The user selects a font for the text different from the default, i extract it.
             if(isset($_GET["text_font"]) && $_GET["text_font"]!='')
             {
                 $name_font = $_GET["text_font"];
                 if(isset($fonts["$name_font"]["name"]))
                 {
                     $font                  = $fonts["$name_font"]["name"];
-                    $dim_nome_pg           = $fonts["$name_font"]["nome_pg"];
+                    $dim_pg_name           = $fonts["$name_font"]["pg_name"];
                     $dim_stats             = $fonts["$name_font"]["stats"];
                     $dim_addictional_info  = $fonts["$name_font"]["addictional_info"];
                 }
             }
-            //Completo il path del file contenente il font.
+            //Complete the path of the font file.
             $font = "fonts/$font";
 
             //Controllo dei campi inseriti, e controllo dell'esistenza del realm selezionato.
-            if(isset($_GET["server"]) && $_GET["server"]!='' && isset($_GET["nome_pg"]) && $_GET["nome_pg"]!='')
+            if(isset($_GET["server"]) && $_GET["server"]!='' && isset($_GET["pg_name"]) && $_GET["pg_name"]!='')
             {
                 $server_id = @strtolower($_GET["server"]);
                 if(isset($realm_name["$server_id"]))
                 {
-                    //Connessione al database dei characters e recupero dei dati.
-                    if($connessione = @mysql_connect($host["$server_id"], $username["$server_id"], $password["$server_id"], true))
+                    //Connect to character's database and recovery data.
+                    if($connection = @mysql_connect($host["$server_id"], $username["$server_id"], $password["$server_id"], true))
                     {
-                        if(@mysql_select_db($database["$server_id"], $connessione))
+                        if(@mysql_select_db($database["$server_id"], $connection))
                         {
-                            //Primo carattere maiuscolo, resto minuscolo. Esempi: TEST=>Test, test=>Test, tEsT=>Test.
-                            $nome_pg = @mysql_real_escape_string(@ucfirst(@strtolower($_GET["nome_pg"]))); //Evita le SQL-Injection.
+                            //First uppercase, rest lowercase. Eg: TEST=>Test, test=>Test, tEsT=>Test.
+                            $pg_name = @mysql_real_escape_string(@ucfirst(@strtolower($_GET["pg_name"]))); //Avoid SQL-Injections.
 
-                            //Nome, Razza, Classe, Livello, Titolo, Spec.
-                            if($result = @mysql_query("SELECT guid, name, race, class, gender, level, chosenTitle, activespec FROM characters WHERE name = '$nome_pg';", $connessione))
+                            //Name, Race, Class, Level, Title, Spec.
+                            if($result = @mysql_query("SELECT guid, name, race, class, gender, level, chosenTitle, activespec FROM characters WHERE name = '$pg_name';", $connection))
                             {
                                 if($row = @mysql_fetch_array($result, MYSQL_ASSOC))
                                 {
                                     $pg_GUID = $row["guid"];
                                     $pg_name = $row["name"];
                                     $spec_id = $row["activespec"];
-                                    @fill_stats($row, $connessione, $pg_GUID); //Riempio il resto delle stats.
+                                    @fill_stats($row, $connection, $pg_GUID); //Fill stats.
 
-                                    //Se il pg ha un titolo identificato (cercando nel database del sito) lo inserisco nella firma.
+                                    //If the PG has a title (searching it in the site database) i insert it in the signature.
                                     $name_string = $row["name"];
                                     if($row["chosenTitle"] != 0)
                                         if($site_connection = @mysql_connect($site_host, $site_username, $site_password, true))
@@ -325,11 +325,11 @@
                                             @mysql_close($site_connection);
                                         }
 
-                                    //Talenti, eseguo questa operazione a prescindere per trovare il nome della spec.
+                                    //Talents, do it for find the spec name.
                                     $talents[0] = 0;
                                     $talents[1] = 0;
                                     $talents[2] = 0;
-                                    if($talents_result = @mysql_query("SELECT spell FROM character_talent WHERE guid = $pg_GUID AND spec = $spec_id;", $connessione))
+                                    if($talents_result = @mysql_query("SELECT spell FROM character_talent WHERE guid = $pg_GUID AND spec = $spec_id;", $connection))
                                     {
                                         while($talents_row = @mysql_fetch_array($talents_result, MYSQL_ASSOC))
                                             if($vet = @getTalentInfo($talents_row["spell"], $site_host, $site_username, $site_password, $site_database))
@@ -339,19 +339,19 @@
                                             }
                                         @mysql_free_result($talents_result);
                                     }
-                                    $row["talents"] = $talents[0] . '/' . $talents[1] . '/' . $talents[2]; //Talenti nella forma (x/x/x).
+                                    $row["talents"] = $talents[0] . '/' . $talents[1] . '/' . $talents[2]; //Talents in the form (x/x/x).
 
-                                    //Nome della spec.
+                                    //Spec name.
                                     $max_talent = @max($talents[0], $talents[1], $talents[2]);
                                     if($max_talent)
                                         for($i_t=0; $i_t<3; ++$i_t)
                                             if($talents[$i_t] == $max_talent)
                                                 $spec_name .= ' ' . $tab_names[$row["class"]][$i_t];
 
-                                    //Livello - Classe - Razza.
+                                    //Level - Class - Race.
                                     $string_info = "Level " . $row["level"] . ' ' . $races[$row["race"]] . ' ' . $classes[$row["class"]]["name"] . $spec_name;
 
-                                    //Se viene dato l'url di un'immagine png valida lo inserisco, altrimenti inserisco quella di default della classe.
+                                    //If is given the url of a valid PNG image i insert it, otherwise insert the default image.
                                     if(isset($_GET["url_image"]) && $_GET["url_image"]!='' && isPng($_GET["url_image"]) && imagecreatefrompng($_GET["url_image"]))
                                     {
                                         $avatar_img = $_GET["url_image"];
@@ -359,58 +359,58 @@
                                     }
                                     else
                                     {
-                                        //L'immagine indica sia la razza che la classe del personaggio.
+                                        //The image shows the race and the class of the character.
                                         if(isset($_GET["type_image"]) && $_GET["type_image"]=="race_class")
                                         {
                                             $is_gif = true;
-                                            //Le immagini sono nella forma "gender-race-class.gif".
+                                            //The images are in the form "gender-race-class.gif".
                                             $avatar_img = $row["gender"] . '-' . $row["race"] . '-' . $row["class"] . ".gif";
-                                            if($row["class"]==6 || $row["level"]>=80) //Se è livello 80 oppure è un Death Knight seleziono gli avatar livello 80 (i DK hanno solo avatar livello 80).
+                                            if($row["class"]==6 || $row["level"]>=80) //If level is 80 or race is Death Knight because Death Knight have got only level 80 avatars.
                                                 $avatar_img = "Level_80_Forum_Avatars/$avatar_img";
-                                            else if($row["level"]>=70 && $row["level"]<80) //Livello compreso tra 70 e 79, seleziono gli avatar livello 70.
+                                            else if($row["level"]>=70 && $row["level"]<80) //70 <= level <= 79, level 70 avatars.
                                                 $avatar_img = "Level_70_Forum_Avatars/$avatar_img";
-                                            else if($row["level"]>=60 && $row["level"]<70) //Livello compreso tra 60 e 69, seleziono gli avatar livello 60.
+                                            else if($row["level"]>=60 && $row["level"]<70) //60 <= level <= 69, level 60 avatars.
                                                 $avatar_img = "Level_60_Forum_Avatars/$avatar_img";
-                                            else $avatar_img = "Level_1_Forum_Avatars/$avatar_img"; //Livello compreso tra 1 e 59, seleziono gli avatar livello 1.
-                                        }else $avatar_img = $classes[$row["class"]]["img"] . ".png"; //L'immagine indica solo la classe del personaggio, faccio riferimento ai config.
-                                        $avatar_img = "images/classes/$avatar_img"; //Completo il path dell'avatar.
+                                            else $avatar_img = "Level_1_Forum_Avatars/$avatar_img"; //1 <= level <= 59, level 1 avatars.
+                                        }else $avatar_img = $classes[$row["class"]]["img"] . ".png"; //Only character's class, refear to config file.
+                                        $avatar_img = "images/classes/$avatar_img"; //Complete the avatar path.
                                     }
 
-                                    //Guild e Rank.
+                                    //Guild and Rank.
                                     $guild_query = "SELECT guild.name, guild_rank.rname FROM guild_member, guild, guild_rank WHERE guild_member.guildid = guild.guildid
                                                     AND guild_member.rank = guild_rank.rid AND guild_rank.guildid = guild.guildid AND guild_member.guid = $pg_GUID;";
-                                    if($guild_result = @mysql_query($guild_query, $connessione))
+                                    if($guild_result = @mysql_query($guild_query, $connection))
                                     {
                                         if($guild_row = @mysql_fetch_array($guild_result, MYSQL_ASSOC))
                                             $string_guild = '"' . $guild_row["rname"] . "\" of <" . $guild_row["name"] . "> "; //"Rank" of <Nome Guild>
                                         @mysql_free_result($guild_result);
                                     }
-                                    $string_guild .= "[$server_name " . $realm_name["$server_id"] . ']'; //[Nome_Server Nome_Realm]
+                                    $string_guild .= "[$server_name " . $realm_name["$server_id"] . ']'; //[Server_Name Realm_Name]
 
-                                    //Stats (messe in array per comodità).
+                                    //Stats (in an array).
                                     $index = 0;
-                                    for($i=1; $i<6; ++$i) //Al massimo 5 stats a scelta.
-                                        if(isset($_GET["stat$i"]) && $_GET["stat$i"]!='') //Controllo se esiste il template di quella stat.
+                                    for($i=1; $i<6; ++$i) //Up to 5 stats of your choice.
+                                        if(isset($_GET["stat$i"]) && $_GET["stat$i"]!='') //Check if there is a template of that stat.
                                         {
                                             $get_stat = @strtolower($_GET["stat$i"]);
 
-                                            //Achievements, eseguo questa operazione solo se richiesta per risparmiare risorse.
+                                            //Achievements, i perform this operation only if required to save resources.
                                             if(($get_stat=="achievements" && !isset($row["achievements"])) || ($get_stat=="achievementpoints" && !isset($row["achievementPoints"])))
                                             {
                                                 $ach_count = 0;
                                                 $ach_points = 0;
-                                                //Seleziono solo gli achievements che danno punti, il resto sono "Feats of Strength" oppure first kill.
-                                                if($achievements_result = @mysql_query("SELECT achievement FROM character_achievement WHERE guid = $pg_GUID;", $connessione))
+                                                //Select only the achievements that give points, the rest are "Feats of Strength" or first kill.
+                                                if($achievements_result = @mysql_query("SELECT achievement FROM character_achievement WHERE guid = $pg_GUID;", $connection))
                                                 {
                                                     while($achievements_row = @mysql_fetch_array($achievements_result, MYSQL_ASSOC))
                                                         if($punti = @isValidAchievement($achievements_row["achievement"], $site_host, $site_username, $site_password, $site_database))
                                                         {
-                                                            $ach_count += 1; //Incremento il conto degli achievements ottenuti.
-                                                            $ach_points += $punti; //Incremento il punteggio degli achivements ottenuti.
+                                                            $ach_count += 1; //Increase the count of the obtained achievements.
+                                                            $ach_points += $punti; //Increase the points of the obtained achievements.
                                                         }
                                                     @mysql_free_result($achievements_result);
                                                 }
-                                                //Inserisco nel vettore delle stats i dati ottenuti.
+                                                //Insert data obtained in the vector of stats.
                                                 $row["achievements"] = $ach_count;
                                                 $row["achievementPoints"] = $ach_points;
                                             }
@@ -419,14 +419,14 @@
                                             {
                                                 $field_name = $stats["$get_stat"]["field_name"];
 
-                                                if(@is_numeric($row["$field_name"])) //Effettuo l'arrotondamento solo se il campo è un numero.
+                                                if(@is_numeric($row["$field_name"])) //I make the round-off only if the field is a number.
                                                     $field_value = @round($row["$field_name"], 2);
                                                 else $field_value = $row["$field_name"];
 
-                                                //Sostituisco i valori alle stringhe di template.
+                                                //Replace the values to the template strings.
                                                 $temp_string = @str_replace("%s", $field_value, $stats["$get_stat"]["text"]);
 
-                                                //Check per evitare di mettere stats doppie.
+                                                //Check to make sure to avoid double stats.
                                                 $find_stat = false;
                                                 for($j=0; $j<@count($show_stats) && !$find_stat; ++$j)
                                                     if($show_stats[$j] == $temp_string)
@@ -443,7 +443,7 @@
                                 @mysql_free_result($result);
                             }else $do_next_step = false;
                         }else $do_next_step = false;
-                        @mysql_close($connessione);
+                        @mysql_close($connection);
                     }else $do_next_step = false;
                 }else $do_next_step = false;
             }else $do_next_step = false;
@@ -455,30 +455,30 @@
     {
         if($do_next_step)
         {
-            @header("Content-disposition: inline; filename=firma.png");
+            @header("Content-disposition: inline; filename=signature.png");
             @header("Content-type: image/png");
 
-            //Dipende dalla versione di GD l'immagine viene creata in modo diverso.
+            //It depends on the version of the GD image is created in a different way.
             if(@GDVersion() == 1)
                 $im = @imagecreate($x, $y);
             else $im = @imagecreatetruecolor($x, $y);
 
-            $gold          = @imagecolorallocate($im, 255, 215, 0); //Colore rettangolo.
-            $ombra         = @imagecolorallocate($im, 0, 0, 0); //Colore delle ombre.
-            $colore_testo  = @imagecolorallocate($im, $text_vet_color[0], $text_vet_color[1], $text_vet_color[2]); //Colore del testo.
+            $gold          = @imagecolorallocate($im, 255, 215, 0); //Rectangle color.
+            $shadow         = @imagecolorallocate($im, 0, 0, 0); //Shadow color.
+            $text_color  = @imagecolorallocate($im, $text_vet_color[0], $text_vet_color[1], $text_vet_color[2]); //Text color.
 
-            //INIZIO COLORAZIONE CENTRALE.
-                if($to_img == false) //Colorazione in sfumatura.
+            //CENTRAL COLOUR - START.
+                if($to_img == false) //Colour in shade.
                 {
-                    //Proporzioni per l'attenuazione dei colori verso il nero (r=0, g=0, b=0).
-                    $prop_bg_red    = ($start_bg_red/$y)/($y/$proporzione_sfumatura_y);
-                    $prop_bg_green  = ($start_bg_green/$y)/($y/$proporzione_sfumatura_y);
-                    $prop_bg_blue   = ($start_bg_blue/$y)/($y/$proporzione_sfumatura_y);
+                    //Proportions for the attenuation of the color to black (r=0, g=0, b=0).
+                    $prop_bg_red    = ($start_bg_red/$y)/($y/$gradient_proportion_y);
+                    $prop_bg_green  = ($start_bg_green/$y)/($y/$gradient_proportion_y);
+                    $prop_bg_blue   = ($start_bg_blue/$y)/($y/$gradient_proportion_y);
 
                     $bg_red    = $start_bg_red;
                     $bg_green  = $start_bg_green;
                     $bg_blue   = $start_bg_blue;
-                    for($i=0; $i<$y; ++$i) //Con un ciclo for coloro l'immagine a strisce di 1 px.
+                    for($i=0; $i<$y; ++$i) //Those with a for loop i colour the image into strips of 1 px.
                     {
                         $bg_red   -= ($i * $prop_bg_red);
                         $bg_green -= ($i * $prop_bg_green);
@@ -489,73 +489,72 @@
                         @imagecolordeallocate($im, $col);
                     }
                 }
-                else //Immagine di sfondo.
+                else //Background image.
                 {
-                    $src_bg = @imagecreatefrompng("images/bg/$img_name.png"); //Apro l'immagine di sfondo.
+                    $src_bg = @imagecreatefrompng("images/bg/$img_name.png"); //Open th background image.
                     list($width_bg, $height_bg) = @getimagesize("images/bg/$img_name.png");
-                    @imagecopyresized($im, $src_bg, 0, 0, 0, 0, $x, $y, $width_bg, $height_bg); //ridimensiono alle dimensioni di quella di destinazione.
+                    @imagecopyresized($im, $src_bg, 0, 0, 0, 0, $x, $y, $width_bg, $height_bg); //Resize to destination size.
                     @imagedestroy($src_bg);
                 }
-            //FINE COLORAZIONE CENTRALE.
+            //CENTRAL COLOUR - END.
 
-            //INIZIO COLORAZIONE BORDO.
-                @imagerectangle($im, 1, 1, $x-2, $y-2, $gold); //Disegno un rettangolo gold ad 1 px dal bordo.
-            //FINE COLORAZIONE BORDO.
+            //BORDER COLOUR - START.
+                @imagerectangle($im, 1, 1, $x-2, $y-2, $gold); //Draw a gold rectangle to 1 px from the border.
+            //BORDER COLOUR - END.
 
-            //INIZIO LINEA A META' IMMAGINE.
-                $pos_line = $y/2.5; //Calcolo la posizione della linea in proporzione all'altezza dell'immagine.
-                @imageline($im, $y+6, $pos_line+1, $x-$y-73, $pos_line+1, $ombra); //Disegno prima l'ombra spostata di 1px verso il basso e verso destra.
-                @imageline($im, $y+5, $pos_line, $x-$y-74, $pos_line, $gold); //Disegno la linea.
-            //FINE LINEA A META' IMMAGINE.
+            //HALF IMAGE LINE - START.
+                $pos_line = $y/2.5; //Calculating the position of the line in proportion to the height of the image.
+                @imageline($im, $y+6, $pos_line+1, $x-$y-73, $pos_line+1, $shadow); //Draw first the shadow moved 1px down and right.
+                @imageline($im, $y+5, $pos_line, $x-$y-74, $pos_line, $gold); //Draw the line.
+            //HALF IMAGE LINE - END.
 
-            //INIZIO NOME PG.
-                @imagettftext($im, $dim_nome_pg, 0, $y+8, $pos_line-4, $ombra, $font, $name_string); //Ombra del nome del pg.
-                @imagettftext($im, $dim_nome_pg, 0, $y+7, $pos_line-5, $colore_testo, $font, $name_string); //Nome del pg.
-            //FINE NOME PG.
+            //CHARACTER NAME - START.
+                @imagettftext($im, $dim_pg_name, 0, $y+8, $pos_line-4, $shadow, $font, $name_string); //Shadow of character name.
+                @imagettftext($im, $dim_pg_name, 0, $y+7, $pos_line-5, $text_color, $font, $name_string); //Character name.
+            //CHARACTER NAME - END.
 
-            //INIZIO STATS.
-                $prop_text = $y/5 - 1; //Mi calcolo il distanziamento tra una stat e l'altra in proporzione all'altezza dell'immagine.
-                for($i=0; $i<@count($show_stats); ++$i) //Stampo le stats selezionate.
+            //STATS - START.
+                $prop_text = $y/5 - 1; //I calculate the distance between the stats in proportion to the height of the image.
+                for($i=0; $i<@count($show_stats); ++$i) //Print selected stats.
                 {
                     $box = @imagettfbbox($dim_stats, 0, $font, $show_stats[$i]);
-                    @imagettftext($im, $dim_stats, 0, $x-$box[2]-5, 13+$prop_text*$i, $ombra, $font, $show_stats[$i]); //Ombra della stat.
-                    @imagettftext($im, $dim_stats, 0, $x-$box[2]-6, 12+$prop_text*$i, $colore_testo, $font, $show_stats[$i]); //Stat.
+                    @imagettftext($im, $dim_stats, 0, $x-$box[2]-5, 13+$prop_text*$i, $shadow, $font, $show_stats[$i]); //Stat's shadow.
+                    @imagettftext($im, $dim_stats, 0, $x-$box[2]-6, 12+$prop_text*$i, $text_color, $font, $show_stats[$i]); //Stat.
                 }
-            //FINE STATS.
+            //STATS - END.
 
-            //INIZIO COPIA CLASSE.
-                if(!$is_gif) //L'immagine selezionata è in png, vuol dire che contiene solo la classe del pg, la ridimensiono quanto l'altezza della firma.
+            //CLASS IMG - START.
+                if(!$is_gif) //The image contains only the character class, resize and scale it.
                 {
                     $src_avatar = @imagecreatefrompng($avatar_img);
                     list($width_avatar, $height_avatar) = @getimagesize($avatar_img);
-                    //Se è un'immagine esterna la rimpicciolisco di 10px e la riposiziono.
+                    //If it is an external image reduce its size of 10px.
                     @imagecopyresized($im, $src_avatar, 5, ($external_image ? 5 : 0), 0, 0, $y-($external_image ? 10 : 0), $y-($external_image ? 10 : 0), $width_avatar, $height_avatar);
                     @imagedestroy($src_avatar);
                 }
-                else //L'immagine è in gif, riduco le sue dimensioni di 10px e la centro in un quadrato a sinistra.
+                else //I reduce the image size of 10px and the center it in a square on the left.
                 {
                     $src_avatar = @imagecreatefromgif($avatar_img);
                     list($width_avatar, $height_avatar) = @getimagesize($avatar_img);
                     @imagecopyresized($im, $src_avatar, 5, 5, 0, 0, $y-10, $y-10, $width_avatar, $height_avatar);
                     @imagedestroy($src_avatar);
                 }
-            //FINE COPIA CLASSE.
+            //CLASS IMG - END.
 
-            //INIZIO LIVELLO-CLASSE-RAZZA.
-                @imagettftext($im, $dim_addictional_info, 0, $y+8, $pos_line+18, $ombra, $font, $string_info); //Ombra delle informazioni addizionali.
-                @imagettftext($im, $dim_addictional_info, 0, $y+7, $pos_line+17, $colore_testo, $font, $string_info); //Informazioni addizionali.
-            //FINE LIVELLO-CLASSE-RAZZA.
+            //LEVEL-CLASS-RACE - START.
+                @imagettftext($im, $dim_addictional_info, 0, $y+8, $pos_line+18, $shadow, $font, $string_info); //Addictional info shadow.
+                @imagettftext($im, $dim_addictional_info, 0, $y+7, $pos_line+17, $text_color, $font, $string_info); //Addictional info.
+            //LEVEL-CLASS-RACE - END.
 
-            //INIZIO GILDA-SERVER.
-                @imagettftext($im, $dim_addictional_info, 0, $y+8, $pos_line+36, $ombra, $font, $string_guild); //Ombra guild, server.
-                @imagettftext($im, $dim_addictional_info, 0, $y+7, $pos_line+35, $colore_testo, $font, $string_guild); //Guild, server.
-            //FINE GILDA-SERVER.
+            //GUILD-SERVER - START.
+                @imagettftext($im, $dim_addictional_info, 0, $y+8, $pos_line+36, $shadow, $font, $string_guild); //Guild, server shadow.
+                @imagettftext($im, $dim_addictional_info, 0, $y+7, $pos_line+35, $text_color, $font, $string_guild); //Guild, server.
+            //GUILD-SERVER - END.
 
-            //INIZIO RIDIMENSIONAMENTO IMMAGINE (MOMENTANEAMENTE DISABILITATO).
-                //Se da config è abilitato il ridimensionamento delle immagini.
+            //IMAGE RESIZING - START (ONLY IF ENABLED).
                 if($image_resize_enabled && ((isset($_GET['x']) && $_GET['x']!='' && @is_numeric($_GET['x'])) || (isset($_GET['y']) && $_GET['y']!='' && @is_numeric($_GET['y']))))
                 {
-                    //Mi calcolo le proporzioni delle dimensioni x e y.
+                    //x and y proportion calculating.
                     if(isset($_GET['x']) && $_GET['x']!='' && @is_numeric($_GET['x']))
                         $prop_x = $_GET['x'] / $x;
                     else $prop_x = 1;
@@ -563,11 +562,11 @@
                         $prop_y = $_GET['y'] / $y;
                     else $prop_y = 1;
 
-                    //Funzionamento:
-                    // - Se le proporzioni sono entrambe maggiori di 1 scelgo la più grande,
-                    // - Se le proporzioni sono entrambe minori di 1 scelgo la più piccola,
-                    // - Se le proporzioni sono una minore di 1 e una maggiore di 1 scelgo la più piccola,
-                    // - Se una delle proporzioni è uguale ad 1 scelgo quella diversa da 1.
+                    //How it work:
+                    // - If the proportions are both greater than 1 choose the largest,
+                    // - If the proportions are both less than 1, choose the smallest,
+                    // - If the proportions are one less than 1 and and greater than 1 choose the smallest,
+                    // - If one of the proportions is equal to 1 i choose the one different from 1.
                     if($prop_x>1 && $prop_y>1)
                         $prop = $prop_x>$prop_y ? $prop_x : $prop_y;
                     else if($prop_x<1 && $prop_y<1)
@@ -578,7 +577,7 @@
                         $prop = $prop_y;
                     else $prop = 1;
 
-                    //Se la proporzione è cambiata è necessario ridimensionare l'immagine.
+                    //If the proportion is changed, i must resize the image.
                     if($prop!=1)
                     {
                         $new_x = $x * $prop;
@@ -593,32 +592,32 @@
                         }
                     }
                 }
-            //FINE RIDIMENSIONAMENTO IMMAGINE.
+            //IMAGE RESIZING - END.
 
-            //INIZIO SALVATAGGIO DELL'IMMAGINE.
-                if($connessione = @mysql_connect($site_host, $site_username, $site_password, true))
+            //IMAGE SAVING - START.
+                if($connection = @mysql_connect($site_host, $site_username, $site_password, true))
                 {
-                    if(@mysql_select_db($site_database, $connessione))
+                    if(@mysql_select_db($site_database, $connection))
                     {
-                        $img_save_name = @strtoupper($_GET["server"]) . "_$pg_name.png"; //SERVER_NomePg.png.
-                        @imagepng($im, "saved/$img_save_name"); //Salvo l'immagine nella cartella "saved".
+                        $img_save_name = @strtoupper($_GET["server"]) . "_$pg_name.png"; //SERVER_PgName.png.
+                        @imagepng($im, "saved/$img_save_name"); //Save the image in the "saved" directory.
 
                         $quey_string = @getOrderQueryString($_SERVER['QUERY_STRING']);
-                        //Salvo un record identificativo su DB.
-                        @mysql_query("REPLACE INTO immaginisalvate VALUES ($pg_GUID, '" . @mysql_real_escape_string(@strtoupper($_GET["server"])) . "', '$quey_string', '$img_save_name', UNIX_TIMESTAMP());", $connessione);
+                        //Save a identification record on DB.
+                        @mysql_query("REPLACE INTO savedimages VALUES ($pg_GUID, '" . @mysql_real_escape_string(@strtoupper($_GET["server"])) . "', '$quey_string', '$img_save_name', UNIX_TIMESTAMP());", $connection);
                     }
-                    @mysql_close($connessione);
+                    @mysql_close($connection);
                 }
-            //FINE SALVATAGGIO DELL'IMMAGINE.
+            //IMAGE SAVING - END.
 
-            //INIZIO DEALLOCAZIONE COLORI.
+            //COLOR DEALLOCATION - START.
                 @imagecolordeallocate($im, $gold);
-                @imagecolordeallocate($im, $ombra);
-                @imagecolordeallocate($im, $colore_testo);
-            //FINE DEALLOCAZIONE COLORI.
+                @imagecolordeallocate($im, $shadow);
+                @imagecolordeallocate($im, $text_color);
+            //COLOR DEALLOCATION - END.
 
             @imagepng($im);
             @imagedestroy($im);
-        }else @header("location: images/$dati_errati");
+        }else @header("location: images/$incorrect_data");
     }
 ?>

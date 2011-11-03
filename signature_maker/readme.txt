@@ -10,13 +10,13 @@
 ***************************************************************************************************
 
 
-Autore: giuseppe1991 / devilcoredev
-Data: 04/10/2011
-Uso: Applicare il file data.sql contenuto dentro la cartella sql al database del sito, compilare
-     i campi necessari del file config.php
-Informazioni addizionali: il tool non presenta interfaccia grafica, in modo che sia adattabile a
-                          a qualsiasi sito, i files che necessitano di grafica sono: index.php,
-                          colori/tabella.htm, fonts/index.php, images/index.htm.
-                          Si raccomanda di settare la cartella "custom" scrivibile poichè il
-                          sito la utilizzerà per delle particolari configurazioni.
-Supporto: montesanto.giuseppe@live.it
+Author: giuseppe1991 / devilcoredev
+Date: 04/10/2011
+Use: Apply the file data.sql contained within the folder to sql database site, fill out the
+     required fields of the file config.php
+Addictional info: the tool has no graphical interface, so that it is adaptable to to any site,
+                  the files that need graphics are: index.php, colors/table.htm, fonts/index.php
+                  and images/index.htm.
+                  It is recommended to set the folder "custom" as the writable because the site
+                  uses it for special configurations.
+Support: montesanto.giuseppe@live.it
