@@ -366,11 +366,12 @@
 ?>
 <?php
     //The function returns 0 if the achievement is not valid (eg achievement of first kill, or Feast of Strength) or achievement's points if it's valid.
-    function isValidAchievement($achievement_id, $host, $user, $pass, $db)
+    function isValidAchievement($achievement_id)
     {
-        if($my_conn = mysql_connect($host, $user, $pass, true))
+        global $site_host, $site_username, $site_password, $site_database;
+        if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
         {
-            if(mysql_select_db($db, $my_conn))
+            if(mysql_select_db($site_database, $my_conn))
                 if($my_result = mysql_query("SELECT points FROM achievement WHERE ID = $achievement_id;", $my_conn))
                 {
                     if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
@@ -387,11 +388,12 @@
     }
 
     //The function returns information about a given talents.
-    function getTalentInfo($spellId, $host, $user, $pass, $db)
+    function getTalentInfo($spellId)
     {
-        if($my_conn = mysql_connect($host, $user, $pass, true))
+        global $site_host, $site_username, $site_password, $site_database;
+        if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
         {
-            if(mysql_select_db($db, $my_conn))
+            if(mysql_select_db($site_database, $my_conn))
                 if($my_result = mysql_query("SELECT rankId, tabPage FROM talent WHERE spellTalent = $spellId;", $my_conn))
                 {
                     if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))

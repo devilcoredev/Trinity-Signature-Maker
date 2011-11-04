@@ -332,7 +332,7 @@
                                     if($talents_result = mysql_query("SELECT spell FROM character_talent WHERE guid = $pg_GUID AND spec = $spec_id;", $connection))
                                     {
                                         while($talents_row = mysql_fetch_array($talents_result, MYSQL_ASSOC))
-                                            if($vet = getTalentInfo($talents_row["spell"], $site_host, $site_username, $site_password, $site_database))
+                                            if($vet = getTalentInfo($talents_row["spell"]))
                                             {
                                                 $tab = $vet["tabPage"];
                                                 $talents[$tab] += $vet["rankId"];
@@ -403,7 +403,7 @@
                                                 if($achievements_result = mysql_query("SELECT achievement FROM character_achievement WHERE guid = $pg_GUID;", $connection))
                                                 {
                                                     while($achievements_row = mysql_fetch_array($achievements_result, MYSQL_ASSOC))
-                                                        if($punti = isValidAchievement($achievements_row["achievement"], $site_host, $site_username, $site_password, $site_database))
+                                                        if($punti = isValidAchievement($achievements_row["achievement"]))
                                                         {
                                                             $ach_count += 1; //Increase the count of the obtained achievements.
                                                             $ach_points += $punti; //Increase the points of the obtained achievements.
