@@ -3,60 +3,13 @@
     include("config.php");
 ?>
 <?php
-    //STANDARD GD FUNCTION - START.
-        function isGD2supported()
-        {
-            global $GD2;
-            if(isset($GD2) && $GD2)
-                return $GD2;
-            else
-            {
-                $php_ver_arr = explode('.', phpversion());
-                $php_ver = intval($php_ver_arr[0])*100 + intval($php_ver_arr[1]);
-
-                if($php_ver < 402) // PHP <= 4.1.x
-                    $GD2 = in_array("imagegd2", get_extension_funcs("gd"));
-                else if($php_ver < 403) // PHP = 4.2.x
-                {
-                    $im = imagecreatetruecolor(10, 10);
-                    if($im)
-                    {
-                        $GD2 = 1;
-                        imagedestroy($im);
-                    }else $GD2 = 0;
-                }else $GD2 = function_exists("imagecreatetruecolor"); // PHP = 4.3.x
-            }
-
-            return $GD2;
-        }
-
-        function GDVersion()
-        {
-            if(!in_array("gd", get_loaded_extensions()))
-                return 0;
-            else if(isGD2supported())
-                return 2;
-            else return 1;
-        }
-
-        function IsFormatSupported($format)
-        {
-            if(($format=="gif") && (imagetypes() & IMG_GIF))
-                return true;
-            else if(($format=="jpeg") && (imagetypes() & IMG_JPG))
-                return true;
-            else if(($format=="png") && (imagetypes() & IMG_PNG))
-                return true;
-            else return false;
-        }
-
-        function isPng($fileName)
-        {
-            if(!strncmp(pathinfo($fileName, PATHINFO_EXTENSION), "png", 3))
-                return true;
-            else return false;
-        }
-    //STANDARD GD FUNCTION - END.
+    //Returns true if the image is png.
+    function isPng($fileName)
+    {
+        if(!strncmp(pathinfo($fileName, PATHINFO_EXTENSION), "png", 3))
+            return true;
+        else return false;
+    }
 
     //Returns a decimal number from a hex number in the form "HHHHHH".
     function GetRGBFromHex($input)
