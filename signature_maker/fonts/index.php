@@ -8,7 +8,7 @@
                 document.getElementsByName("testo_font")[0].select();
             }
 
-            function selecttesto(input)
+            function copiaTesto(input)
             {
                 document.getElementsByName("testo_font")[0].value = input;
                 open_field = input;
@@ -28,7 +28,7 @@
                         if($count++) print "                ";
                         print "<tr>\n";
                         print "                    <td>\n";
-                        print "                        <center><a href=\"#ancora_testo\" onClick=\"selecttesto('$i');\"><img width=250 src=\"stampa_carattere.php?id_font=$i\"></a></center>\n";
+                        print "                        <center><a href=\"#ancora_testo\" onClick=\"copiaTesto('$i');\"><img width=250 src=\"stampa_carattere.php?id_font=$i\"></a></center>\n";
                         print "                    </td>\n";
                         print "                </tr>\n";
                     }
