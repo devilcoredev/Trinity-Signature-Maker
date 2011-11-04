@@ -174,11 +174,11 @@
                     $input["intellect"]          = $input_array[0x0006 + 0x004E + 0x0003];                  //OBJECT_END + UNIT_FIELD_STAT3.
                     $input["spirit"]             = $input_array[0x0006 + 0x004E + 0x0004];                  //OBJECT_END + UNIT_FIELD_STAT4.
                     $input["armor"]              = $input_array[0x0006 + 0x005D];                           //OBJECT_END + UNIT_FIELD_RESISTANCES.
-                    $input["blockPct"]           = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x036C]);  //OBJECT_END + UNIT_END + PLAYER_BLOCK_PERCENTAGE.
-                    $input["dodgePct"]           = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x036D]);  //OBJECT_END + UNIT_END + PLAYER_DODGE_PERCENTAGE.
-                    $input["parryPct"]           = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x036E]);  //OBJECT_END + UNIT_END + PLAYER_PARRY_PERCENTAGE.
-                    $input["critPct"]            = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x0371]);  //OBJECT_END + UNIT_END + PLAYER_CRIT_PERCENTAGE.
-                    $input["rangedCritPct"]      = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x0372]);  //OBJECT_END + UNIT_END + PLAYER_RANGED_CRIT_PERCENTAGE.
+                    $input["blockPct"]           = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x036C]);   //OBJECT_END + UNIT_END + PLAYER_BLOCK_PERCENTAGE.
+                    $input["dodgePct"]           = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x036D]);   //OBJECT_END + UNIT_END + PLAYER_DODGE_PERCENTAGE.
+                    $input["parryPct"]           = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x036E]);   //OBJECT_END + UNIT_END + PLAYER_PARRY_PERCENTAGE.
+                    $input["critPct"]            = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x0371]);   //OBJECT_END + UNIT_END + PLAYER_CRIT_PERCENTAGE.
+                    $input["rangedCritPct"]      = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x0372]);   //OBJECT_END + UNIT_END + PLAYER_RANGED_CRIT_PERCENTAGE.
                     $input["attackPower"]        = $input_array[0x0006 + 0x0075];                           //OBJECT_END + UNIT_FIELD_ATTACK_POWER.
                     $input["rangedAttackPower"]  = $input_array[0x0006 + 0x0078];                           //OBJECT_END + UNIT_FIELD_RANGED_ATTACK_POWER.
                     $input["resilience"]         = $input_array[0x0006 + 0x008E + 0x043B + 0x0010];         //OBJECT_END + UNIT_END + PLAYER_FIELD_COMBAT_RATING_1 + CR_CRIT_TAKEN_SPELL.
@@ -187,7 +187,7 @@
                     for($i=0x0495; $i<0x049A; ++$i) //Il valore minimo è lo spell power attuale del PG.
                         $input["spellPower"]     = min($input["spellPower"], $input_array[$i]);
 
-                    $input["spellCritPct"]       = UInt32ToFloat($input_array[0x0409]);                    //OBJECT_END + UNIT_END + PLAYER_SPELL_CRIT_PERCENTAGE1.
+                    $input["spellCritPct"]       = UInt32ToFloat($input_array[0x0409]);                     //OBJECT_END + UNIT_END + PLAYER_SPELL_CRIT_PERCENTAGE1.
                     for($i=0x040A; $i<0x0410; ++$i) //Il valore minimo è lo spell crit attuale del PG.
                         $input["spellCritPct"]   = min($input["spellCritPct"], UInt32ToFloat($input_array[$i]));
                 }
@@ -344,9 +344,10 @@
                                     //Nome della spec.
                                     $max_talent = max($talents[0], $talents[1], $talents[2]);
                                     if($max_talent)
-                                        for($i_t=0; $i_t<3; ++$i_t)
-                                            if($talents[$i_t] == $max_talent)
-                                                $spec_name .= ' ' . $tab_names[$row["class"]][$i_t];
+                                    {
+                                        $i_t = array_search($max_talent, $talents);
+                                        $spec_name .= ' ' . $tab_names[$row["class"]][$i_t];
+                                    }
 
                                     //Livello - Classe - Razza.
                                     $string_info = "Level " . $row["level"] . ' ' . $races[$row["race"]] . ' ' . $classes[$row["class"]]["name"] . $spec_name;
