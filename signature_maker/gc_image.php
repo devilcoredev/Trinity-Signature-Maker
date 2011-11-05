@@ -558,7 +558,7 @@
                         imagepng($im, "saved/$img_save_name"); //Save the image in the "saved" directory.
 
                         //Save a identification record on DB.
-                        mysql_query("REPLACE INTO savedimages VALUES ($pg_GUID, '$realm_name', " . getOrderQueryString($_SERVER["QUERY_STRING"]) . ", '$img_save_name', UNIX_TIMESTAMP());", $connection);
+                        mysql_query("REPLACE INTO savedimages VALUES ($pg_GUID, '$realm_name', '" . getOrderQueryString($_SERVER["QUERY_STRING"]) . "', '$img_save_name', UNIX_TIMESTAMP());", $connection);
                     }
                     mysql_close($connection);
                 }
