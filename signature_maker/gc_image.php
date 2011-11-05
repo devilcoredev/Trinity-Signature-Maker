@@ -554,12 +554,12 @@
                 {
                     if(mysql_select_db($site_database, $connessione))
                     {
-                        $img_save_name = strtoupper($_GET["server"]) . "_$pg_name.png"; //SERVER_NomePg.png.
+                        $realm_name = mysql_real_escape_string(strtoupper($_GET["server"])); //Evita le SQL-Injections.
+                        $img_save_name = $realm_name . "_$pg_name.png"; //SERVER_NomePg.png.
                         imagepng($im, "saved/$img_save_name"); //Salvo l'immagine nella cartella "saved".
 
-                        $quey_string = getOrderQueryString($_SERVER["QUERY_STRING"]);
                         //Salvo un record identificativo su DB.
-                        mysql_query("REPLACE INTO immaginisalvate VALUES ($pg_GUID, '" . mysql_real_escape_string(strtoupper($_GET["server"])) . "', '$quey_string', '$img_save_name', UNIX_TIMESTAMP());", $connessione);
+                        mysql_query("REPLACE INTO immaginisalvate VALUES ($pg_GUID, '$realm_name', '" . getOrderQueryString($_SERVER["QUERY_STRING"]) . "', '$img_save_name', UNIX_TIMESTAMP());", $connessione);
                     }
                     mysql_close($connessione);
                 }
