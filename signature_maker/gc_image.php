@@ -6,7 +6,7 @@
     //Restituisce true se l'immagine è png.
     function isPng($fileName)
     {
-        return (strncmp(pathinfo($fileName, PATHINFO_EXTENSION), "png", 3) == 0)
+        return (strncmp(pathinfo($fileName, PATHINFO_EXTENSION), "png", 3) == 0);
     }
 
     //Restituisce un numero decimale a partire da un numero esadecimale nella forma "HHHHHH".
