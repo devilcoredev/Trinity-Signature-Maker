@@ -253,8 +253,10 @@
                             //First uppercase, rest lowercase. Eg: TEST=>Test, test=>Test, tEsT=>Test.
                             $pg_name = mysql_real_escape_string(ucfirst(strtolower($_GET["pg_name"]))); //Avoid SQL-Injections.
 
-                            //Name, Race, Class, Level, Title, Spec.
-                            if($result = mysql_query("SELECT guid, name, race, class, gender, level, chosenTitle, activespec FROM characters WHERE name = '$pg_name';", $connection))
+                            //Name, Race, Class, Level, Title, Spec, Arena Points, Honor Points, PvP Kills.
+                            $query = "SELECT guid, name, race, class, gender, level, chosenTitle, activespec, arenaPoints, totalHonorPoints,
+                                        totalKills FROM characters WHERE name = '$pg_name';";
+                            if($result = mysql_query($query, $connection))
                             {
                                 if($row = mysql_fetch_array($result, MYSQL_ASSOC))
                                 {

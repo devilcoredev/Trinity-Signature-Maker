@@ -262,6 +262,15 @@
     $stats["talents"]["name"]                  = "Talents";
     $stats["talents"]["field_name"]            = "talents";
     $stats["talents"]["text"]                  = "Talents: (%s)";
+    $stats["arenapoints"]["name"]              = "Arena Points";
+    $stats["arenapoints"]["field_name"]        = "arenaPoints";
+    $stats["arenapoints"]["text"]              = "Arena Pts: %s";
+    $stats["honorpoints"]["name"]              = "Honor Points";
+    $stats["honorpoints"]["field_name"]        = "totalHonorPoints";
+    $stats["honorpoints"]["text"]              = "Honor Pts: %s";
+    $stats["pvpkills"]["name"]                 = "PvP Kills";
+    $stats["pvpkills"]["field_name"]           = "totalKills";
+    $stats["pvpkills"]["text"]                 = "PvP Kills: %s";
 
     //Once every 24 hours are re-written information on achievements in the configuration file so you must not always read them from db.
     $to_fill_achievements = false;
@@ -313,7 +322,7 @@
                 fputs($ach_file, "    \$stats[\"achievements\"][\"text\"]             = \"Ach.: %s/\$num_achievements\"; //Obtained achievements / Obtanible achievements.\r\n");
                 fputs($ach_file, "    \$stats[\"achievementpoints\"][\"name\"]        = \"Achievement Points\";\r\n");
                 fputs($ach_file, "    \$stats[\"achievementpoints\"][\"field_name\"]  = \"achievementPoints\";\r\n");
-                fputs($ach_file, "    \$stats[\"achievementpoints\"][\"text\"]        = \"Ach. Points: %s\";\r\n");
+                fputs($ach_file, "    \$stats[\"achievementpoints\"][\"text\"]        = \"Ach. Pts: %s\";\r\n");
             }
 
             fputs($ach_file, "?>");
