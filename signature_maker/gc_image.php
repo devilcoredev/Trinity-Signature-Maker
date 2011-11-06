@@ -253,8 +253,10 @@
                             //Primo carattere maiuscolo, resto minuscolo. Esempi: TEST=>Test, test=>Test, tEsT=>Test.
                             $nome_pg = mysql_real_escape_string(ucfirst(strtolower($_GET["nome_pg"]))); //Evita le SQL-Injection.
 
-                            //Nome, Razza, Classe, Livello, Titolo, Spec.
-                            if($result = mysql_query("SELECT guid, name, race, class, gender, level, chosenTitle, activespec FROM characters WHERE name = '$nome_pg';", $connessione))
+                            //Nome, Razza, Classe, Livello, Titolo, Spec, Punti arena, Punti honor, Kill PvP.
+                            $query = "SELECT guid, name, race, class, gender, level, chosenTitle, activespec, arenaPoints, totalHonorPoints,
+                                        totalKills FROM characters WHERE name = '$nome_pg';";
+                            if($result = mysql_query($query, $connessione))
                             {
                                 if($row = mysql_fetch_array($result, MYSQL_ASSOC))
                                 {
