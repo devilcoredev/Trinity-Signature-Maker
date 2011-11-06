@@ -7,7 +7,7 @@
         print "<option value=\"-\" selected>---</option>\n";
         foreach($input as $i => $value)
         {
-            print "                                    <option value=\"" . $value["field_name"] . "\">" . $value["name"] . "</option>\n";
+            print "                                    <option value=\"$i\">" . $value["name"] . "</option>\n";
         }
     }
 ?>
