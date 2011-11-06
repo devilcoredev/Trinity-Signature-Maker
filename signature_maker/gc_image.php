@@ -6,9 +6,7 @@
     //Restituisce true se l'immagine è png.
     function isPng($fileName)
     {
-        if(!strncmp(pathinfo($fileName, PATHINFO_EXTENSION), "png", 3))
-            return true;
-        else return false;
+        return (strncmp(pathinfo($fileName, PATHINFO_EXTENSION), "png", 3) == 0)
     }
 
     //Restituisce un numero decimale a partire da un numero esadecimale nella forma "HHHHHH".
@@ -208,8 +206,7 @@
                         $img_name = $_GET["sfondo"];
                     }
                 }
-                //Lo sfondo è un colore, cerco le 3 graduazioni nel codice esadecimale.
-                else
+                else //Lo sfondo è un colore, cerco le 3 graduazioni nel codice esadecimale.
                 {
                     $bg_vet = GetRGBFromHex($_GET["sfondo"]);
 
@@ -383,12 +380,7 @@
                                                 $temp_string = str_replace("%s", $field_value, $stats["$get_stat"]["text"]);
 
                                                 //Check per evitare di mettere stats doppie.
-                                                $find_stat = false;
-                                                for($j=0; $j<count($show_stats) && !$find_stat; ++$j)
-                                                    if($show_stats[$j] == $temp_string)
-                                                        $find_stat = true;
-
-                                                if(!$find_stat)
+                                                if(!in_array($temp_string, $show_stats))
                                                 {
                                                     $show_stats[$index] = $temp_string;
                                                     $index++;
