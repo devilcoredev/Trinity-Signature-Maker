@@ -161,7 +161,7 @@
                 if(!strncmp($_GET["sfondo"], "bg_", 3))
                 {
                     //Tutti gli sfondi utilizzati per la firma sono in png, cominciano con bg_ e sono contenuti nella directory "images/bg".
-                    if(file_exists("images/bg/" . $_GET["sfondo"] . ".png") && is_file("images/bg/" . $_GET["sfondo"] . ".png"))
+                    if(in_array($_GET["sfondo"], $backgrounds))
                     {
                         $to_img = true;
                         $img_name = $_GET["sfondo"];
