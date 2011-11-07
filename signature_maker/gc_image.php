@@ -410,7 +410,7 @@
                 {
                     $src_bg = imagecreatefrompng("images/bg/$img_name.png"); //Open th background image.
                     list($width_bg, $height_bg) = getimagesize("images/bg/$img_name.png");
-                    imagecopyresized($im, $src_bg, 0, 0, 0, 0, $x, $y, $width_bg, $height_bg); //Resize to destination size.
+                    imagecopyresampled($im, $src_bg, 0, 0, 0, 0, $x, $y, $width_bg, $height_bg); //Resize to destination size.
                     imagedestroy($src_bg);
                 }
             //CENTRAL COLOUR - END.
@@ -446,14 +446,14 @@
                     $src_avatar = imagecreatefrompng($avatar_img);
                     list($width_avatar, $height_avatar) = getimagesize($avatar_img);
                     //If it is an external image reduce its size of 10px.
-                    imagecopyresized($im, $src_avatar, 5, ($external_image ? 5 : 0), 0, 0, $y-($external_image ? 10 : 0), $y-($external_image ? 10 : 0), $width_avatar, $height_avatar);
+                    imagecopyresampled($im, $src_avatar, 5, ($external_image ? 5 : 0), 0, 0, $y-($external_image ? 10 : 0), $y-($external_image ? 10 : 0), $width_avatar, $height_avatar);
                     imagedestroy($src_avatar);
                 }
                 else //I reduce the image size of 10px and the center it in a square on the left.
                 {
                     $src_avatar = imagecreatefromgif($avatar_img);
                     list($width_avatar, $height_avatar) = getimagesize($avatar_img);
-                    imagecopyresized($im, $src_avatar, 5, 5, 0, 0, $y-10, $y-10, $width_avatar, $height_avatar);
+                    imagecopyresampled($im, $src_avatar, 5, 5, 0, 0, $y-10, $y-10, $width_avatar, $height_avatar);
                     imagedestroy($src_avatar);
                 }
             //CLASS IMG - END.
@@ -502,7 +502,7 @@
                         if(GDVersion() == 1)
                             $img_resized = imagecreate($new_x, $new_y);
                         else $img_resized = imagecreatetruecolor($new_x, $new_y);
-                        if(imagecopyresized($img_resized, $im, 0, 0, 0, 0, $new_x, $new_y, $x, $y))
+                        if(imagecopyresampled($img_resized, $im, 0, 0, 0, 0, $new_x, $new_y, $x, $y))
                         {
                             imagedestroy($im);
                             $im = $img_resized;
