@@ -21,10 +21,9 @@
             <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" bordercolor="111111">
                 <?php
                     include("/../config.php");
-                    $count = 0;
                     foreach($backgrounds as $i => $value)
                     {
-                        if($count++) print "                ";
+                        if($i) print "                "; //Indexes are number, so you don't need to use another counter.
                         print "<tr>\n";
                         print "                    <td>\n";
                         print "                        <center><a href=\"#text_link\" onClick=\"select('$value');\"><img width=\"350\" src=\"bg/$value.png\"></a></center>\n";
