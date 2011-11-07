@@ -6,9 +6,7 @@
     //Returns true if the image is png.
     function isPng($fileName)
     {
-        if(!strncmp(pathinfo($fileName, PATHINFO_EXTENSION), "png", 3))
-            return true;
-        else return false;
+        return (strncmp(pathinfo($fileName, PATHINFO_EXTENSION), "png", 3) == 0);
     }
 
     //Returns a decimal number from a hex number in the form "HHHHHH".
@@ -169,8 +167,7 @@
                         $img_name = $_GET["background"];
                     }
                 }
-                //The background is a color, search the 3 graduations in hexadecimal code.
-                else
+                else //The background is a color, search the 3 graduations in hexadecimal code.
                 {
                     $bg_vet = GetRGBFromHex($_GET["background"]);
 
@@ -344,12 +341,7 @@
                                                 $temp_string = str_replace("%s", $field_value, $stats["$get_stat"]["text"]);
 
                                                 //Check to make sure to avoid double stats.
-                                                $find_stat = false;
-                                                for($j=0; $j<count($show_stats) && !$find_stat; ++$j)
-                                                    if($show_stats[$j] == $temp_string)
-                                                        $find_stat = true;
-
-                                                if(!$find_stat)
+                                                if(!in_array($temp_string, $show_stats))
                                                 {
                                                     $show_stats[$index] = $temp_string;
                                                     $index++;
