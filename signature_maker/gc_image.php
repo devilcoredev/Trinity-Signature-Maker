@@ -161,7 +161,7 @@
                 if(!strncmp($_GET["background"], "bg_", 3))
                 {
                     //All wallpapers are used for signature are png, they start with bg_ and are contained in the directory "images/bg".
-                    if(file_exists("images/bg/" . $_GET["background"] . ".png") && is_file("images/bg/" . $_GET["background"] . ".png"))
+                    if(in_array($_GET["background"], $backgrounds))
                     {
                         $to_img = true;
                         $img_name = $_GET["background"];
