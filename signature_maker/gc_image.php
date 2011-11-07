@@ -132,8 +132,8 @@
             $query_string = getOrderQueryString($_SERVER["QUERY_STRING"]); //Controllo se esiste un'immagine salvata con la stessa query string.
             if($result = mysql_query("SELECT * FROM immaginisalvate WHERE queryString = '$query_string';", $connessione))
             {
-                if($row = mysql_fetch_array($result, MYSQL_ASSOC))
-                    if(file_exists("saved/" . $row["nomeImmagine"]))
+                if($row = mysql_fetch_array($result, MYSQL_ASSOC))     //Forza l'aggiornamento dell'immagine ogni 24 ore.
+                    if(file_exists("saved/" . $row["nomeImmagine"]) && (time()-$row["ultimaModifica"])<(24*60*60))
                     {
                         $to_make_image = false;
                         mysql_query("UPDATE immaginisalvate SET ultimaModifica = UNIX_TIMESTAMP() WHERE queryString = '$query_string';", $connessione);
@@ -488,7 +488,7 @@
                     else $prop = 1;
 
                     //Se la proporzione è cambiata è necessario ridimensionare l'immagine.
-                    if($prop!=1)
+                    if($prop != 1)
                     {
                         $new_x = $x * $prop;
                         $new_y = $y * $prop;
