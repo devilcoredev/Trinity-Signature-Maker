@@ -46,47 +46,8 @@
     //Function that performs a conversion from UInt32 to float.
     function UInt32ToFloat($input)
     {
-        $bin_string = decbin($input); //Decimal->Binary conversion.
-        $len = strlen($bin_string);
-        if($len > 32) //Invalid number.
-            return -1;
-
-        /*
-            This is the structure of the 32-bits float:
-                +---+----------+-------------------------+
-                | x | xxxxxxxx | xxxxxxxxxxxxxxxxxxxxxxx |
-                +---+----------+-------------------------+
-                  ^       ^                 ^
-                Sign  Exponent           Mantissa
-
-            The sign bit (sign) is negligible because for unsigned it doesn't exist.
-            The formula to calculate the float from the number of bits is:
-                    Sign    Exponent-Offset
-            N = (-1)     * 2                * (1.Mantissa)
-            The length in bits of the exponent are the following:
-             - Float 32 bit: 8 bits,
-             - Float 64 bit: 11 bits,
-             - Float 80 bit: 15 bits.
-            The length in bits of the mantissa are the following:
-             - Float 32 bit: 23 bits,
-             - Float 64 bit: 52 bits,
-             - Float 80 bit: 64 bits.
-            The offsets are the following:
-             - Float 32 bit: 127,
-             - Float 64 bit: 1023,
-             - Float 80 bit: 16383.
-            Because the numbers are > 0 in this case we can neglect the sign bit:
-                 Exponent-Offset
-            N = 2                * (1.Mantissa)
-        */
-
-        for($i=0; $i<(32-$len); ++$i) //Complete the sequence of bits, putting the 0 in the head.
-            $bin_string = '0' . $bin_string;
-        $exp = intval(substr($bin_string, 1, 8), 2); //I take bits of the exponent (8 starting from position 1).
-        $mant = intval(substr($bin_string, 9), 2); //I take the mantissa (from position 9, the remaining 23 bits).
-        $f_mant = floatval("1.$mant"); //Get 1.Mantissa.
-
-        return (pow(2, $exp-127) * $f_mant) * 1.05; //Use the formula for getting the float (value is about 5% at fault, i apply a forced correction).
+        $txt = unpack('f', pack('L', $input));
+        $txt[1];
     }
 
     //The function gets all the stats of the PG, searches first in the table character_stats, if it doesn't find anything searches in the table armory_character_stats.
