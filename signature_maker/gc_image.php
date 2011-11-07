@@ -100,7 +100,7 @@
                         $input["spellPower"]     = min($input["spellPower"], $input_array[$i]);
 
                     $input["spellCritPct"]       = UInt32ToFloat($input_array[0x0409]);                     //OBJECT_END + UNIT_END + PLAYER_SPELL_CRIT_PERCENTAGE1.
-                    for($i=0x040A; $i<0x0410; ++$i) //The min-value is the spell crit.
+                    for($i=0x040A; $i<0x040F; ++$i) //The min-value is the spell crit.
                         $input["spellCritPct"]   = min($input["spellCritPct"], UInt32ToFloat($input_array[$i]));
                 }
                 mysql_free_result($result);
