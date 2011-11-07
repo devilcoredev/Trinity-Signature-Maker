@@ -45,7 +45,7 @@
     function UInt32ToFloat($input)
     {
         $txt = unpack('f', pack('L', $input));
-        $txt[1];
+        return $txt[1];
     }
 
     //La funzione ricava tutte le stats del PG, cerca prima nella tabella character_stats, se non trova nulla cerca in armory_character_stats.
