@@ -132,8 +132,8 @@
             $query_string = getOrderQueryString($_SERVER["QUERY_STRING"]); //Check if exists an image with the same queryString.
             if($result = mysql_query("SELECT * FROM savedimages WHERE queryString = '$query_string';", $connection))
             {
-                if($row = mysql_fetch_array($result, MYSQL_ASSOC))
-                    if(file_exists("saved/" . $row["imageName"]))
+                if($row = mysql_fetch_array($result, MYSQL_ASSOC))  //Force-refresh the image every 24 hours.
+                    if(file_exists("saved/" . $row["imageName"]) && (time()-$row["lastEdit"])<(24*60*60))
                     {
                         $to_make_image = false;
                         mysql_query("UPDATE savedimages SET lastEdit = UNIX_TIMESTAMP() WHERE queryString = '$query_string';", $connection);
@@ -178,7 +178,7 @@
                 }
             }
 
-            //The user has selected a text color different from the default, estraggo il colore.
+            //The user has selected a text color different from the default, i extract it.
             if(isset($_GET["text_color"]) && $_GET["text_color"]!='')
                 $text_vet_color = GetRGBFromHex($_GET["text_color"]);
 
@@ -197,7 +197,7 @@
             //Complete the path of the font file.
             $font = "fonts/$font";
 
-            //Controllo dei campi inseriti, e controllo dell'esistenza del realm selezionato.
+            //Check of inserted fields and check if the selected realm exists.
             if(isset($_GET["server"]) && $_GET["server"]!='' && isset($_GET["pg_name"]) && $_GET["pg_name"]!='')
             {
                 $server_id = strtolower($_GET["server"]);
@@ -317,10 +317,10 @@
                                                 if($achievements_result = mysql_query("SELECT achievement FROM character_achievement WHERE guid = $pg_GUID;", $connection))
                                                 {
                                                     while($achievements_row = mysql_fetch_array($achievements_result, MYSQL_ASSOC))
-                                                        if($punti = isValidAchievement($achievements_row["achievement"]))
+                                                        if($points = isValidAchievement($achievements_row["achievement"]))
                                                         {
                                                             $ach_count += 1; //Increase the count of the obtained achievements.
-                                                            $ach_points += $punti; //Increase the points of the obtained achievements.
+                                                            $ach_points += $points; //Increase the points of the obtained achievements.
                                                         }
                                                     mysql_free_result($achievements_result);
                                                 }
@@ -487,7 +487,7 @@
                     else $prop = 1;
 
                     //If the proportion is changed, i must resize the image.
-                    if($prop!=1)
+                    if($prop != 1)
                     {
                         $new_x = $x * $prop;
                         $new_y = $y * $prop;

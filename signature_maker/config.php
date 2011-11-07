@@ -115,16 +115,16 @@
     $fonts["flashd"]['y']                 = 50;
 
     //Signature backgrounds.
-    $backgrounds[0] = "bg_abstract";
-    $backgrounds[1] = "bg_blue";
-    $backgrounds[2] = "bg_blues";
-    $backgrounds[3] = "bg_chain";
-    $backgrounds[4] = "bg_dragon";
-    $backgrounds[5] = "bg_electric";
-    $backgrounds[6] = "bg_lava";
-    $backgrounds[7] = "bg_rippedmetal";
-    $backgrounds[8] = "bg_space";
-    $backgrounds[9] = "bg_stone";
+    $backgrounds[0]  = "bg_abstract";
+    $backgrounds[1]  = "bg_blue";
+    $backgrounds[2]  = "bg_blues";
+    $backgrounds[3]  = "bg_chain";
+    $backgrounds[4]  = "bg_dragon";
+    $backgrounds[5]  = "bg_electric";
+    $backgrounds[6]  = "bg_lava";
+    $backgrounds[7]  = "bg_rippedmetal";
+    $backgrounds[8]  = "bg_space";
+    $backgrounds[9]  = "bg_stone";
     $backgrounds[10] = "bg_swag";
     $backgrounds[11] = "bg_swirls";
     $backgrounds[12] = "bg_swirls_bw";
