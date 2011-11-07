@@ -131,7 +131,7 @@
     $backgrounds[13] = "bg_tornado";
     $backgrounds[14] = "bg_drake";
     $backgrounds[15] = "bg_lightning";
-    $backgrounds[15] = "bg_vulcan";
+    $backgrounds[16] = "bg_vulcan";
 
     //Default font (verdana).
     $font                  = $fonts["verdana"]["name"];
