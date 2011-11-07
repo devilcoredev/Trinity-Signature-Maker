@@ -106,6 +106,14 @@
                 mysql_free_result($result);
             }
         }
+
+        if($input["class"] != 6) //Solo i Death Knight hanno rune e runic power.
+        {
+            $input["rune"]       = "N/D";
+            $input["runicPower"] = "N/D";
+        }
+        if($input["class"]==1 || $input["class"]==2 || $input["class"]==6) //Warrior, rogue e Death Knight non hanno mana.
+            $input["mana"] = "N/D";
     }
 ?>
 <?php
