@@ -130,6 +130,7 @@
     $backgrounds[11] = "bg_swirls";
     $backgrounds[12] = "bg_swirls_bw";
     $backgrounds[13] = "bg_tornado";
+    $backgrounds[14] = "bg_drake";
 
     //Font di default (verdana).
     $font                  = $fonts["verdana"]["name"];
@@ -227,7 +228,7 @@
     $stats["rune"]["text"]                     = "Rune: %s";
     $stats["runicpower"]["name"]               = "Runic Power";
     $stats["runicpower"]["field_name"]         = "runicPower";
-    $stats["runicpower"]["text"]               = "Runic Power: %s";
+    $stats["runicpower"]["text"]               = "Runic Pwr: %s";
     $stats["strength"]["name"]                 = "Strength";
     $stats["strength"]["field_name"]           = "strength";
     $stats["strength"]["text"]                 = "Strength: %s";
@@ -266,13 +267,13 @@
     $stats["spellcritpct"]["text"]             = "Spell Crit: %s%";
     $stats["attackpower"]["name"]              = "Attack Power";
     $stats["attackpower"]["field_name"]        = "attackPower";
-    $stats["attackpower"]["text"]              = "Attack Power: %s";
+    $stats["attackpower"]["text"]              = "Attack Pwr: %s";
     $stats["rangedattackpower"]["name"]        = "Ranged Attack Power";
     $stats["rangedattackpower"]["field_name"]  = "rangedAttackPower";
-    $stats["rangedattackpower"]["text"]        = "Ranged AP: %s";
+    $stats["rangedattackpower"]["text"]        = "Ranged Attack Pwr: %s";
     $stats["spellpower"]["name"]               = "Spell Power";
     $stats["spellpower"]["field_name"]         = "spellPower";
-    $stats["spellpower"]["text"]               = "Spell Power: %s";
+    $stats["spellpower"]["text"]               = "Spell Pwr: %s";
     $stats["resilience"]["name"]               = "Resilience";
     $stats["resilience"]["field_name"]         = "resilience";
     $stats["resilience"]["text"]               = "Resilience: %s";
