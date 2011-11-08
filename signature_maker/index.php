@@ -226,9 +226,13 @@
                                         $count = 0;
                                         foreach($realm_name as $i => $value)
                                         {
-                                            if($count++) print "                                    ";
-                                            print "<option value=\"$i\">$value</option>\n";
+                                            if($i!='' && $value!='')
+                                            {
+                                                if($count++) print "                                    ";
+                                                print "<option value=\"$i\">$value</option>\n";
+                                            }
                                         }
+                                        if(!$count) print "<option value=\"-\">---</option>\n";
                                     ?>
                                 </input>
                             </center>
