@@ -239,7 +239,7 @@
                                         }
 
                                     //Talents, do it for find the spec name.
-                                    $talents = array(0, 0, 0):
+                                    $talents = array(0, 0, 0);
                                     if($talents_result = mysql_query("SELECT spell FROM character_talent WHERE guid = $pg_GUID AND spec = $spec_id;", $connection))
                                     {
                                         while($talents_row = mysql_fetch_array($talents_result, MYSQL_ASSOC))
