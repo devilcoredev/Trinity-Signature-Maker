@@ -44,9 +44,11 @@
     }
 
     //The function gets all the stats of the PG, searches first in the table character_stats, if it doesn't find anything searches in the table armory_character_stats.
-    function fill_stats(&$input, $intput_conn, $guid)
+    function fill_stats(&$input, $intput_conn)
     {
+        $guid = $input["guid"];
         $find_stats = false;
+
         $query = "SELECT maxhealth, maxpower1 AS mana, maxpower6 AS rune, maxpower7 AS runicPower, strength, agility, stamina, intellect, spirit,
                     armor, blockPct, dodgePct, parryPct, critPct, rangedCritPct, spellCritPct, attackPower, rangedAttackPower, spellPower,
                     resilience FROM character_stats WHERE guid = $guid;";
@@ -221,7 +223,7 @@
                                     $pg_GUID = $row["guid"];
                                     $pg_name = $row["name"];
                                     $spec_id = $row["activespec"];
-                                    fill_stats($row, $connection, $pg_GUID); //Fill stats.
+                                    fill_stats($row, $connection); //Fill stats.
 
                                     //If the PG has a title (searching it in the site database) i insert it in the signature.
                                     $name_string = $row["name"];
