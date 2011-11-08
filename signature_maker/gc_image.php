@@ -6,19 +6,14 @@
     //Restituisce true se l'immagine è png.
     function isPng($fileName)
     {
-        return (strncmp(pathinfo($fileName, PATHINFO_EXTENSION), "png", 3) == 0);
+        return !strncmp(pathinfo($fileName, PATHINFO_EXTENSION), "png", 3);
     }
 
     //Restituisce un numero decimale a partire da un numero esadecimale nella forma "HHHHHH".
     function GetRGBFromHex($input)
     {
         $input = strtolower($input);
-
-        $vet[0] = hexdec(substr($input, 0, 2));
-        $vet[1] = hexdec(substr($input, 2, 2));
-        $vet[2] = hexdec(substr($input, 4, 2));
-
-        return $vet;
+        return array(hexdec(substr($input, 0, 2)), hexdec(substr($input, 2, 2)), hexdec(substr($input, 4, 2)));
     }
 
     //Funzione che restituisce la query string ordinata alfabeticamente.
@@ -60,10 +55,7 @@
             if($row = mysql_fetch_array($result, MYSQL_ASSOC))
             {
                 $find_stats = true;
-                foreach($row as $i => $value)
-                {
-                    $input["$i"] = $value;
-                }
+                $input = array_merge($input, $row);
             }
             mysql_free_result($result);
         }
@@ -247,9 +239,7 @@
                                         }
 
                                     //Talenti, eseguo questa operazione a prescindere per trovare il nome della spec.
-                                    $talents[0] = 0;
-                                    $talents[1] = 0;
-                                    $talents[2] = 0;
+                                    $talents = array(0, 0, 0);
                                     if($talents_result = mysql_query("SELECT spell FROM character_talent WHERE guid = $pg_GUID AND spec = $spec_id;", $connessione))
                                     {
                                         while($talents_row = mysql_fetch_array($talents_result, MYSQL_ASSOC))
@@ -289,9 +279,9 @@
                                             $avatar_img = $row["gender"] . '-' . $row["race"] . '-' . $row["class"] . ".gif";
                                             if($row["class"]==6 || $row["level"]>=80) //Se è livello 80 oppure è un Death Knight seleziono gli avatar livello 80 (i DK hanno solo avatar livello 80).
                                                 $avatar_img = "Level_80_Forum_Avatars/$avatar_img";
-                                            else if($row["level"]>=70 && $row["level"]<80) //Livello compreso tra 70 e 79, seleziono gli avatar livello 70.
+                                            else if($row["level"]>=70) //Livello compreso tra 70 e 79, seleziono gli avatar livello 70.
                                                 $avatar_img = "Level_70_Forum_Avatars/$avatar_img";
-                                            else if($row["level"]>=60 && $row["level"]<70) //Livello compreso tra 60 e 69, seleziono gli avatar livello 60.
+                                            else if($row["level"]>=60) //Livello compreso tra 60 e 69, seleziono gli avatar livello 60.
                                                 $avatar_img = "Level_60_Forum_Avatars/$avatar_img";
                                             else $avatar_img = "Level_1_Forum_Avatars/$avatar_img"; //Livello compreso tra 1 e 59, seleziono gli avatar livello 1.
                                         }else $avatar_img = $classes[$row["class"]]["img"] . ".png"; //L'immagine indica solo la classe del personaggio, faccio riferimento ai config.
@@ -311,6 +301,7 @@
 
                                     //Stats (messe in array per comodità).
                                     $index = 0;
+                                    $show_stats = array();
                                     for($i=1; $i<6; ++$i) //Al massimo 5 stats a scelta.
                                         if(isset($_GET["stat$i"]) && $_GET["stat$i"]!='') //Controllo se esiste il template di quella stat.
                                         {
@@ -397,9 +388,9 @@
                     $bg_blue   = $start_bg_blue;
                     for($i=0; $i<$y; ++$i) //Con un ciclo for coloro l'immagine a strisce di 1 px.
                     {
-                        $bg_red   -= ($i * $prop_bg_red);
-                        $bg_green -= ($i * $prop_bg_green);
-                        $bg_blue  -= ($i * $prop_bg_blue);
+                        $bg_red    -= ($i * $prop_bg_red);
+                        $bg_green  -= ($i * $prop_bg_green);
+                        $bg_blue   -= ($i * $prop_bg_blue);
 
                         $col = imagecolorallocate($im, $bg_red, $bg_green, $bg_blue);
                         imagefilledrectangle($im, 0, $i, $x, $i+1, $col);
