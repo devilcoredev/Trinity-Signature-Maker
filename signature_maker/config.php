@@ -13,7 +13,7 @@
     $server_name = "";
 
     //Dati di connessione ai servers (per aggiungere un nuovo server basta copiare un blocco e cambiare la chiave
-    //con l'acronimo del nuovo server), il campo "$realm_name" sarà visualizzato in firma.
+    //con l'acronimo del nuovo server), il campo "$realm_name" sarÃ  visualizzato in firma.
     //Dati di connessione al database del primo server.
     $realm_name[""]  = "";
     $host[""]        = "";
@@ -52,7 +52,7 @@
     //Messaggio d'errore stampato in caso non venga inserito il nome del pg nell'apposito campo.
     $error_pg = "Inserire un nome valido di un personaggio!";
 
-    //Link generico all'armory, %s rappresenterà il nome del server, %p il nome del personaggio. (ES: http://miosito/character-sheet.xml?r=MioServer&cn=MioPG)
+    //Link generico all'armory, %s rappresenterÃ  il nome del server, %p il nome del personaggio. (ES: http://miosito/character-sheet.xml?r=MioServer&cn=MioPG)
     $armory_template_link = "http://miosito/character-sheet.xml?r=%s&cn=%p";
 
     //Tempo in secondi dopo il quale le firme vengono cancellate automaticamente se non usate.
@@ -72,12 +72,10 @@
     $start_bg_blue   = 0;
 
     //Colore del testo di default (oro).
-    $text_vet_color = array();
-    $text_vet_color[] = 255; //Graduazione rossa.
-    $text_vet_color[] = 215; //Graduazione verde.
-    $text_vet_color[] = 0;   //Graduazione blu.
+    //                    rosso verde blu.
+    $text_vet_color = array(255, 215, 0);
 
-    //Modificando questo valore è possibile modificare l'inizio della sfumatura verso il nero.
+    //Modificando questo valore Ã¨ possibile modificare l'inizio della sfumatura verso il nero.
     $proporzione_sfumatura_y = 2.5;
 
     //Caratteri.
@@ -195,9 +193,9 @@
     $tab_names[11]  = array("Balance", "Feral Combat", "Restoration");
 
     //Vettore contenente le stats da stampare,
-    //"name" sarà visualizzato nel menu a tendina dell'index,
-    //"field_name" sarà il nome del campo da ricercare nel database,
-    //"text" è il testo da stampare in firma con il valore della stat al posto di %s.
+    //"name" sarÃ  visualizzato nel menu a tendina dell'index,
+    //"field_name" sarÃ  il nome del campo da ricercare nel database,
+    //"text" Ã¨ il testo da stampare in firma con il valore della stat al posto di %s.
     $stats = array();
     $stats["maxhealth"]          = array("name" => "Health", "field_name" => "maxhealth", "text" => "Health: %s");
     $stats["mana"]               = array("name" => "Mana", "field_name" => "mana", "text" => "Mana: %s");
@@ -256,7 +254,7 @@
                 if(mysql_select_db($site_database, $conn))
                     if($result = mysql_query("SELECT COUNT(*) AS numero FROM achievement WHERE points <> 0;", $conn))
                     {
-                        if($row = mysql_fetch_array($result, MYSQL_ASSOC)) //Seleziono solo gli achievements ottenibili (cioè quelli che danno punti) e li inserisco nel vettore $achievements.
+                        if($row = mysql_fetch_array($result, MYSQL_ASSOC)) //Seleziono solo gli achievements ottenibili (cioÃ¨ quelli che danno punti) e li inserisco nel vettore $achievements.
                         {
                             $num_ach = $row["numero"];
                             fputs($ach_file, "    \$num_achievements = $num_ach;\r\n\r\n");
@@ -322,7 +320,7 @@
     }
 ?>
 <?php
-    //La funzione restituisce 0 se l'achievement non è valido (ad esempio achievement di first kill oppure Feast of Strenght) oppure i punti dell'achievement se è valido.
+    //La funzione restituisce 0 se l'achievement non Ã¨ valido (ad esempio achievement di first kill oppure Feast of Strenght) oppure i punti dell'achievement se Ã¨ valido.
     function isValidAchievement($achievement_id)
     {
         global $site_host, $site_username, $site_password, $site_database;
