@@ -2,6 +2,13 @@
     //Disable errors reporting.
     error_reporting(0);
 
+    //Global array.
+    $realm_name  = array();
+    $host        = array();
+    $username    = array();
+    $password    = array();
+    $database    = array();
+
     //Name of the server showed in the signature (it is recommended to use an acronym).
     $server_name = "";
 
@@ -65,9 +72,8 @@
     $start_bg_blue   = 0;
 
     //Default text color (gold).
-    $text_vet_color[0] = 255; //Red graduation.
-    $text_vet_color[1] = 215; //Green graduation.
-    $text_vet_color[2] = 0;   //Blue graduation.
+    //                      red green blue.
+    $text_vet_color = array(255, 215, 0);
 
     //Changing this value can change the start of the gradient to black.
     $gradient_proportion_y = 2.5;
@@ -82,6 +88,9 @@
     // - addictional_info: size of the text containing the additional informations (class, race, level, guild, rank, server) in the signature,
     // - x: width of the preview of the font,
     // - y: height of the preview of the font.
+    $fonts = array();
+
+    $fonts["jokerman"] = array();
     $fonts["jokerman"]["text"]              = "Jokerman";
     $fonts["jokerman"]["name"]              = "JOKERMAN.TTF";
     $fonts["jokerman"]["pg_name"]           = 15;
@@ -90,6 +99,7 @@
     $fonts["jokerman"]['x']                 = 215;
     $fonts["jokerman"]['y']                 = 50;
 
+    $fonts["morpheus"] = array();
     $fonts["morpheus"]["text"]              = "Morpheus";
     $fonts["morpheus"]["name"]              = "MORPHEUS_0.TTF";
     $fonts["morpheus"]["pg_name"]           = 16;
@@ -98,6 +108,7 @@
     $fonts["morpheus"]['x']                 = 185;
     $fonts["morpheus"]['y']                 = 55;
 
+    $fonts["verdana"] = array();
     $fonts["verdana"]["text"]              = "Verdana";
     $fonts["verdana"]["name"]              = "verdanab.ttf";
     $fonts["verdana"]["pg_name"]           = 15;
@@ -106,6 +117,7 @@
     $fonts["verdana"]['x']                 = 210;
     $fonts["verdana"]['y']                 = 50;
 
+    $fonts["flashd"] = array();
     $fonts["flashd"]["text"]              = "Flash D";
     $fonts["flashd"]["name"]              = "FlashD.ttf";
     $fonts["flashd"]["pg_name"]           = 20;
@@ -115,23 +127,24 @@
     $fonts["flashd"]['y']                 = 50;
 
     //Signature backgrounds.
-    $backgrounds[0]  = "bg_abstract";
-    $backgrounds[1]  = "bg_blue";
-    $backgrounds[2]  = "bg_blues";
-    $backgrounds[3]  = "bg_chain";
-    $backgrounds[4]  = "bg_dragon";
-    $backgrounds[5]  = "bg_electric";
-    $backgrounds[6]  = "bg_lava";
-    $backgrounds[7]  = "bg_rippedmetal";
-    $backgrounds[8]  = "bg_space";
-    $backgrounds[9]  = "bg_stone";
-    $backgrounds[10] = "bg_swag";
-    $backgrounds[11] = "bg_swirls";
-    $backgrounds[12] = "bg_swirls_bw";
-    $backgrounds[13] = "bg_tornado";
-    $backgrounds[14] = "bg_drake";
-    $backgrounds[15] = "bg_lightning";
-    $backgrounds[16] = "bg_vulcan";
+    $backgrounds = array();
+    $backgrounds[] = "bg_abstract";
+    $backgrounds[] = "bg_blue";
+    $backgrounds[] = "bg_blues";
+    $backgrounds[] = "bg_chain";
+    $backgrounds[] = "bg_dragon";
+    $backgrounds[] = "bg_electric";
+    $backgrounds[] = "bg_lava";
+    $backgrounds[] = "bg_rippedmetal";
+    $backgrounds[] = "bg_space";
+    $backgrounds[] = "bg_stone";
+    $backgrounds[] = "bg_swag";
+    $backgrounds[] = "bg_swirls";
+    $backgrounds[] = "bg_swirls_bw";
+    $backgrounds[] = "bg_tornado";
+    $backgrounds[] = "bg_drake";
+    $backgrounds[] = "bg_lightning";
+    $backgrounds[] = "bg_vulcan";
 
     //Default font (verdana).
     $font                  = $fonts["verdana"]["name"];
@@ -140,6 +153,7 @@
     $dim_addictional_info  = $fonts["verdana"]["addictional_info"];
 
     //Vector containing the races.
+    $races = array();
     $races[1]   = "Human";
     $races[2]   = "Orc";
     $races[3]   = "Dwarf";
@@ -152,144 +166,60 @@
     $races[11]  = "Draenei";
 
     //Vector containing the classes and their names.
-    $classes[1]["name"]   = "Warrior";
-    $classes[1]["img"]    = "180px-Warrior_crest";
-    $classes[2]["name"]   = "Paladin";
-    $classes[2]["img"]    = "180px-Paladin_crest";
-    $classes[3]["name"]   = "Hunter";
-    $classes[3]["img"]    = "180px-Hunter_crest";
-    $classes[4]["name"]   = "Rogue";
-    $classes[4]["img"]    = "180px-Rogue_crest";
-    $classes[5]["name"]   = "Priest";
-    $classes[5]["img"]    = "180px-Priest_crest";
-    $classes[6]["name"]   = "Death Knight";
-    $classes[6]["img"]    = "180px-Death_knight_crest";
-    $classes[7]["name"]   = "Shaman";
-    $classes[7]["img"]    = "180px-Shaman_crest";
-    $classes[8]["name"]   = "Mage";
-    $classes[8]["img"]    = "180px-Mage_crest";
-    $classes[9]["name"]   = "Warlock";
-    $classes[9]["img"]    = "180px-Warlock_crest";
-    $classes[11]["name"]  = "Druid";
-    $classes[11]["img"]   = "180px-Druid_crest";
+    $classes = array();
+    $classes[1]   = array("name" => "Warrior", "img" => "180px-Warrior_crest");
+    $classes[2]   = array("name" => "Paladin", "img" => "180px-Paladin_crest");
+    $classes[3]   = array("name" => "Hunter", "img" => "180px-Hunter_crest");
+    $classes[4]   = array("name" => "Rogue", "img" => "180px-Rogue_crest");
+    $classes[5]   = array("name" => "Priest", "img" => "180px-Priest_crest");
+    $classes[6]   = array("name" => "Death Knight", "img" => "180px-Death_knight_crest");
+    $classes[7]   = array("name" => "Shaman", "img" => "180px-Shaman_crest");
+    $classes[8]   = array("name" => "Mage", "img" => "180px-Mage_crest");
+    $classes[9]   = array("name" => "Warlock", "img" => "180px-Warlock_crest");
+    $classes[11]  = array("name" => "Druid", "img" => "180px-Druid_crest");
 
     //Tab's names.
-    $tab_names[1][0] = "Arms";
-    $tab_names[1][1] = "Fury";
-    $tab_names[1][2] = "Protection";
-
-    $tab_names[2][0] = "Holy";
-    $tab_names[2][1] = "Protection";
-    $tab_names[2][2] = "Retribution";
-
-    $tab_names[3][0] = "Beast Mastery";
-    $tab_names[3][1] = "Marksmanship";
-    $tab_names[3][2] = "Survival";
-
-    $tab_names[4][0] = "Assassination";
-    $tab_names[4][1] = "Combat";
-    $tab_names[4][2] = "Subtlety";
-
-    $tab_names[5][0] = "Discipline";
-    $tab_names[5][1] = "Holy";
-    $tab_names[5][2] = "Shadow";
-
-    $tab_names[6][0] = "Blood";
-    $tab_names[6][1] = "Frost";
-    $tab_names[6][2] = "Unholy";
-
-    $tab_names[7][0] = "Elemental";
-    $tab_names[7][1] = "Enhancement";
-    $tab_names[7][2] = "Restoration";
-
-    $tab_names[8][0] = "Arcane";
-    $tab_names[8][1] = "Fire";
-    $tab_names[8][2] = "Frost";
-
-    $tab_names[9][0] = "Affliction";
-    $tab_names[9][1] = "Demonology";
-    $tab_names[9][2] = "Destruction";
-
-    $tab_names[11][0] = "Balance";
-    $tab_names[11][1] = "Feral Combat";
-    $tab_names[11][2] = "Restoration";
+    $tab_names = array();
+    $tab_names[1]   = array("Arms", "Fury", "Protection");
+    $tab_names[2]   = array("Holy", "Protection", "Retribution");
+    $tab_names[3]   = array("Beast Mastery", "Marksmanship", "Survival");
+    $tab_names[4]   = array("Assassination", "Combat", "Subtlety");
+    $tab_names[5]   = array("Discipline", "Holy", "Shadow");
+    $tab_names[6]   = array("Blood", "Frost", "Unholy");
+    $tab_names[7]   = array("Elemental", "Enhancement", "Restoration");
+    $tab_names[8]   = array("Arcane", "Fire", "Frost");
+    $tab_names[9]   = array("Affliction", "Demonology", "Destruction");
+    $tab_names[11]  = array("Balance", "Feral Combat", "Restoration");
 
     //Vector containing the stats to print,
     //"name" will be displayed in the index's drop-down menu,
     //"field_name" will be the field name to search in the database,
     //"text" is the text to be printed in the signature with the value of the stat instead of %s.
-    $stats["maxhealth"]["name"]                = "Health";
-    $stats["maxhealth"]["field_name"]          = "maxhealth";
-    $stats["maxhealth"]["text"]                = "Health: %s";
-    $stats["mana"]["name"]                     = "Mana";
-    $stats["mana"]["field_name"]               = "mana";
-    $stats["mana"]["text"]                     = "Mana: %s";
-    $stats["rune"]["name"]                     = "Rune";
-    $stats["rune"]["field_name"]               = "rune";
-    $stats["rune"]["text"]                     = "Rune: %s";
-    $stats["runicpower"]["name"]               = "Runic Power";
-    $stats["runicpower"]["field_name"]         = "runicPower";
-    $stats["runicpower"]["text"]               = "Runic Pwr: %s";
-    $stats["strength"]["name"]                 = "Strength";
-    $stats["strength"]["field_name"]           = "strength";
-    $stats["strength"]["text"]                 = "Strength: %s";
-    $stats["agility"]["name"]                  = "Agility";
-    $stats["agility"]["field_name"]            = "agility";
-    $stats["agility"]["text"]                  = "Agility: %s";
-    $stats["stamina"]["name"]                  = "Stamina";
-    $stats["stamina"]["field_name"]            = "stamina";
-    $stats["stamina"]["text"]                  = "Stamina: %s";
-    $stats["intellect"]["name"]                = "Intellect";
-    $stats["intellect"]["field_name"]          = "intellect";
-    $stats["intellect"]["text"]                = "Intellect: %s";
-    $stats["spirit"]["name"]                   = "Spirit";
-    $stats["spirit"]["field_name"]             = "spirit";
-    $stats["spirit"]["text"]                   = "Spirit: %s";
-    $stats["armor"]["name"]                    = "Armor";
-    $stats["armor"]["field_name"]              = "armor";
-    $stats["armor"]["text"]                    = "Armor: %s";
-    $stats["blockpct"]["name"]                 = "Block Pct";
-    $stats["blockpct"]["field_name"]           = "blockPct";
-    $stats["blockpct"]["text"]                 = "Block: %s%";
-    $stats["dodgepct"]["name"]                 = "Dodge Pct";
-    $stats["dodgepct"]["field_name"]           = "dodgePct";
-    $stats["dodgepct"]["text"]                 = "Dodge: %s%";
-    $stats["parrypct"]["name"]                 = "Parry Pct";
-    $stats["parrypct"]["field_name"]           = "parryPct";
-    $stats["parrypct"]["text"]                 = "Parry: %s%";
-    $stats["critpct"]["name"]                  = "Crit Pct";
-    $stats["critpct"]["field_name"]            = "critPct";
-    $stats["critpct"]["text"]                  = "Crit Chance: %s%";
-    $stats["rangedcritpct"]["name"]            = "Ranged Crit Pct";
-    $stats["rangedcritpct"]["field_name"]      = "rangedCritPct";
-    $stats["rangedcritpct"]["text"]            = "Ranged Crit: %s%";
-    $stats["spellcritpct"]["name"]             = "Spell Crit Pct";
-    $stats["spellcritpct"]["field_name"]       = "spellCritPct";
-    $stats["spellcritpct"]["text"]             = "Spell Crit: %s%";
-    $stats["attackpower"]["name"]              = "Attack Power";
-    $stats["attackpower"]["field_name"]        = "attackPower";
-    $stats["attackpower"]["text"]              = "Attack Pwr: %s";
-    $stats["rangedattackpower"]["name"]        = "Ranged Attack Power";
-    $stats["rangedattackpower"]["field_name"]  = "rangedAttackPower";
-    $stats["rangedattackpower"]["text"]        = "Ranged Attack Pwr: %s";
-    $stats["spellpower"]["name"]               = "Spell Power";
-    $stats["spellpower"]["field_name"]         = "spellPower";
-    $stats["spellpower"]["text"]               = "Spell Pwr: %s";
-    $stats["resilience"]["name"]               = "Resilience";
-    $stats["resilience"]["field_name"]         = "resilience";
-    $stats["resilience"]["text"]               = "Resilience: %s";
-    $stats["talents"]["name"]                  = "Talents";
-    $stats["talents"]["field_name"]            = "talents";
-    $stats["talents"]["text"]                  = "Talents: (%s)";
-    $stats["arenapoints"]["name"]              = "Arena Points";
-    $stats["arenapoints"]["field_name"]        = "arenaPoints";
-    $stats["arenapoints"]["text"]              = "Arena Pts: %s";
-    $stats["honorpoints"]["name"]              = "Honor Points";
-    $stats["honorpoints"]["field_name"]        = "totalHonorPoints";
-    $stats["honorpoints"]["text"]              = "Honor Pts: %s";
-    $stats["pvpkills"]["name"]                 = "PvP Kills";
-    $stats["pvpkills"]["field_name"]           = "totalKills";
-    $stats["pvpkills"]["text"]                 = "PvP Kills: %s";
+    $stats = array();
+    $stats["maxhealth"]          = array("name" => "Health", "field_name" => "maxhealth", "text" => "Health: %s");
+    $stats["mana"]               = array("name" => "Mana", "field_name" => "mana", "text" => "Mana: %s");
+    $stats["rune"]               = array("name" => "Rune", "field_name" => "rune", "text" => "Rune: %s");
+    $stats["runicpower"]         = array("name" => "Runic Power", "field_name" => "runicPower", "text" => "Runic Pwr: %s");
+    $stats["strength"]           = array("name" => "Strength", "field_name" => "strength", "text" => "Strength: %s");
+    $stats["agility"]            = array("name" => "Agility", "field_name" => "agility", "text" => "Agility: %s");
+    $stats["stamina"]            = array("name" => "Stamina", "field_name" => "stamina", "text" => "Stamina: %s");
+    $stats["intellect"]          = array("name" => "Intellect", "field_name" => "intellect", "text" => "Intellect: %s");
+    $stats["spirit"]             = array("name" => "Spirit", "field_name" => "spirit", "text" => "Spirit: %s");
+    $stats["armor"]              = array("name" => "Armor", "field_name" => "armor", "text" => "Armor: %s");
+    $stats["blockpct"]           = array("name" => "Block Pct", "field_name" => "blockPct", "text" => "Block: %s%");
+    $stats["dodgepct"]           = array("name" => "Dodge Pct", "field_name" => "dodgePct", "text" => "Dodge: %s%");
+    $stats["parrypct"]           = array("name" => "Parry Pct", "field_name" => "parryPct", "text" => "Parry: %s%");
+    $stats["critpct"]            = array("name" => "Crit Pct", "field_name" => "critPct", "text" => "Crit Chance: %s%");
+    $stats["rangedcritpct"]      = array("name" => "Ranged Crit Pct", "field_name" => "rangedCritPct", "text" => "Ranged Crit: %s%");
+    $stats["spellcritpct"]       = array("name" => "Spell Crit Pct", "field_name" => "spellCritPct", "text" => "Spell Crit: %s%");
+    $stats["attackpower"]        = array("name" => "Attack Power", "field_name" => "attackPower", "text" => "Attack Pwr: %s");
+    $stats["rangedattackpower"]  = array("name" => "Ranged Attack Power", "field_name" => "rangedAttackPower", "text" => "Ranged Attack Pwr: %s");
+    $stats["spellpower"]         = array("name" => "Spell Power", "field_name" => "spellPower", "text" => "Spell Pwr: %s");
+    $stats["resilience"]         = array("name" => "Resilience", "field_name" => "resilience", "text" => "Resilience: %s");
+    $stats["talents"]            = array("name" => "Talents", "field_name" => "talents", "text" => "Talents: (%s)");
+    $stats["arenapoints"]        = array("name" => "Arena Points", "field_name" => "arenaPoints", "text" => "Arena Pts: %s");
+    $stats["honorpoints"]        = array("name" => "Honor Points", "field_name" => "totalHonorPoints", "text" => "Honor Pts: %s");
+    $stats["pvpkills"]           = array("name" => "PvP Kills", "field_name" => "totalKills", "text" => "PvP Kills: %s");
 
     //Once every 24 hours are re-written information on achievements in the configuration file so you must not always read them from db.
     $to_fill_achievements = false;
@@ -336,12 +266,8 @@
             //If there are achievements i put the last 2 entries for stat's configuring.
             if($num_ach)
             {
-                fputs($ach_file, "    \$stats[\"achievements\"][\"name\"]             = \"Achievements\";\r\n");
-                fputs($ach_file, "    \$stats[\"achievements\"][\"field_name\"]       = \"achievements\";\r\n");
-                fputs($ach_file, "    \$stats[\"achievements\"][\"text\"]             = \"Ach.: %s/\$num_achievements\"; //Obtained achievements / Obtanible achievements.\r\n");
-                fputs($ach_file, "    \$stats[\"achievementpoints\"][\"name\"]        = \"Achievement Points\";\r\n");
-                fputs($ach_file, "    \$stats[\"achievementpoints\"][\"field_name\"]  = \"achievementPoints\";\r\n");
-                fputs($ach_file, "    \$stats[\"achievementpoints\"][\"text\"]        = \"Ach. Pts: %s\";\r\n");
+                fputs($ach_file, "    \$stats[\"achievements\"]       = array(\"name\" => \"Achievements\", \"field_name\" => \"achievements\", \"text\" => \"Ach.: %s/\$num_achievements\"); //Obtained achievements / Obtanible achievements.\r\n");
+                fputs($ach_file, "    \$stats[\"achievementpoints\"]  = array(\"name\" => \"Achievement Points\", \"field_name\" => \"achievementPoints\", \"text\" => \"Ach. Pts: %s\");\r\n");
             }
 
             fputs($ach_file, "?>");
