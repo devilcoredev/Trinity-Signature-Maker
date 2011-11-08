@@ -108,6 +108,29 @@
         }
         if($input["class"]==1 || $input["class"]==2 || $input["class"]==6) //Warrior, rogue e Death Knight non hanno mana.
             $input["mana"] = "N/D";
+
+        //Personal e team rating 2v2, 3v3 e 5v5.
+        $team_types = array(2, 3, 5);
+        foreach($team_types as $i => $value)
+        {
+            $input["teamName$value"]        = "N/D";
+            $input["teamRating$value"]      = "N/D";
+            $input["personalRating$value"]  = "N/D";
+
+            $query = "SELECT arena_team.name, arena_team.rating, arena_team_member.personalRating FROM arena_team,
+                        arena_team_member WHERE arena_team.arenaTeamId = arena_team_member.arenaTeamId AND
+                        arena_team_member.guid = $guid AND arena_team.type = $value;";
+            if($result = mysql_query($query, $intput_conn))
+            {
+                if($row = mysql_fetch_array($result, MYSQL_ASSOC))
+                {
+                    $input["teamName$value"]        = $row["name"];
+                    $input["teamRating$value"]      = $row["rating"];
+                    $input["personalRating$value"]  = $row["personalRating"];
+                }
+                mysql_free_result($result);
+            }
+        }
     }
 ?>
 <?php

@@ -221,6 +221,12 @@
     $stats["arenapoints"]        = array("name" => "Punti arena", "field_name" => "arenaPoints", "text" => "Pt arena: %s");
     $stats["honorpoints"]        = array("name" => "Punti honor", "field_name" => "totalHonorPoints", "text" => "Pt honor: %s");
     $stats["pvpkills"]           = array("name" => "Kill PvP", "field_name" => "totalKills", "text" => "Kill PvP: %s");
+    $stats["teamrating2"]        = array("name" => "Team Rating 2v2", "field_name" => "teamRating2", "text" => "Team Rating 2v2: %s");
+    $stats["teamrating3"]        = array("name" => "Team Rating 3v3", "field_name" => "teamRating3", "text" => "Team Rating 3v3: %s");
+    $stats["teamrating5"]        = array("name" => "Team Rating 5v5", "field_name" => "teamRating5", "text" => "Team Rating 5v5: %s");
+    $stats["personalrating2"]    = array("name" => "Personal Rating 2v2", "field_name" => "personalRating2", "text" => "Personal Rating 2v2: %s");
+    $stats["personalrating3"]    = array("name" => "Personal Rating 3v3", "field_name" => "personalRating3", "text" => "Personal Rating 3v3: %s");
+    $stats["personalrating5"]    = array("name" => "Personal Rating 5v5", "field_name" => "personalRating5", "text" => "Personal Rating 5v5: %s");
 
     //Una volta ogni 24 ore vengono riscritte le informazioni sugli achievements sul file di configurazione in modo da non leggerli sempre da db.
     $to_fill_achievements = false;
