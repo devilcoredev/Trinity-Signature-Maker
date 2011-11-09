@@ -4,10 +4,10 @@
     //Funzione che stampa un menu a tendina contente le stats supportate.
     function printMenu($input)
     {
-        print "<option value=\"-\" selected>---</option>\n";
+        print "<option value=\"-\" selected>---</option>\r\n";
         foreach($input as $i => $value)
         {
-            print "                                    <option value=\"$i\">" . $value["name"] . "</option>\n";
+            print "                                    <option value=\"$i\">" . $value["name"] . "</option>\r\n";
         }
     }
 ?>
@@ -129,19 +129,19 @@
                 <?php
                     if($image_resize_enabled)
                     {
-                        print "var x = document.getElementsByName('x')[0].value;\n";
-                        print "                if(x!='' && x!=\"undefined\")\n";
-                        print "                {\n";
-                        print "                    indirizzo += (count++ ? '&' : '?');\n";
-                        print "                    indirizzo += \"x=\" + x;\n";
-                        print "                }\n\n";
+                        print "var x = document.getElementsByName('x')[0].value;\r\n";
+                        print "                if(x!='' && x!=\"undefined\")\r\n";
+                        print "                {\r\n";
+                        print "                    indirizzo += (count++ ? '&' : '?');\r\n";
+                        print "                    indirizzo += \"x=\" + x;\r\n";
+                        print "                }\r\n\r\n";
 
-                        print "                var y = document.getElementsByName('y')[0].value;\n";
-                        print "                if(y!='' && y!=\"undefined\")\n";
-                        print "                {\n";
-                        print "                    indirizzo += (count++ ? '&' : '?');\n";
-                        print "                    indirizzo += \"y=\" + y;\n";
-                        print "                }\n";
+                        print "                var y = document.getElementsByName('y')[0].value;\r\n";
+                        print "                if(y!='' && y!=\"undefined\")\r\n";
+                        print "                {\r\n";
+                        print "                    indirizzo += (count++ ? '&' : '?');\r\n";
+                        print "                    indirizzo += \"y=\" + y;\r\n";
+                        print "                }\r\n";
                     }
                 ?>
 
@@ -227,7 +227,7 @@
                 <table width="<?php print $x; ?>" cellSpacing="0" border="1">
                     <tr>
                         <td width="50%">Seleziona il server:</td>
-                        <td width="50%">
+                        <td width="50%" align="middle">
                             <center>
                                 <select name="server">
                                     <?php
@@ -248,7 +248,7 @@
                     </tr>
                     <tr>
                         <td>Inserisci il nome del personaggio:</td>
-                        <td><center><input type="text" name="nome_pg"></center></td>
+                        <td align="middle"><center><input type="text" name="nome_pg"></center></td>
                     </tr>
                     <tr>
                         <td>Seleziona uno sfondo: (seleziona un <a href="javascript:popUp('colori/tabella.htm', 350, 540)">colore</a> oppure una <a href="javascript:popUp('images/', 400, 830)">immagine</a> e copia il codice nella casella di testo).</td>
@@ -288,29 +288,29 @@
                     </tr>
                     <tr>
                         <td>Seleziona il <a href="javascript:popUp('colori/tabella.htm', 350, 540)">colore</a> del testo:</td>
-                        <td><center><input type="text" name="colore_testo"></center></td>
+                        <td align="middle"><center><input type="text" name="colore_testo"></center></td>
                     </tr>
                     <tr>
                         <td>Seleziona il <a href="javascript:popUp('fonts/', 300, 420)">carattere</a> del testo:</td>
-                        <td><center><input type="text" name="text_font"></center></td>
+                        <td align="middle"><center><input type="text" name="text_font"></center></td>
                     </tr>
                     <?php
                         if($image_resize_enabled)
                         {
-                            print "<tr>\n";
-                            print "                        <td>Inserisci le dimensioni dell'immagine:</td>\n";
-                            print "                        <td>\n";
-                            print "                            <center>\n";
-                            print "                                Dimensione x: <input type=\"text\" name=\"x\" size=3><br>\n";
-                            print "                                Dimensione y: <input type=\"text\" name=\"y\" size=3>\n";
-                            print "                            </center>\n";
-                            print "                        </td>\n";
-                            print "                    </tr>\n";
+                            print "<tr>\r\n";
+                            print "                        <td>Inserisci le dimensioni dell'immagine:</td>\r\n";
+                            print "                        <td align=\"middle\">\r\n";
+                            print "                            <center>\r\n";
+                            print "                                Dimensione x: <input type=\"text\" name=\"x\" size=3><br>\r\n";
+                            print "                                Dimensione y: <input type=\"text\" name=\"y\" size=3>\r\n";
+                            print "                            </center>\r\n";
+                            print "                        </td>\r\n";
+                            print "                    </tr>\r\n";
                         }
                     ?>
                     <tr>
                         <td>Seleziona la statistica per il primo campo:</td>
-                        <td>
+                        <td align="middle">
                             <center>
                                 <select name="stat1">
                                     <?php printMenu($stats); ?>
@@ -320,7 +320,7 @@
                     </tr>
                     <tr>
                         <td>Seleziona la statistica per il secondo campo:</td>
-                        <td>
+                        <td align="middle">
                             <center>
                                 <select name="stat2">
                                     <?php printMenu($stats); ?>
@@ -330,7 +330,7 @@
                     </tr>
                     <tr>
                         <td>Seleziona la statistica per il terzo campo:</td>
-                        <td>
+                        <td align="middle">
                             <center>
                                 <select name="stat3">
                                     <?php printMenu($stats); ?>
@@ -340,7 +340,7 @@
                     </tr>
                     <tr>
                         <td>Seleziona la statistica per il quarto campo:</td>
-                        <td>
+                        <td align="middle">
                             <center>
                                 <select name="stat4">
                                     <?php printMenu($stats); ?>
@@ -350,7 +350,7 @@
                     </tr>
                     <tr>
                         <td>Seleziona la statistica per il quinto campo:</td>
-                        <td>
+                        <td align="middle">
                             <center>
                                 <select name="stat5">
                                     <?php printMenu($stats); ?>
@@ -359,7 +359,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan=2><center><input type="button" value="Crea immagine!" onClick="return show_message();"></center></td>
+                        <td colspan="2"><center><input type="button" value="Crea immagine!" onClick="return show_message();"></center></td>
                     </tr>
                 </table>
             </form>

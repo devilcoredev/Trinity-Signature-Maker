@@ -18,25 +18,26 @@
     <body>
         <center>
             <h3>Seleziona un font</h3>
-            <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" bordercolor="111111">
+            <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" borderColor="111111">
                 <?php
                     include("/../config.php");
                     $count = 0;
                     foreach($fonts as $i => $value)
                     {
                         if($count++) print "                ";
-                        print "<tr>\n";
-                        print "                    <td>\n";
-                        print "                        <center><a href=\"#ancora_testo\" onClick=\"copiaTesto('$i');\"><img width=250 src=\"stampa_carattere.php?id_font=$i\" onContextMenu=\"return false;\"></a></center>\n";
-                        print "                    </td>\n";
-                        print "                </tr>\n";
+                        print "<tr>\r\n";
+                        print "                    <td>\r\n";
+                        print "                        <center><a href=\"#ancora_testo\" onClick=\"copiaTesto('$i');\"><img width=250 src=\"stampa_carattere.php?id_font=$i\" onContextMenu=\"return false;\"></a></center>\r\n";
+                        print "                    </td>\r\n";
+                        print "                </tr>\r\n";
                     }
                 ?>
                 <tr>
                     <td>
                         <center>
                             <a name="ancora_testo">
-                            <input type="text" name="testo_font" size="15" style="text-align: center" onClick="selezionaTesto();"><br>(usa CTRL+C per copiare il font)
+                            <input type="text" name="testo_font" size="15" style="text-align: center" onClick="selezionaTesto();"><br>
+                            (usa CTRL+C per copiare il font)
                         </center>
                     </td>
                 </tr>
