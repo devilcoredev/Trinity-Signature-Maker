@@ -11,7 +11,6 @@
             function copyText(input)
             {
                 document.getElementsByName("font_text")[0].value = input;
-                open_field = input;
                 selectText();
             }
         </script>
@@ -28,7 +27,7 @@
                         if($count++) print "                ";
                         print "<tr>\n";
                         print "                    <td>\n";
-                        print "                        <center><a href=\"#text_link\" onClick=\"copyText('$i');\"><img width=250 src=\"print_font.php?id_font=$i\"></a></center>\n";
+                        print "                        <center><a href=\"#text_link\" onClick=\"copyText('$i');\"><img width=250 src=\"print_font.php?id_font=$i\" onContextMenu=\"return false;\"></a></center>\n";
                         print "                    </td>\n";
                         print "                </tr>\n";
                     }

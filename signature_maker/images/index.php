@@ -26,7 +26,7 @@
                         if($i) print "                "; //Indexes are number, so you don't need to use another counter.
                         print "<tr>\n";
                         print "                    <td>\n";
-                        print "                        <center><a href=\"#text_link\" onClick=\"select('$value');\"><img width=\"350\" src=\"bg/$value.png\"></a></center>\n";
+                        print "                        <center><a href=\"#text_link\" onClick=\"select('$value');\"><img width=\"350\" src=\"bg/$value.png\" onContextMenu=\"return false;\"></a></center>\n";
                         print "                    </td>\n";
                         print "                </tr>\n";
                     }

@@ -12,7 +12,6 @@
     //Returns a decimal number from a hex number in the form "HHHHHH".
     function GetRGBFromHex($input)
     {
-        $input = strtolower($input);
         return array(hexdec(substr($input, 0, 2)), hexdec(substr($input, 2, 2)), hexdec(substr($input, 4, 2)));
     }
 
@@ -147,6 +146,8 @@
     $to_make_image   = true;      //Indicates if the image should be built.
     $pg_GUID         = 0;         //Unique ID of the character.
     $spec_name       = '';        //Spec's name.
+    $effect          = '';        //Background effect.
+    $img_name        = '';        //Background image.
 ?>
 <?php
     //If the same image already exists i don't rebuild it.
@@ -182,25 +183,33 @@
             //The user has selected a different background than the default (red graduation).
             if(isset($_GET["background"]) && $_GET["background"]!='')
             {
+                $background = strtolower($_GET["background"]);
                 //The background is an image, (it starts with bg_), i construct a link to the image.
-                if(!strncmp($_GET["background"], "bg_", 3))
+                if(!strncmp($background, "bg_", 3))
                 {
                     //All wallpapers are used for signature are png, they start with bg_ and are contained in the directory "images/bg".
-                    if(in_array($_GET["background"], $backgrounds))
+                    if(in_array($background, $backgrounds))
                     {
                         $to_img = true;
-                        $img_name = $_GET["background"];
+                        $img_name = $background;
                     }
                 }
                 else //The background is a color, search the 3 graduations in hexadecimal code.
                 {
-                    $bg_vet = GetRGBFromHex($_GET["background"]);
+                    $bg_vet = GetRGBFromHex($background);
 
                     $to_img          = false;
                     $start_bg_red    = $bg_vet[0];
                     $start_bg_green  = $bg_vet[1];
                     $start_bg_blue   = $bg_vet[2];
                 }
+            }
+
+            //Background effect.
+            if(isset($_GET["effects"]) && $_GET["effects"]!='')
+            {
+                $effect = strtolower($_GET["effects"]);
+                if(!in_array($effect, $effects)) $effect = '';
             }
 
             //The user has selected a text color different from the default, i extract it.
@@ -210,7 +219,7 @@
             //The user selects a font for the text different from the default, i extract it.
             if(isset($_GET["text_font"]) && $_GET["text_font"]!='')
             {
-                $name_font = $_GET["text_font"];
+                $name_font = strtolower($_GET["text_font"]);
                 if(isset($fonts["$name_font"]["name"]))
                 {
                     $font                  = $fonts["$name_font"]["name"];
@@ -278,8 +287,7 @@
                                     $row["talents"] = $talents[0] . '/' . $talents[1] . '/' . $talents[2]; //Talents in the form (x/x/x).
 
                                     //Spec name.
-                                    $max_talent = max($talents[0], $talents[1], $talents[2]);
-                                    if($max_talent)
+                                    if($max_talent = max($talents[0], $talents[1], $talents[2]))
                                     {
                                         $i_t = array_search($max_talent, $talents);
                                         $spec_name .= ' ' . $tab_names[$row["class"]][$i_t];
@@ -430,6 +438,20 @@
                     imagedestroy($src_bg);
                 }
             //CENTRAL COLOUR - END.
+
+            //BACKGROUND EFFECT - START.
+                if($effect != '')
+                {
+                    list($width_effect, $height_effect) = getimagesize("images/effects/$effect.png");
+                    for($i=0; $i<ceil($y/$height_effect); ++$i)
+                        for($j=0; $j<ceil($x/$width_effect); ++$j)
+                        {
+                            $src_effect = imagecreatefrompng("images/effects/$effect.png");
+                            imagecopyresampled($im, $src_effect, $j*$width_effect, $i*$height_effect, 0, 0, $width_effect, $height_effect, $width_effect, $height_effect);
+                            imagedestroy($src_effect);
+                        }
+                }
+            //BACKGROUND EFFECT - END.
 
             //BORDER COLOUR - START.
                 imagerectangle($im, 1, 1, $x-2, $y-2, $gold); //Draw a gold rectangle to 1 px from the border.
