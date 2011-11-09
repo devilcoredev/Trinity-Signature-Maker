@@ -305,7 +305,7 @@
                                     else
                                     {
                                         //The image shows the race and the class of the character.
-                                        if(isset($_GET["type_image"]) && $_GET["type_image"]=="race_class")
+                                        if(isset($_GET["type_image"]) && strtolower($_GET["type_image"])=="race_class")
                                         {
                                             $is_gif = true;
                                             //The images are in the form "gender-race-class.gif".
@@ -330,7 +330,12 @@
                                             $string_guild = '"' . $guild_row["rname"] . "\" of <" . $guild_row["name"] . "> "; //"Rank" of <Nome Guild>
                                         mysql_free_result($guild_result);
                                     }
-                                    $string_guild .= "[$server_name " . $realm_name["$server_id"] . ']'; //[Server_Name Realm_Name]
+                                    if($server_name!='' || $server_id!='') //[Server_Name Realm_Name]
+                                    {
+                                        $string_guild .= "[$server_name";
+                                        if($server_name!='' && $server_id!='') $string_guild .= ' ';
+                                        $string_guild .= $realm_name["$server_id"] . ']';
+                                    }
 
                                     //Stats (in an array).
                                     $index = 0;

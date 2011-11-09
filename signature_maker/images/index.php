@@ -18,24 +18,25 @@
     <body>
         <center>
             <h3>Select an image</h3>
-            <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" bordercolor="111111">
+            <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" borderColor="111111">
                 <?php
                     include("/../config.php");
                     foreach($backgrounds as $i => $value)
                     {
                         if($i) print "                "; //Indexes are number, so you don't need to use another counter.
-                        print "<tr>\n";
-                        print "                    <td>\n";
-                        print "                        <center><a href=\"#text_link\" onClick=\"select('$value');\"><img width=\"350\" src=\"bg/$value.png\" onContextMenu=\"return false;\"></a></center>\n";
-                        print "                    </td>\n";
-                        print "                </tr>\n";
+                        print "<tr>\r\n";
+                        print "                    <td>\r\n";
+                        print "                        <center><a href=\"#text_link\" onClick=\"select('$value');\"><img width=\"350\" src=\"bg/$value.png\" onContextMenu=\"return false;\"></a></center>\r\n";
+                        print "                    </td>\r\n";
+                        print "                </tr>\r\n";
                     }
                 ?>
                 <tr>
                     <td>
                         <center>
                             <a name="text_link">
-                            <input type="text" name="text_image" size="15" style="text-align: center" onClick="selectText();"><br>(use CTRL+C to copy the image)
+                            <input type="text" name="text_image" size="15" style="text-align: center" onClick="selectText();"><br>
+                            (use CTRL+C to copy the image)
                         </center>
                     </td>
                 </tr>

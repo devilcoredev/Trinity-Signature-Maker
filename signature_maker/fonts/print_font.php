@@ -2,7 +2,7 @@
     include("/../config.php");
     if(GDVersion() && isset($_GET["id_font"]) && $_GET["id_font"]!='')
     {
-        $id_font = $_GET["id_font"];
+        $id_font = strtolower($_GET["id_font"]);
         if(isset($fonts["$id_font"]["text"]) && $fonts["$id_font"]["text"]!='')
         {
             header("Content-type: image/png");

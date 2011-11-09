@@ -18,25 +18,26 @@
     <body>
         <center>
             <h3>Select a font</h3>
-            <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" bordercolor="111111">
+            <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" borderColor="111111">
                 <?php
                     include("/../config.php");
                     $count = 0;
                     foreach($fonts as $i => $value)
                     {
                         if($count++) print "                ";
-                        print "<tr>\n";
-                        print "                    <td>\n";
-                        print "                        <center><a href=\"#text_link\" onClick=\"copyText('$i');\"><img width=250 src=\"print_font.php?id_font=$i\" onContextMenu=\"return false;\"></a></center>\n";
-                        print "                    </td>\n";
-                        print "                </tr>\n";
+                        print "<tr>\r\n";
+                        print "                    <td>\r\n";
+                        print "                        <center><a href=\"#text_link\" onClick=\"copyText('$i');\"><img width=250 src=\"print_font.php?id_font=$i\" onContextMenu=\"return false;\"></a></center>\r\n";
+                        print "                    </td>\r\n";
+                        print "                </tr>\r\n";
                     }
                 ?>
                 <tr>
                     <td>
                         <center>
                             <a name="text_link">
-                            <input type="text" name="font_text" size="15" style="text-align: center" onClick="selectText();"><br>(use CTRL+C to copy the font)
+                            <input type="text" name="font_text" size="15" style="text-align: center" onClick="selectText();"><br>
+                            (use CTRL+C to copy the font)
                         </center>
                     </td>
                 </tr>
