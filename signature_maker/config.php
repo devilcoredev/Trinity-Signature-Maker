@@ -147,6 +147,12 @@
     $backgrounds[] = "bg_lightning";
     $backgrounds[] = "bg_vulcan";
 
+    //Effetti visivi.
+    $effects = array();
+    $effects[] = "grid_left_to_right";
+    $effects[] = "grid_right_to_left";
+    $effects[] = "grid_pointer";
+
     //Font di default (verdana).
     $font                  = $fonts["verdana"]["name"];
     $dim_nome_pg           = $fonts["verdana"]["nome_pg"];

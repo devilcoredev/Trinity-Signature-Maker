@@ -26,7 +26,7 @@
                         if($i) print "                "; //Gli indici sono numeri, quindi non è necessario usare un altro contatore.
                         print "<tr>\n";
                         print "                    <td>\n";
-                        print "                        <center><a href=\"#ancora_testo\" onClick=\"select('$value');\"><img width=\"350\" src=\"bg/$value.png\"></a></center>\n";
+                        print "                        <center><a href=\"#ancora_testo\" onClick=\"select('$value');\"><img width=\"350\" src=\"bg/$value.png\" onContextMenu=\"return false;\"></a></center>\n";
                         print "                    </td>\n";
                         print "                </tr>\n";
                     }

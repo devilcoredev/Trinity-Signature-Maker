@@ -88,6 +88,14 @@
                     indirizzo += "sfondo=" + sfondo;
                 }
 
+                var effects = document.getElementsByName("effects");
+                for(var i=0; i<effects.length; ++i)
+                    if(effects[i].checked==1)
+                    {
+                        indirizzo += (count++ ? '&' : '?');
+                        indirizzo += "effects=" + effects[i].value;
+                    }
+
                 var url_image = document.getElementsByName("url_image")[0].value;
                 if(url_image!='' && url_image!="undefined")
                 {
@@ -246,6 +254,29 @@
                         <td>Seleziona uno sfondo: (seleziona un <a href="javascript:popUp('colori/tabella.htm', 350, 540)">colore</a> oppure una <a href="javascript:popUp('images/', 400, 830)">immagine</a> e copia il codice nella casella di testo).</td>
                         <td align="middle"><center><input type="text" name="sfondo"></center></td>
                     </tr>
+                    <tr>
+                        <td>Seleziona un effetto per lo sfondo:</td>
+                        <td align="middle">
+                            <center>
+                                <table border="0">
+                                    <tr>
+                                        <td>Nessuno:</td>
+                                        <td><input type="radio" name="effects" value="none" checked="checked"></td>
+                                    </tr>
+                                    <?php
+                                        foreach($effects as $i => $value)
+                                        {
+                                            if($i) print "                                    ";
+                                            print "<tr>\r\n                                        ";
+                                            print "<td><img src=\"images/effects/$value.png\" onContextMenu=\"return false;\"></td>";
+                                            print "\r\n                                        ";
+                                            print "<td><input type=\"radio\" name=\"effects\" value=\"$value\"></td>\r\n";
+                                            print "                                    </tr>\r\n";
+                                        }
+                                    ?>
+                                </table>
+                            </center>
+                        </td>
                     <tr>
                         <td>Inserisci un link ad un avatar:<br>(<u><font color="ff0000"><b>ATTENZIONE</b></font>: l'immagine deve essere in formato <i>png</i>, inoltre un link esterno potrebbe ritardare il caricamento della firma</u>), lasciare vuoto per utilizzare l'immagine di default della classe.</td>
                         <td align="middle"><center><input type="text" name="url_image"></center></td>

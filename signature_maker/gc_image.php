@@ -12,7 +12,6 @@
     //Restituisce un numero decimale a partire da un numero esadecimale nella forma "HHHHHH".
     function GetRGBFromHex($input)
     {
-        $input = strtolower($input);
         return array(hexdec(substr($input, 0, 2)), hexdec(substr($input, 2, 2)), hexdec(substr($input, 4, 2)));
     }
 
@@ -147,6 +146,8 @@
     $to_make_image   = true;      //Serve a controllare se l'immagine deve essere costruita.
     $pg_GUID         = 0;         //ID univoco del personaggio.
     $spec_name       = '';        //Nome della spec.
+    $effect          = '';        //Effetto per lo sfondo.
+    $img_name        = '';        //Sfondo della firma.
 ?>
 <?php
     //Controllo preliminare sull'esistenda dell'immagine (se la stessa immagine esiste già non la rielaboro).
@@ -182,25 +183,33 @@
             //L'utente ha selezionato uno sfondo diverso da quello di default (graduazione di rosso).
             if(isset($_GET["sfondo"]) && $_GET["sfondo"]!='')
             {
+                $sfondo = strtolower($_GET["sfondo"]);
                 //Lo sfondo è un'immagine, (comincia con bg_), mi costruisco il link all'immagine.
-                if(!strncmp($_GET["sfondo"], "bg_", 3))
+                if(!strncmp($sfondo, "bg_", 3))
                 {
                     //Tutti gli sfondi utilizzati per la firma sono in png, cominciano con bg_ e sono contenuti nella directory "images/bg".
-                    if(in_array($_GET["sfondo"], $backgrounds))
+                    if(in_array($sfondo, $backgrounds))
                     {
                         $to_img = true;
-                        $img_name = $_GET["sfondo"];
+                        $img_name = $sfondo;
                     }
                 }
                 else //Lo sfondo è un colore, cerco le 3 graduazioni nel codice esadecimale.
                 {
-                    $bg_vet = GetRGBFromHex($_GET["sfondo"]);
+                    $bg_vet = GetRGBFromHex($sfondo);
 
                     $to_img          = false;
                     $start_bg_red    = $bg_vet[0];
                     $start_bg_green  = $bg_vet[1];
                     $start_bg_blue   = $bg_vet[2];
                 }
+            }
+
+            //Effetto per lo sfondo.
+            if(isset($_GET["effects"]) && $_GET["effects"]!='')
+            {
+                $effect = strtolower($_GET["effects"]);
+                if(!in_array($effect, $effects)) $effect = '';
             }
 
             //L'utente ha selezionato un colore di testo diverso da quello di default, elaboro il codice esadecimale.
@@ -210,7 +219,7 @@
             //L'utente ha selezionato un carattere per il testo diverso da quello di default, lo estraggo.
             if(isset($_GET["text_font"]) && $_GET["text_font"]!='')
             {
-                $name_font = $_GET["text_font"];
+                $name_font = strtolower($_GET["text_font"]);
                 if(isset($fonts["$name_font"]["name"]))
                 {
                     $font                  = $fonts["$name_font"]["name"];
@@ -278,8 +287,7 @@
                                     $row["talents"] = $talents[0] . '/' . $talents[1] . '/' . $talents[2]; //Talenti nella forma (x/x/x).
 
                                     //Nome della spec.
-                                    $max_talent = max($talents[0], $talents[1], $talents[2]);
-                                    if($max_talent)
+                                    if($max_talent = max($talents[0], $talents[1], $talents[2]))
                                     {
                                         $i_t = array_search($max_talent, $talents);
                                         $spec_name .= ' ' . $tab_names[$row["class"]][$i_t];
@@ -430,6 +438,20 @@
                     imagedestroy($src_bg);
                 }
             //FINE COLORAZIONE CENTRALE.
+
+            //INIZIO INSERIMENTO EFFETTO.
+                if($effect != '')
+                {
+                    list($width_effect, $height_effect) = getimagesize("images/effects/$effect.png");
+                    for($i=0; $i<ceil($y/$height_effect); ++$i)
+                        for($j=0; $j<ceil($x/$width_effect); ++$j)
+                        {
+                            $src_effect = imagecreatefrompng("images/effects/$effect.png");
+                            imagecopyresampled($im, $src_effect, $j*$width_effect, $i*$height_effect, 0, 0, $width_effect, $height_effect, $width_effect, $height_effect);
+                            imagedestroy($src_effect);
+                        }
+                }
+            //FINE INSERIMENTO EFFETTO.
 
             //INIZIO COLORAZIONE BORDO.
                 imagerectangle($im, 1, 1, $x-2, $y-2, $gold); //Disegno un rettangolo gold ad 1 px dal bordo.
