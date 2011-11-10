@@ -458,6 +458,25 @@
                 }
             //BACKGROUND EFFECT - END.
 
+            //FILTERS - BEGIN.
+                if(isset($_GET["filter"]) && $_GET["filter"]!='')
+                {
+                    switch(strtolower($_GET["filter"]))
+                    {
+                    case "grayscale":
+                        imagefilter($im, IMG_FILTER_GRAYSCALE);
+                        break;
+                    case "sepia":
+                        imagefilter($im, IMG_FILTER_GRAYSCALE);
+                        imagefilter($im, IMG_FILTER_COLORIZE, 112, 66, 20);
+                        break;
+                    case "negate":
+                        imagefilter($im, IMG_FILTER_NEGATE);
+                        break;
+                    }
+                }
+            //FILTERS - END.
+
             //BORDER COLOUR - START.
                 imagerectangle($im, 1, 1, $x-2, $y-2, $gold); //Draw a gold rectangle to 1 px from the border.
             //BORDER COLOUR - END.

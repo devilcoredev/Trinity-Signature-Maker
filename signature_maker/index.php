@@ -95,6 +95,13 @@
                         pLocation += (count++ ? '&' : '?');
                         pLocation += "effects=" + effects[i].value;
                     }
+                    
+                var filter = document.getElementsByName("filter")[0].value;
+                if(filter!='' && filter!="undefined")
+                {
+                    pLocation += (count++ ? '&' : '?');
+                    pLocation += "filter=" + filter;
+                }
 
                 var url_image = document.getElementsByName("url_image")[0].value;
                 if(url_image!='' && url_image!="undefined")
@@ -276,6 +283,17 @@
                                     ?>
                                 </table>
                             </center>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Select a background filter:</td>
+                        <td align="middle">
+                            <select name="filter">
+                                <option value="none">None</option>
+                                <option value="grayscale">Grayscale</option>
+                                <option value="sepia">Sepia</option>
+                                <option value="negate">Negate</option>
+                            </select>
                         </td>
                     </tr>
                     <tr>
