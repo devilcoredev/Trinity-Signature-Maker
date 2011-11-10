@@ -4,9 +4,31 @@
 ?>
 <?php
     //Restituisce true se l'immagine è png.
-    function isPng($fileName)
+    function dinamicimagecreate($fileName)
     {
-        return !strncmp(pathinfo($fileName, PATHINFO_EXTENSION), "png", 3);
+        switch(strtolower(pathinfo($fileName, PATHINFO_EXTENSION)))
+        {
+            case "gd2":
+                return imagecreatefromgd2($fileName);
+            case "gd":
+                return imagecreatefromgd($fileName);
+            case "gif":
+                return imagecreatefromgif($fileName);
+            case "jpg":
+            case "jpeg":
+            case "jpe":
+                return imagecreatefromjpeg($fileName);
+            case "png":
+                return imagecreatefrompng($fileName);
+            case "wbmp":
+                return imagecreatefromwbmp($fileName);
+            case "xbm":
+                return imagecreatefromxbm($fileName);
+            case "xpm":
+                return imagecreatefromxpm($fileName);
+            default:
+                return FALSE;
+        }
     }
 
     //Restituisce un numero decimale a partire da un numero esadecimale nella forma "HHHHHH".
@@ -297,12 +319,14 @@
                                     $string_info = "Level " . $row["level"] . ' ' . $races[$row["race"]] . ' ' . $classes[$row["class"]]["name"] . $spec_name;
 
                                     //Se viene dato l'url di un'immagine png valida lo inserisco, altrimenti inserisco quella di default della classe.
-                                    if(isset($_GET["url_image"]) && $_GET["url_image"]!='' && isPng($_GET["url_image"]) && imagecreatefrompng($_GET["url_image"]))
+                                    if(isset($_GET["url_image"]) && $_GET["url_image"]!='')
                                     {
                                         $avatar_img = $_GET["url_image"];
-                                        $external_image = true;
+                                        if(dinamicimagecreate($avatar_img) != FALSE)
+                                            $external_image = true;
                                     }
-                                    else
+
+                                    if(!$external_image)
                                     {
                                         //L'immagine indica sia la razza che la classe del personaggio.
                                         if(isset($_GET["type_image"]) && strtolower($_GET["type_image"])=="race_class")
@@ -503,21 +527,13 @@
             //FINE STATS.
 
             //INIZIO COPIA CLASSE.
-                if(!$is_gif) //L'immagine selezionata è in png, vuol dire che contiene solo la classe del pg, la ridimensiono quanto l'altezza della firma.
-                {
-                    $src_avatar = imagecreatefrompng($avatar_img);
-                    list($width_avatar, $height_avatar) = getimagesize($avatar_img);
-                    //Se è un'immagine esterna la rimpicciolisco di 10px e la riposiziono.
-                    imagecopyresampled($im, $src_avatar, 5, ($external_image ? 5 : 0), 0, 0, $y-($external_image ? 10 : 0), $y-($external_image ? 10 : 0), $width_avatar, $height_avatar);
-                    imagedestroy($src_avatar);
-                }
-                else //L'immagine è in gif, riduco le sue dimensioni di 10px e la centro in un quadrato a sinistra.
-                {
-                    $src_avatar = imagecreatefromgif($avatar_img);
-                    list($width_avatar, $height_avatar) = getimagesize($avatar_img);
+                $src_avatar = dinamicimagecreate($avatar_img);
+                list($width_avatar, $height_avatar) = getimagesize($avatar_img);
+                if($external_image) //Se è un'immagine esterna la rimpicciolisco di 10px e la riposiziono.
                     imagecopyresampled($im, $src_avatar, 5, 5, 0, 0, $y-10, $y-10, $width_avatar, $height_avatar);
-                    imagedestroy($src_avatar);
-                }
+                else //Immagine interna, effettuo il ridimensionamento a seconda del tipo di immagine scelta.
+                    imagecopyresampled($im, $src_avatar, 5, ($is_gif ? 5 : 0), 0, 0, $y-($is_gif ? 10 : 0), $y-($is_gif ? 10 : 0), $width_avatar, $height_avatar);
+                imagedestroy($src_avatar);
             //FINE COPIA CLASSE.
 
             //INIZIO LIVELLO-CLASSE-RAZZA.
