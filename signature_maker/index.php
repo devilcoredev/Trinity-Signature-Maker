@@ -297,7 +297,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Insert a link to an avatar:<br>(<u><font color="ff0000"><b>ATTENCTION</b></font>: The image must be in <i>png</i> format, also an external link could delay the loading of the signature</u>), leave blank to use the default class image.</td>
+                        <td>Insert a link to an avatar:<br>(<u><font color="ff0000"><b>ATTENCTION</b></font>: an external link could delay the loading of the signature</u>), leave blank to use the default class image.</td>
                         <td align="middle"><center><input type="text" name="url_image"></center></td>
                     </tr>
                     <tr>

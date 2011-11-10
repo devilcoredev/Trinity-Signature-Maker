@@ -4,9 +4,31 @@
 ?>
 <?php
     //Returns true if the image is png.
-    function isPng($fileName)
+    function dinamicimagecreate($fileName)
     {
-        return !strncmp(pathinfo($fileName, PATHINFO_EXTENSION), "png", 3);
+        switch(strtolower(pathinfo($fileName, PATHINFO_EXTENSION)))
+        {
+            case "gd2":
+                return imagecreatefromgd2($fileName);
+            case "gd":
+                return imagecreatefromgd($fileName);
+            case "gif":
+                return imagecreatefromgif($fileName);
+            case "jpg":
+            case "jpeg":
+            case "jpe":
+                return imagecreatefromjpeg($fileName);
+            case "png":
+                return imagecreatefrompng($fileName);
+            case "wbmp":
+                return imagecreatefromwbmp($fileName);
+            case "xbm":
+                return imagecreatefromxbm($fileName);
+            case "xpm":
+                return imagecreatefromxpm($fileName);
+            default:
+                return FALSE;
+        }
     }
 
     //Returns a decimal number from a hex number in the form "HHHHHH".
@@ -297,12 +319,14 @@
                                     $string_info = "Level " . $row["level"] . ' ' . $races[$row["race"]] . ' ' . $classes[$row["class"]]["name"] . $spec_name;
 
                                     //If is given the url of a valid PNG image i insert it, otherwise insert the default image.
-                                    if(isset($_GET["url_image"]) && $_GET["url_image"]!='' && isPng($_GET["url_image"]) && imagecreatefrompng($_GET["url_image"]))
+                                    if(isset($_GET["url_image"]) && $_GET["url_image"]!='')
                                     {
                                         $avatar_img = $_GET["url_image"];
-                                        $external_image = true;
+                                        if(dinamicimagecreate($avatar_img) != FALSE)
+                                            $external_image = true;
                                     }
-                                    else
+
+                                    if(!$external_image)
                                     {
                                         //The image shows the race and the class of the character.
                                         if(isset($_GET["type_image"]) && strtolower($_GET["type_image"])=="race_class")
@@ -503,21 +527,13 @@
             //STATS - END.
 
             //CLASS IMG - START.
-                if(!$is_gif) //The image contains only the character class, resize and scale it.
-                {
-                    $src_avatar = imagecreatefrompng($avatar_img);
-                    list($width_avatar, $height_avatar) = getimagesize($avatar_img);
-                    //If it is an external image reduce its size of 10px.
-                    imagecopyresampled($im, $src_avatar, 5, ($external_image ? 5 : 0), 0, 0, $y-($external_image ? 10 : 0), $y-($external_image ? 10 : 0), $width_avatar, $height_avatar);
-                    imagedestroy($src_avatar);
-                }
-                else //I reduce the image size of 10px and the center it in a square on the left.
-                {
-                    $src_avatar = imagecreatefromgif($avatar_img);
-                    list($width_avatar, $height_avatar) = getimagesize($avatar_img);
+                $src_avatar = dinamicimagecreate($avatar_img);
+                list($width_avatar, $height_avatar) = getimagesize($avatar_img);
+                if($external_image) //If it is an external image reduce its size of 10px.
                     imagecopyresampled($im, $src_avatar, 5, 5, 0, 0, $y-10, $y-10, $width_avatar, $height_avatar);
-                    imagedestroy($src_avatar);
-                }
+                else //The image contains only the character class, resize and scale it.
+                    imagecopyresampled($im, $src_avatar, 5, ($is_gif ? 5 : 0), 0, 0, $y-($is_gif ? 10 : 0), $y-($is_gif ? 10 : 0), $width_avatar, $height_avatar);
+                imagedestroy($src_avatar);
             //CLASS IMG - END.
 
             //LEVEL-CLASS-RACE - START.
