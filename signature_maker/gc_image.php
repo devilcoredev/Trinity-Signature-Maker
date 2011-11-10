@@ -472,13 +472,11 @@
                 if($effect != '')
                 {
                     list($width_effect, $height_effect) = getimagesize("images/effects/$effect.png");
+                    $src_effect = imagecreatefrompng("images/effects/$effect.png");
                     for($i=0; $i<ceil($y/$height_effect); ++$i)
                         for($j=0; $j<ceil($x/$width_effect); ++$j)
-                        {
-                            $src_effect = imagecreatefrompng("images/effects/$effect.png");
                             imagecopyresampled($im, $src_effect, $j*$width_effect, $i*$height_effect, 0, 0, $width_effect, $height_effect, $width_effect, $height_effect);
-                            imagedestroy($src_effect);
-                        }
+                    imagedestroy($src_effect);
                 }
             //FINE INSERIMENTO EFFETTO.
 
