@@ -463,7 +463,7 @@
                 {
                     switch(strtolower($_GET["filter"]))
                     {
-                    case "greyscale":
+                    case "grayscale":
                         imagefilter($im, IMG_FILTER_GRAYSCALE);
                         break;
                     case "sepia":

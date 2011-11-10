@@ -290,7 +290,7 @@
                         <td align="middle">
                             <select name="filter">
                                 <option value="none">Nessuno</option>
-                                <option value="greyscale">Bianco e nero</option>
+                                <option value="grayscale">Bianco e nero</option>
                                 <option value="sepia">Seppia</option>
                                 <option value="negate">Negativo</option>
                             </select>
