@@ -3,34 +3,6 @@
     include("config.php");
 ?>
 <?php
-    //Returns true if the image is png.
-    function dinamicimagecreate($fileName)
-    {
-        switch(strtolower(pathinfo($fileName, PATHINFO_EXTENSION)))
-        {
-            case "gd2":
-                return imagecreatefromgd2($fileName);
-            case "gd":
-                return imagecreatefromgd($fileName);
-            case "gif":
-                return imagecreatefromgif($fileName);
-            case "jpg":
-            case "jpeg":
-            case "jpe":
-                return imagecreatefromjpeg($fileName);
-            case "png":
-                return imagecreatefrompng($fileName);
-            case "wbmp":
-                return imagecreatefromwbmp($fileName);
-            case "xbm":
-                return imagecreatefromxbm($fileName);
-            case "xpm":
-                return imagecreatefromxpm($fileName);
-            default:
-                return FALSE;
-        }
-    }
-
     //Returns a decimal number from a hex number in the form "HHHHHH".
     function GetRGBFromHex($input)
     {
@@ -322,7 +294,7 @@
                                     if(isset($_GET["url_image"]) && $_GET["url_image"]!='')
                                     {
                                         $avatar_img = $_GET["url_image"];
-                                        if(dinamicimagecreate($avatar_img) != FALSE)
+                                        if(imagecreatefromstring(file_get_contents($avatar_img)) != FALSE)
                                             $external_image = true;
                                     }
 
@@ -525,7 +497,7 @@
             //STATS - END.
 
             //CLASS IMG - START.
-                $src_avatar = dinamicimagecreate($avatar_img);
+                $src_avatar = imagecreatefromstring(file_get_contents($avatar_img));
                 list($width_avatar, $height_avatar) = getimagesize($avatar_img);
                 if($external_image) //If it is an external image reduce its size of 10px.
                     imagecopyresampled($im, $src_avatar, 5, 5, 0, 0, $y-10, $y-10, $width_avatar, $height_avatar);
