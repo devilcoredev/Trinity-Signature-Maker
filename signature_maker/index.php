@@ -96,6 +96,13 @@
                         indirizzo += "effects=" + effects[i].value;
                     }
 
+                var filter = document.getElementsByName("filter")[0].value;
+                if(filter!='' && filter!="undefined")
+                {
+                    indirizzo += (count++ ? '&' : '?');
+                    indirizzo += "filter=" + filter;
+                }
+
                 var url_image = document.getElementsByName("url_image")[0].value;
                 if(url_image!='' && url_image!="undefined")
                 {
@@ -276,6 +283,17 @@
                                     ?>
                                 </table>
                             </center>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Seleziona un filtro per lo sfondo:</td>
+                        <td align="middle">
+                            <select name="filter">
+                                <option value="none">Nessuno</option>
+                                <option value="greyscale">Bianco e nero</option>
+                                <option value="sepia">Seppia</option>
+                                <option value="negate">Negativo</option>
+                            </select>
                         </td>
                     </tr>
                     <tr>

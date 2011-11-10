@@ -152,6 +152,7 @@
     $effects[] = "grid_left_to_right";
     $effects[] = "grid_right_to_left";
     $effects[] = "grid_pointer";
+    $effects[] = "grid_square";
 
     //Font di default (verdana).
     $font                  = $fonts["verdana"]["name"];

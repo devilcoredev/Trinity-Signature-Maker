@@ -458,6 +458,25 @@
                 }
             //FINE INSERIMENTO EFFETTO.
 
+            //INIZIO FILTRI.
+                if(isset($_GET["filter"]) && $_GET["filter"]!='')
+                {
+                    switch(strtolower($_GET["filter"]))
+                    {
+                    case "greyscale":
+                        imagefilter($im, IMG_FILTER_GRAYSCALE);
+                        break;
+                    case "sepia":
+                        imagefilter($im, IMG_FILTER_GRAYSCALE);
+                        imagefilter($im, IMG_FILTER_COLORIZE, 112, 66, 20);
+                        break;
+                    case "negate":
+                        imagefilter($im, IMG_FILTER_NEGATE);
+                        break;
+                    }
+                }
+            //FINE FILTRI.
+
             //INIZIO COLORAZIONE BORDO.
                 imagerectangle($im, 1, 1, $x-2, $y-2, $gold); //Disegno un rettangolo gold ad 1 px dal bordo.
             //FINE COLORAZIONE BORDO.
