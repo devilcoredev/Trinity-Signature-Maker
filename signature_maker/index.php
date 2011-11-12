@@ -273,12 +273,12 @@
                                 <?php
                                     foreach($effects as $i => $value)
                                     {
-                                        if($i) print "                                    ";
-                                        print "<tr>\r\n                                        ";
+                                        if($i) print "                                ";
+                                        print "<tr>\r\n                                    ";
                                         print "<td><img src=\"images/effects/$value.png\" onContextMenu=\"return false;\"></td>";
-                                        print "\r\n                                        ";
+                                        print "\r\n                                    ";
                                         print "<td><input type=\"radio\" name=\"effects\" value=\"$value\"></td>\r\n";
-                                        print "                                    </tr>\r\n";
+                                        print "                                </tr>\r\n";
                                     }
                                 ?>
                             </table>
