@@ -336,44 +336,42 @@
     function isValidAchievement($achievement_id)
     {
         global $site_host, $site_username, $site_password, $site_database;
+        $returnValue = 0;
+
         if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
         {
             if(mysql_select_db($site_database, $my_conn))
                 if($my_result = mysql_query("SELECT points FROM achievement WHERE ID = $achievement_id;", $my_conn))
                 {
                     if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
-                    {
-                        mysql_free_result($my_result);
-                        return $my_row["points"];
-                    }
+                        $returnValue = $my_row["points"];
                     mysql_free_result($my_result);
                 }
             mysql_close($my_conn);
         }
 
-        return 0;
+        return $returnValue;
     }
 
     //The function returns information about a given talents.
     function getTalentInfo($spellId)
     {
         global $site_host, $site_username, $site_password, $site_database;
+        $returnValue = 0;
+
         if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
         {
             if(mysql_select_db($site_database, $my_conn))
                 if($my_result = mysql_query("SELECT rankId, tabPage FROM talent WHERE spellTalent = $spellId;", $my_conn))
                 {
                     if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
-                    {
-                        mysql_free_result($my_result);
-                        return $my_row;
-                    }
+                        $returnValue = $my_row;
                     mysql_free_result($my_result);
                 }
             mysql_close($my_conn);
         }
 
-        return 0;
+        return $returnValue;
     }
 
     //STANDARD GD FUNCTION - START.

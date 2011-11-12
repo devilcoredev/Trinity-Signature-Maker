@@ -7,7 +7,7 @@
         print "<option value=\"-\" selected>---</option>\r\n";
         foreach($input as $i => $value)
         {
-            print "                                    <option value=\"$i\">" . $value["name"] . "</option>\r\n";
+            print "                                <option value=\"$i\">" . $value["name"] . "</option>\r\n";
         }
     }
 ?>
@@ -21,6 +21,7 @@
                 day = new Date();
                 id = day.getTime();
                 eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0, scrollbars=1, location=0, statusbar=0, menubar=0, resizable=1, width=" + X + ", height=" + Y + "');");
+                eval("page" + id + ".creator = self;");
             }
 
             //Function that transforms text with the first letter capitalized and the rest lowercase, eg: test=>Text TEXT=>Text tExT=>Test.
@@ -230,157 +231,153 @@
     </head>
     <body>
         <center>
-            <form>
-                <table width="<?php print $x; ?>" cellSpacing="0" border="1">
-                    <tr>
-                        <td width="50%">Select the server:</td>
-                        <td width="50%" align="middle">
-                            <center>
-                                <select name="server">
-                                    <?php
-                                        $count = 0;
-                                        foreach($realm_name as $i => $value)
+            <table width="<?php print $x; ?>" cellSpacing="0" border="1">
+                <tr>
+                    <td width="50%">Select the server:</td>
+                    <td width="50%" align="middle">
+                        <center>
+                            <select name="server">
+                                <?php
+                                    $count = 0;
+                                    foreach($realm_name as $i => $value)
+                                    {
+                                        if($i!='' && $value!='')
                                         {
-                                            if($i!='' && $value!='')
-                                            {
-                                                if($count++) print "                                    ";
-                                                print "<option value=\"$i\">$value</option>\r\n";
-                                            }
+                                            if($count++) print "                                ";
+                                            print "<option value=\"$i\">$value</option>\r\n";
                                         }
-                                        if(!$count) print "<option value=\"-\">---</option>\r\n";
-                                    ?>
-                                </input>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Insert the name of the character:</td>
-                        <td align="middle"><center><input type="text" name="pg_name"></center></td>
-                    </tr>
-                    <tr>
-                        <td>Select a background: (select a <a href="javascript:popUp('colors/table.htm', 350, 540)">color</a> or an <a href="javascript:popUp('images/', 400, 830)">image</a> and copy the code in the text box).</td>
-                        <td align="middle"><center><input type="text" name="background"></center></td>
-                    </tr>
-                    <tr>
-                        <td>Select a background effect:</td>
-                        <td align="middle">
-                            <center>
-                                <table border="0">
-                                    <tr>
-                                        <td>None:</td>
-                                        <td><input type="radio" name="effects" value="none" checked="checked"></td>
-                                    </tr>
-                                    <?php
-                                        foreach($effects as $i => $value)
-                                        {
-                                            if($i) print "                                    ";
-                                            print "<tr>\r\n                                        ";
-                                            print "<td><img src=\"images/effects/$value.png\" onContextMenu=\"return false;\"></td>";
-                                            print "\r\n                                        ";
-                                            print "<td><input type=\"radio\" name=\"effects\" value=\"$value\"></td>\r\n";
-                                            print "                                    </tr>\r\n";
-                                        }
-                                    ?>
-                                </table>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Select a background filter:</td>
-                        <td align="middle">
-                            <select name="filter">
-                                <option value="none">None</option>
-                                <option value="grayscale">Grayscale</option>
-                                <option value="sepia">Sepia</option>
-                                <option value="negate">Negate</option>
+                                    }
+                                    if(!$count) print "<option value=\"-\">---</option>\r\n";
+                                ?>
                             </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Insert a link to an avatar:<br>(<u><font color="ff0000"><b>ATTENCTION</b></font>: an external link could delay the loading of the signature</u>), leave blank to use the default class image.</td>
-                        <td align="middle"><center><input type="text" name="url_image"></center></td>
-                    </tr>
-                    <tr>
-                        <td>Select "yes" to enter the race and the class in the avatar, "no" to insert only the class (Cataclysm Avatar) in the avatar:</td>
-                        <td align="middle"><center>Yes <input type="radio" name="type_image" value="race_class" checked="checked">&nbsp&nbsp&nbsp&nbspNo <input type="radio" name="type_image" value="class"></center></td>
-                    </tr>
-                    <tr>
-                        <td>Select the text <a href="javascript:popUp('colors/table.htm', 350, 540)">color</a>:</td>
-                        <td align="middle"><center><input type="text" name="text_color"></center></td>
-                    </tr>
-                    <tr>
-                        <td>Select the text <a href="javascript:popUp('fonts/', 300, 420)">font</a>:</td>
-                        <td align="middle"><center><input type="text" name="text_font"></center></td>
-                    </tr>
-                    <?php
-                        if($image_resize_enabled)
-                        {
-                            print "<tr>\r\n";
-                            print "                        <td>Insert the image size:</td>\r\n";
-                            print "                        <td align=\"middle\">\r\n";
-                            print "                            <center>\r\n";
-                            print "                                X size: <input type=\"text\" name=\"x\" size=\"3\"><br>\r\n";
-                            print "                                Y size: <input type=\"text\" name=\"y\" size=\"3\">\r\n";
-                            print "                            </center>\r\n";
-                            print "                        </td>\r\n";
-                            print "                    </tr>\r\n";
-                        }
-                    ?>
-                    <tr>
-                        <td>Select the stat for the first field:</td>
-                        <td align="middle">
-                            <center>
-                                <select name="stat1">
-                                    <?php printMenu($stats); ?>
-                                </select>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Select the stat for the second field:</td>
-                        <td align="middle">
-                            <center>
-                                <select name="stat2">
-                                    <?php printMenu($stats); ?>
-                                </select>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Select the stat for the third field:</td>
-                        <td align="middle">
-                            <center>
-                                <select name="stat3">
-                                    <?php printMenu($stats); ?>
-                                </select>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Select the stat for the fourth field:</td>
-                        <td align="middle">
-                            <center>
-                                <select name="stat4">
-                                    <?php printMenu($stats); ?>
-                                </select>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Select the stat for the fifth field:</td>
-                        <td align="middle">
-                            <center>
-                                <select name="stat5">
-                                    <?php printMenu($stats); ?>
-                                </select>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><center><input type="button" value="Create signature!" onClick="return showMessage();"></center></td>
-                    </tr>
-                </table>
-            </form>
+                        </center>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Insert the name of the character:</td>
+                    <td align="middle"><center><input type="text" name="pg_name"></center></td>
+                </tr>
+                <tr>
+                    <td>Select a background: (select a <a href="javascript:popUp('colors/index.php?field_edit=background', 350, 485)">color</a> or an <a href="javascript:popUp('images/index.php?field_edit=background', 400, 830)">image</a>).</td>
+                    <td align="middle"><center><input type="text" name="background"></center></td>
+                </tr>
+                <tr>
+                    <td>Select a background effect:</td>
+                    <td align="middle">
+                        <center>
+                            <table border="0">
+                                <tr>
+                                    <td>None:</td>
+                                    <td><input type="radio" name="effects" value="none" checked="checked"></td>
+                                </tr>
+                                <?php
+                                    foreach($effects as $i => $value)
+                                    {
+                                        if($i) print "                                ";
+                                        print "<tr>\r\n                                    ";
+                                        print "<td><img src=\"images/effects/$value.png\" onContextMenu=\"return false;\"></td>";
+                                        print "\r\n                                   ";
+                                        print "<td><input type=\"radio\" name=\"effects\" value=\"$value\"></td>\r\n";
+                                        print "                                </tr>\r\n";
+                                    }
+                                ?>
+                            </table>
+                        </center>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Select a background filter:</td>
+                    <td align="middle">
+                        <select name="filter">
+                            <option value="none">None</option>
+                            <option value="grayscale">Grayscale</option>
+                            <option value="sepia">Sepia</option>
+                            <option value="negate">Negate</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Insert a link to an avatar:<br>(<u><font color="ff0000"><b>ATTENCTION</b></font>: an external link could delay the loading of the signature</u>), leave blank to use the default class image.</td>
+                    <td align="middle"><center><input type="text" name="url_image"></center></td>
+                </tr>
+                <tr>
+                    <td>Select "yes" to enter the race and the class in the avatar, "no" to insert only the class (Cataclysm Avatar) in the avatar:</td>
+                    <td align="middle"><center>Yes <input type="radio" name="type_image" value="race_class" checked="checked">&nbsp&nbsp&nbsp&nbspNo <input type="radio" name="type_image" value="class"></center></td>
+                </tr>
+                <tr>
+                    <td>Select the text <a href="javascript:popUp('colors/index.php?field_edit=text_color', 350, 485)">color</a>:</td>
+                    <td align="middle"><center><input type="text" name="text_color"></center></td>
+                </tr>
+                <tr>
+                    <td>Select the text <a href="javascript:popUp('fonts/index.php?field_edit=text_font', 300, 420)">font</a>:</td>
+                    <td align="middle"><center><input type="text" name="text_font"></center></td>
+                </tr>
+                <?php
+                    if($image_resize_enabled)
+                    {
+                        print "<tr>\r\n";
+                        print "                    <td>Insert the image size:</td>\r\n";
+                        print "                    <td align=\"middle\">\r\n";
+                        print "                        <center>\r\n";
+                        print "                            X size: <input type=\"text\" name=\"x\" size=\"3\"><br>\r\n";
+                        print "                            Y size: <input type=\"text\" name=\"y\" size=\"3\">\r\n";
+                        print "                        </center>\r\n";
+                        print "                    </td>\r\n";
+                        print "                </tr>\r\n";
+                    }
+                ?>
+                <tr>
+                    <td>Select the stat for the first field:</td>
+                    <td align="middle">
+                        <center>
+                            <select name="stat1">
+                                <?php printMenu($stats); ?>
+                            </select>
+                        </center>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Select the stat for the second field:</td>
+                    <td align="middle">
+                        <center>
+                            <select name="stat2">
+                                <?php printMenu($stats); ?>
+                            </select>
+                        </center>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Select the stat for the third field:</td>
+                    <td align="middle">
+                        <center>
+                            <select name="stat3">
+                                <?php printMenu($stats); ?>
+                            </select>
+                        </center>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Select the stat for the fourth field:</td>
+                    <td align="middle">
+                        <center>
+                            <select name="stat4">
+                                <?php printMenu($stats); ?>
+                            </select>
+                        </center>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Select the stat for the fifth field:</td>
+                    <td align="middle">
+                        <center>
+                            <select name="stat5">
+                                <?php printMenu($stats); ?>
+                            </select>
+                        </center>
+                    </td>
+                </tr>
+                <tr><td colspan="2"><center><input type="button" value="Create signature!" onClick="return showMessage();"></center></td></tr>
+            </table>
             <div id="output" style="display: none">
                 <br>
                 <div id="loading">

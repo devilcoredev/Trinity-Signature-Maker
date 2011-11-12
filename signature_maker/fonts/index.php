@@ -12,6 +12,10 @@
             {
                 document.getElementsByName("font_text")[0].value = input;
                 selectText();
+
+                var field_edit = "<?php print $_GET["field_edit"]; ?>";
+                if(field_edit != '')
+                    eval("opener.document.getElementsByName('" + field_edit + "')[0].value = '" + input + "';");
             }
         </script>
     </head>
@@ -37,7 +41,6 @@
                         <center>
                             <a name="text_link">
                             <input type="text" name="font_text" size="15" style="text-align: center" onClick="selectText();"><br>
-                            (use CTRL+C to copy the font)
                         </center>
                     </td>
                 </tr>
