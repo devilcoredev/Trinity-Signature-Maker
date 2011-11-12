@@ -12,6 +12,10 @@
             {
                 document.getElementsByName("testo_font")[0].value = input;
                 selezionaTesto();
+
+                var field_edit = "<?php print $_GET["field_edit"]; ?>";
+                if(field_edit != '')
+                    eval("opener.document.getElementsByName('" + field_edit + "')[0].value = '" + input + "';");
             }
         </script>
     </head>
@@ -37,7 +41,6 @@
                         <center>
                             <a name="ancora_testo">
                             <input type="text" name="testo_font" size="15" style="text-align: center" onClick="selezionaTesto();"><br>
-                            (usa CTRL+C per copiare il font)
                         </center>
                     </td>
                 </tr>

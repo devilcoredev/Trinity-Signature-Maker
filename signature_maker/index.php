@@ -7,7 +7,7 @@
         print "<option value=\"-\" selected>---</option>\r\n";
         foreach($input as $i => $value)
         {
-            print "                                    <option value=\"$i\">" . $value["name"] . "</option>\r\n";
+            print "                                <option value=\"$i\">" . $value["name"] . "</option>\r\n";
         }
     }
 ?>
@@ -21,6 +21,7 @@
                 day = new Date();
                 id = day.getTime();
                 eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0, scrollbars=1, location=0, statusbar=0, menubar=0, resizable=1, width=" + X + ", height=" + Y + "');");
+                eval("page" + id + ".creator = self;");
             }
 
             //Funzione che trasforma il testo con la prima lettera maiuscola ed il resto minuscolo, es: test=>Test TEST=>Test tEsT=>Test.
@@ -230,157 +231,153 @@
     </head>
     <body>
         <center>
-            <form>
-                <table width="<?php print $x; ?>" cellSpacing="0" border="1">
-                    <tr>
-                        <td width="50%">Seleziona il server:</td>
-                        <td width="50%" align="middle">
-                            <center>
-                                <select name="server">
-                                    <?php
-                                        $count = 0;
-                                        foreach($realm_name as $i => $value)
+            <table width="<?php print $x; ?>" cellSpacing="0" border="1">
+                <tr>
+                    <td width="50%">Seleziona il server:</td>
+                    <td width="50%" align="middle">
+                        <center>
+                            <select name="server">
+                                <?php
+                                    $count = 0;
+                                    foreach($realm_name as $i => $value)
+                                    {
+                                        if($i!='' && $value!='')
                                         {
-                                            if($i!='' && $value!='')
-                                            {
-                                                if($count++) print "                                    ";
-                                                print "<option value=\"$i\">$value</option>\n";
-                                            }
+                                            if($count++) print "                                ";
+                                            print "<option value=\"$i\">$value</option>\n";
                                         }
-                                        if(!$count) print "<option value=\"-\">---</option>\n";
-                                    ?>
-                                </input>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Inserisci il nome del personaggio:</td>
-                        <td align="middle"><center><input type="text" name="nome_pg"></center></td>
-                    </tr>
-                    <tr>
-                        <td>Seleziona uno sfondo: (seleziona un <a href="javascript:popUp('colori/tabella.htm', 350, 540)">colore</a> oppure una <a href="javascript:popUp('images/', 400, 830)">immagine</a> e copia il codice nella casella di testo).</td>
-                        <td align="middle"><center><input type="text" name="sfondo"></center></td>
-                    </tr>
-                    <tr>
-                        <td>Seleziona un effetto per lo sfondo:</td>
-                        <td align="middle">
-                            <center>
-                                <table border="0">
-                                    <tr>
-                                        <td>Nessuno:</td>
-                                        <td><input type="radio" name="effects" value="none" checked="checked"></td>
-                                    </tr>
-                                    <?php
-                                        foreach($effects as $i => $value)
-                                        {
-                                            if($i) print "                                    ";
-                                            print "<tr>\r\n                                        ";
-                                            print "<td><img src=\"images/effects/$value.png\" onContextMenu=\"return false;\"></td>";
-                                            print "\r\n                                        ";
-                                            print "<td><input type=\"radio\" name=\"effects\" value=\"$value\"></td>\r\n";
-                                            print "                                    </tr>\r\n";
-                                        }
-                                    ?>
-                                </table>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Seleziona un filtro per lo sfondo:</td>
-                        <td align="middle">
-                            <select name="filter">
-                                <option value="none">Nessuno</option>
-                                <option value="grayscale">Bianco e nero</option>
-                                <option value="sepia">Seppia</option>
-                                <option value="negate">Negativo</option>
+                                    }
+                                    if(!$count) print "<option value=\"-\">---</option>\n";
+                                ?>
+                            </input>
+                        </center>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Inserisci il nome del personaggio:</td>
+                    <td align="middle"><center><input type="text" name="nome_pg"></center></td>
+                </tr>
+                <tr>
+                    <td>Seleziona uno sfondo: (seleziona un <a href="javascript:popUp('colori/index.php?field_edit=sfondo', 350, 485)">colore</a> oppure una <a href="javascript:popUp('images/index.php?field_edit=sfondo', 400, 830)">immagine</a>).</td>
+                    <td align="middle"><center><input type="text" name="sfondo"></center></td>
+                </tr>
+                <tr>
+                    <td>Seleziona un effetto per lo sfondo:</td>
+                    <td align="middle">
+                        <center>
+                            <table border="0">
+                                <tr>
+                                    <td>Nessuno:</td>
+                                    <td><input type="radio" name="effects" value="none" checked="checked"></td>
+                                </tr>
+                                <?php
+                                    foreach($effects as $i => $value)
+                                    {
+                                        if($i) print "                                    ";
+                                        print "<tr>\r\n                                        ";
+                                        print "<td><img src=\"images/effects/$value.png\" onContextMenu=\"return false;\"></td>";
+                                        print "\r\n                                        ";
+                                        print "<td><input type=\"radio\" name=\"effects\" value=\"$value\"></td>\r\n";
+                                        print "                                    </tr>\r\n";
+                                    }
+                                ?>
+                            </table>
+                        </center>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Seleziona un filtro per lo sfondo:</td>
+                    <td align="middle">
+                        <select name="filter">
+                            <option value="none">Nessuno</option>
+                            <option value="grayscale">Bianco e nero</option>
+                            <option value="sepia">Seppia</option>
+                            <option value="negate">Negativo</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Inserisci un link ad un avatar:<br>(<u><font color="ff0000"><b>ATTENZIONE</b></font>: un link esterno potrebbe ritardare il caricamento della firma</u>), lasciare vuoto per utilizzare l'immagine di default della classe.</td>
+                    <td align="middle"><center><input type="text" name="url_image"></center></td>
+                </tr>
+                <tr>
+                    <td>Selezinare "sì" per inserire sia la classe che la razza nell'avatar, "no" per inserire solo la classe (avatar Cataclysm) nell'avatar:</td>
+                    <td align="middle"><center>Sì <input type="radio" name="type_image" value="race_class" checked="checked">&nbsp&nbsp&nbsp&nbspNo <input type="radio" name="type_image" value="class"></center></td>
+                </tr>
+                <tr>
+                    <td>Seleziona il <a href="javascript:popUp('colori/index.php?field_edit=colore_testo', 350, 485)">colore</a> del testo:</td>
+                    <td align="middle"><center><input type="text" name="colore_testo"></center></td>
+                </tr>
+                <tr>
+                    <td>Seleziona il <a href="javascript:popUp('fonts/index.php?field_edit=text_font', 300, 420)">carattere</a> del testo:</td>
+                    <td align="middle"><center><input type="text" name="text_font"></center></td>
+                </tr>
+                <?php
+                    if($image_resize_enabled)
+                    {
+                        print "<tr>\r\n";
+                        print "                    <td>Inserisci le dimensioni dell'immagine:</td>\r\n";
+                        print "                    <td align=\"middle\">\r\n";
+                        print "                        <center>\r\n";
+                        print "                            Dimensione x: <input type=\"text\" name=\"x\" size=3><br>\r\n";
+                        print "                            Dimensione y: <input type=\"text\" name=\"y\" size=3>\r\n";
+                        print "                        </center>\r\n";
+                        print "                    </td>\r\n";
+                        print "                </tr>\r\n";
+                    }
+                ?>
+                <tr>
+                    <td>Seleziona la statistica per il primo campo:</td>
+                    <td align="middle">
+                        <center>
+                            <select name="stat1">
+                                <?php printMenu($stats); ?>
                             </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Inserisci un link ad un avatar:<br>(<u><font color="ff0000"><b>ATTENZIONE</b></font>: un link esterno potrebbe ritardare il caricamento della firma</u>), lasciare vuoto per utilizzare l'immagine di default della classe.</td>
-                        <td align="middle"><center><input type="text" name="url_image"></center></td>
-                    </tr>
-                    <tr>
-                        <td>Selezinare "sì" per inserire sia la classe che la razza nell'avatar, "no" per inserire solo la classe (avatar Cataclysm) nell'avatar:</td>
-                        <td align="middle"><center>Sì <input type="radio" name="type_image" value="race_class" checked="checked">&nbsp&nbsp&nbsp&nbspNo <input type="radio" name="type_image" value="class"></center></td>
-                    </tr>
-                    <tr>
-                        <td>Seleziona il <a href="javascript:popUp('colori/tabella.htm', 350, 540)">colore</a> del testo:</td>
-                        <td align="middle"><center><input type="text" name="colore_testo"></center></td>
-                    </tr>
-                    <tr>
-                        <td>Seleziona il <a href="javascript:popUp('fonts/', 300, 420)">carattere</a> del testo:</td>
-                        <td align="middle"><center><input type="text" name="text_font"></center></td>
-                    </tr>
-                    <?php
-                        if($image_resize_enabled)
-                        {
-                            print "<tr>\r\n";
-                            print "                        <td>Inserisci le dimensioni dell'immagine:</td>\r\n";
-                            print "                        <td align=\"middle\">\r\n";
-                            print "                            <center>\r\n";
-                            print "                                Dimensione x: <input type=\"text\" name=\"x\" size=3><br>\r\n";
-                            print "                                Dimensione y: <input type=\"text\" name=\"y\" size=3>\r\n";
-                            print "                            </center>\r\n";
-                            print "                        </td>\r\n";
-                            print "                    </tr>\r\n";
-                        }
-                    ?>
-                    <tr>
-                        <td>Seleziona la statistica per il primo campo:</td>
-                        <td align="middle">
-                            <center>
-                                <select name="stat1">
-                                    <?php printMenu($stats); ?>
-                                </select>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Seleziona la statistica per il secondo campo:</td>
-                        <td align="middle">
-                            <center>
-                                <select name="stat2">
-                                    <?php printMenu($stats); ?>
-                                </select>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Seleziona la statistica per il terzo campo:</td>
-                        <td align="middle">
-                            <center>
-                                <select name="stat3">
-                                    <?php printMenu($stats); ?>
-                                </select>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Seleziona la statistica per il quarto campo:</td>
-                        <td align="middle">
-                            <center>
-                                <select name="stat4">
-                                    <?php printMenu($stats); ?>
-                                </select>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Seleziona la statistica per il quinto campo:</td>
-                        <td align="middle">
-                            <center>
-                                <select name="stat5">
-                                    <?php printMenu($stats); ?>
-                                </select>
-                            </center>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><center><input type="button" value="Crea immagine!" onClick="return show_message();"></center></td>
-                    </tr>
-                </table>
-            </form>
+                        </center>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Seleziona la statistica per il secondo campo:</td>
+                    <td align="middle">
+                        <center>
+                            <select name="stat2">
+                                <?php printMenu($stats); ?>
+                            </select>
+                        </center>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Seleziona la statistica per il terzo campo:</td>
+                    <td align="middle">
+                        <center>
+                            <select name="stat3">
+                                <?php printMenu($stats); ?>
+                            </select>
+                        </center>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Seleziona la statistica per il quarto campo:</td>
+                    <td align="middle">
+                        <center>
+                            <select name="stat4">
+                                <?php printMenu($stats); ?>
+                            </select>
+                        </center>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Seleziona la statistica per il quinto campo:</td>
+                    <td align="middle">
+                        <center>
+                            <select name="stat5">
+                                <?php printMenu($stats); ?>
+                            </select>
+                        </center>
+                    </td>
+                </tr>
+                <tr><td colspan="2"><center><input type="button" value="Crea immagine!" onClick="return show_message();"></center></td></tr>
+            </table>
             <div id="output" style="display: none">
                 <br>
                 <div id="caricamento">

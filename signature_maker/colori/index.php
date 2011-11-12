@@ -10,15 +10,21 @@
 
             function selectButton(input)
             {
-                document.getElementsByName("testo_colore")[0].value = input.bgColor.replace('#', '');
+                var colorValue = input.bgColor.replace('#', '');
+
+                document.getElementsByName("testo_colore")[0].value = colorValue;
                 selezionaTesto();
+
+                var field_edit = "<?php print $_GET["field_edit"]; ?>";
+                if(field_edit != '')
+                    eval("opener.document.getElementsByName('" + field_edit + "')[0].value = '" + colorValue + "';");
             }
         </script>
     </head>
     <body>
         <center>
             <h3>Tabella dei colori HTML</h3>
-            <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" bordercolor="111111">
+            <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" borderColor="111111">
                 <tr>
                     <td align="middle" onClick="selectButton(this);" bgColor="ccff00" style="cursor: hand; width: 20px; height: 20px;"></td>
                     <td align="middle" onClick="selectButton(this);" bgColor="ccff33" style="cursor: hand; width: 20px; height: 20px;"></td>
@@ -285,14 +291,7 @@
                     <td align="middle" onClick="selectButton(this);" bgColor="171717" style="cursor: hand; width: 20px; height: 20px;"></td>
                     <td align="middle" onClick="selectButton(this);" bgColor="000000" style="cursor: hand; width: 20px; height: 20px;"></td>
                 </tr>
-                <tr>
-                    <td colspan="12">
-                        <center>
-                            <input type="text" name="testo_colore" size="10" style="text-align: center" onClick="selezionaTesto();"><br>
-                            (usa CTRL+C per copiare il colore)
-                        </center>
-                    </td>
-                </tr>
+                <tr><td colspan="12"><center><input type="text" name="testo_colore" size="10" style="text-align: center" onClick="selezionaTesto();"></center></td></tr>
             </table>
         </center>
     </body>
