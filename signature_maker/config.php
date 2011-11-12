@@ -126,7 +126,7 @@
     $fonts["flashd"]["addictional_info"]  = 11;
     $fonts["flashd"]['x']                 = 190;
     $fonts["flashd"]['y']                 = 50;
-    
+
     //Sfondi per le firme.
     $backgrounds = array();
     $backgrounds[] = "bg_abstract";
