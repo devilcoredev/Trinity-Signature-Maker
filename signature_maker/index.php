@@ -249,7 +249,7 @@
                                     }
                                     if(!$count) print "<option value=\"-\">---</option>\n";
                                 ?>
-                            </input>
+                            </select>
                         </center>
                     </td>
                 </tr>
