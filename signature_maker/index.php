@@ -20,7 +20,7 @@
             {
                 day = new Date();
                 id = day.getTime();
-                eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0, scrollbars=1, location=0, statusbar=0, menubar=0, resizable=1, width=" + X + ", height=" + Y + "');");
+                eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0, scrollbars=1, location=0, statusbar=0, menubar=0, resizable=0, width=" + X + ", height=" + Y + "');");
                 eval("page" + id + ".creator = self;");
             }
 
@@ -96,7 +96,7 @@
                         pLocation += (count++ ? '&' : '?');
                         pLocation += "effects=" + effects[i].value;
                     }
-                    
+
                 var filter = document.getElementsByName("filter")[0].value;
                 if(filter!='' && filter!="undefined")
                 {
@@ -276,7 +276,7 @@
                                         if($i) print "                                ";
                                         print "<tr>\r\n                                    ";
                                         print "<td><img src=\"images/effects/$value.png\" onContextMenu=\"return false;\"></td>";
-                                        print "\r\n                                   ";
+                                        print "\r\n                                    ";
                                         print "<td><input type=\"radio\" name=\"effects\" value=\"$value\"></td>\r\n";
                                         print "                                </tr>\r\n";
                                     }

@@ -93,7 +93,7 @@
                 mysql_free_result($result);
             }
         }
-        
+
         if($input["class"] != 6) //Only Death Knights have got rune and runic power.
         {
             $input["rune"]       = "N/D";
