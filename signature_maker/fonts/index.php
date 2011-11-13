@@ -2,16 +2,9 @@
     <head>
         <title>Seleziona un font</title>
         <script language="JavaScript">
-            function selezionaTesto()
-            {
-                document.getElementsByName("testo_font")[0].focus();
-                document.getElementsByName("testo_font")[0].select();
-            }
-
             function copiaTesto(input)
             {
-                document.getElementsByName("testo_font")[0].value = input;
-                selezionaTesto();
+                document.getElementById("testo_font").src = document.getElementById(input).src;
 
                 var field_edit = "<?php print $_GET["field_edit"]; ?>";
                 if(field_edit != '')
@@ -31,7 +24,7 @@
                         if($count++) print "                ";
                         print "<tr>\r\n";
                         print "                    <td>\r\n";
-                        print "                        <center><a href=\"#ancora_testo\" onClick=\"copiaTesto('$i');\"><img width=250 src=\"stampa_carattere.php?id_font=$i\" onContextMenu=\"return false;\"></a></center>\r\n";
+                        print "                        <center><a href=\"#ancora_testo\" onClick=\"copiaTesto('$i');\"><img width=250 id=\"$i\" src=\"stampa_carattere.php?id_font=$i\" onContextMenu=\"return false;\"></a></center>\r\n";
                         print "                    </td>\r\n";
                         print "                </tr>\r\n";
                     }
@@ -40,7 +33,8 @@
                     <td>
                         <center>
                             <a name="ancora_testo">
-                            <input type="text" name="testo_font" size="15" style="text-align: center" onClick="selezionaTesto();"><br>
+                            Font selezionato:<br>
+                            <img id="testo_font" src="../images/blank_64.png" onContextMenu="return false;">
                         </center>
                     </td>
                 </tr>

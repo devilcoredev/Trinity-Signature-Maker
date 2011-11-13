@@ -2,16 +2,9 @@
     <head>
         <title>Seleziona un'immagine</title>
         <script language="JavaScript">
-            function selezionaTesto()
-            {
-                document.getElementsByName("testo_immagine")[0].focus();
-                document.getElementsByName("testo_immagine")[0].select();
-            }
-
             function select(input)
             {
-                document.getElementsByName("testo_immagine")[0].value = input;
-                selezionaTesto();
+                document.getElementById("testo_immagine").src = document.getElementById(input).src;
 
                 var field_edit = "<?php print $_GET["field_edit"]; ?>";
                 if(field_edit != '')
@@ -30,7 +23,7 @@
                         if($i) print "                "; //Gli indici sono numeri, quindi non è necessario usare un altro contatore.
                         print "<tr>\r\n";
                         print "                    <td>\r\n";
-                        print "                        <center><a href=\"#ancora_testo\" onClick=\"select('$value');\"><img width=\"350\" src=\"bg/$value.png\" onContextMenu=\"return false;\"></a></center>\r\n";
+                        print "                        <center><a href=\"#ancora_testo\" onClick=\"select('$value');\"><img width=\"350\" id=\"$value\" src=\"bg/$value.png\" onContextMenu=\"return false;\"></a></center>\r\n";
                         print "                    </td>\r\n";
                         print "                </tr>\r\n";
                     }
@@ -39,7 +32,8 @@
                     <td>
                         <center>
                             <a name="ancora_testo">
-                            <input type="text" name="testo_immagine" size="15" style="text-align: center" onClick="selezionaTesto();"><br>
+                            Immagine selezionata:<br>
+                            <img id="testo_immagine" src="blank_64.png" width="350" height="50" onContextMenu="return false;">
                         </center>
                     </td>
                 </tr>

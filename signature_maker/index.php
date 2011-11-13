@@ -20,7 +20,7 @@
             {
                 day = new Date();
                 id = day.getTime();
-                eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0, scrollbars=1, location=0, statusbar=0, menubar=0, resizable=0, width=" + X + ", height=" + Y + "');");
+                eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0, scrollbars=1, location=0, statusbar=0, menubar=0, resizable=0, width=" + X + ", height=" + Y + ", top=0, left=0');");
                 eval("page" + id + ".creator = self;");
             }
 
@@ -258,7 +258,7 @@
                     <td align="middle"><center><input type="text" name="nome_pg"></center></td>
                 </tr>
                 <tr>
-                    <td>Seleziona uno sfondo: (seleziona un <a href="javascript:popUp('colori/index.php?field_edit=sfondo', 350, 485)">colore</a> oppure una <a href="javascript:popUp('images/index.php?field_edit=sfondo', 400, 830)">immagine</a>).</td>
+                    <td>Seleziona uno sfondo: (seleziona un <a href="javascript:popUp('colori/index.php?field_edit=sfondo', 350, 500)">colore</a> oppure una <a href="javascript:popUp('images/index.php?field_edit=sfondo', 400, 830)">immagine</a>).</td>
                     <td align="middle"><center><input type="text" name="sfondo"></center></td>
                 </tr>
                 <tr>
@@ -305,7 +305,7 @@
                     <td align="middle"><center>Sì <input type="radio" name="type_image" value="race_class" checked="checked">&nbsp&nbsp&nbsp&nbspNo <input type="radio" name="type_image" value="class"></center></td>
                 </tr>
                 <tr>
-                    <td>Seleziona il <a href="javascript:popUp('colori/index.php?field_edit=colore_testo', 350, 485)">colore</a> del testo:</td>
+                    <td>Seleziona il <a href="javascript:popUp('colori/index.php?field_edit=colore_testo', 350, 500)">colore</a> del testo:</td>
                     <td align="middle"><center><input type="text" name="colore_testo"></center></td>
                 </tr>
                 <tr>
