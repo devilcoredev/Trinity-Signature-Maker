@@ -322,7 +322,7 @@
                 if($result = mysql_query("SELECT * FROM immaginisalvate WHERE ultimaModifica < (UNIX_TIMESTAMP() - $image_expire_time);", $connessione))
                 {
                     while($row = mysql_fetch_array($result, MYSQL_ASSOC))
-                        if(file_exists("saved/" . $row["nomeImmagine"]) && is_file("saved/" . $row["nomeImmagine"]))
+                        if(file_exists("saved/" . $row["nomeImmagine"]))
                             unlink("saved/" . $row["nomeImmagine"]);
                     mysql_free_result($result);
                 }
