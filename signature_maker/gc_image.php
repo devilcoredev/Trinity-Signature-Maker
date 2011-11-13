@@ -153,7 +153,7 @@
             if($result = mysql_query("SELECT * FROM immaginisalvate WHERE queryString = '$query_string';", $connessione))
             {
                 if($row = mysql_fetch_array($result, MYSQL_ASSOC))     //Forza l'aggiornamento dell'immagine ogni 24 ore.
-                    if(file_exists("saved/" . $row["nomeImmagine"]) && (time()-$row["ultimaModifica"])<(24*60*60))
+                    if(file_exists("saved/" . $row["nomeImmagine"]) && (time()-$row["creazione"])<(24*60*60))
                     {
                         $to_make_image = false;
                         mysql_query("UPDATE immaginisalvate SET ultimaModifica = UNIX_TIMESTAMP() WHERE queryString = '$query_string';", $connessione);
@@ -570,7 +570,7 @@
                         imagepng($im, "saved/$img_save_name"); //Salvo l'immagine nella cartella "saved".
 
                         //Salvo un record identificativo su DB.
-                        mysql_query("REPLACE INTO immaginisalvate VALUES ($pg_GUID, '$realm_name', '" . getOrderQueryString($_SERVER["QUERY_STRING"]) . "', '$img_save_name', UNIX_TIMESTAMP());", $connessione);
+                        mysql_query("REPLACE INTO immaginisalvate VALUES ($pg_GUID, '$realm_name', '" . getOrderQueryString($_SERVER["QUERY_STRING"]) . "', '$img_save_name', UNIX_TIMESTAMP(), UNIX_TIMESTAMP());", $connessione);
                     }
                     mysql_close($connessione);
                 }
