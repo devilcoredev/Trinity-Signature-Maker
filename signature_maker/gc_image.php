@@ -293,7 +293,7 @@
                                     //Se viene dato l'url di un'immagine png valida lo inserisco, altrimenti inserisco quella di default della classe.
                                     if(isset($_GET["url_image"]) && $_GET["url_image"]!='')
                                     {
-                                        $avatar_img = $_GET["url_image"];
+                                        $avatar_img = utf8_decode($_GET["url_image"]);
                                         if(imagecreatefromstring(file_get_contents($avatar_img)) != FALSE)
                                             $external_image = true;
                                     }

@@ -104,7 +104,7 @@
                     indirizzo += "filter=" + filter;
                 }
 
-                var url_image = document.getElementsByName("url_image")[0].value;
+                var url_image = encodeURIComponent(document.getElementsByName("url_image")[0].value);
                 if(url_image!='' && url_image!="undefined")
                 {
                     indirizzo += (count++ ? '&' : '?');
