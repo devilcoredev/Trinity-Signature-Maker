@@ -153,7 +153,7 @@
             if($result = mysql_query("SELECT * FROM savedimages WHERE queryString = '$query_string';", $connection))
             {
                 if($row = mysql_fetch_array($result, MYSQL_ASSOC))  //Force-refresh the image every 24 hours.
-                    if(file_exists("saved/" . $row["imageName"]) && (time()-$row["lastEdit"])<(24*60*60))
+                    if(file_exists("saved/" . $row["imageName"]) && (time()-$row["creation"])<(24*60*60))
                     {
                         $to_make_image = false;
                         mysql_query("UPDATE savedimages SET lastEdit = UNIX_TIMESTAMP() WHERE queryString = '$query_string';", $connection);
@@ -569,7 +569,7 @@
                         imagepng($im, "saved/$img_save_name"); //Save the image in the "saved" directory.
 
                         //Save a identification record on DB.
-                        mysql_query("REPLACE INTO savedimages VALUES ($pg_GUID, '$realm_name', '" . getOrderQueryString($_SERVER["QUERY_STRING"]) . "', '$img_save_name', UNIX_TIMESTAMP());", $connection);
+                        mysql_query("REPLACE INTO savedimages VALUES ($pg_GUID, '$realm_name', '" . getOrderQueryString($_SERVER["QUERY_STRING"]) . "', '$img_save_name', UNIX_TIMESTAMP(), UNIX_TIMESTAMP());", $connection);
                     }
                     mysql_close($connection);
                 }

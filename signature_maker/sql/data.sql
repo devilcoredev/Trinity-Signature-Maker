@@ -1988,6 +1988,7 @@ CREATE TABLE IF NOT EXISTS `savedimages` (
   `server` varchar(10) COLLATE utf8_bin NOT NULL,
   `queryString` varchar(255) COLLATE utf8_bin NOT NULL,
   `imageName` varchar(255) COLLATE utf8_bin NOT NULL,
+  `creation` int(12) NOT NULL,
   `lastEdit` int(12) NOT NULL,
   PRIMARY KEY (`pgGUID`,`server`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
