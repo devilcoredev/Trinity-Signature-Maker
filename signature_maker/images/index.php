@@ -2,16 +2,9 @@
     <head>
         <title>Select an image</title>
         <script language="JavaScript">
-            function selectText()
-            {
-                document.getElementsByName("text_image")[0].focus();
-                document.getElementsByName("text_image")[0].select();
-            }
-
             function select(input)
             {
-                document.getElementsByName("text_image")[0].value = input;
-                selectText();
+                document.getElementById("text_image").src = document.getElementById(input).src;
 
                 var field_edit = "<?php print $_GET["field_edit"]; ?>";
                 if(field_edit != '')
@@ -30,7 +23,7 @@
                         if($i) print "                "; //Indexes are number, so you don't need to use another counter.
                         print "<tr>\r\n";
                         print "                    <td>\r\n";
-                        print "                        <center><a href=\"#text_link\" onClick=\"select('$value');\"><img width=\"350\" src=\"bg/$value.png\" onContextMenu=\"return false;\"></a></center>\r\n";
+                        print "                        <center><a href=\"#text_link\" onClick=\"select('$value');\"><img width=\"350\" id=\"$value\" src=\"bg/$value.png\" onContextMenu=\"return false;\"></a></center>\r\n";
                         print "                    </td>\r\n";
                         print "                </tr>\r\n";
                     }
@@ -39,7 +32,8 @@
                     <td>
                         <center>
                             <a name="text_link">
-                            <input type="text" name="text_image" size="15" style="text-align: center" onClick="selectText();"><br>
+                            Selected image:
+                            <img id="text_image" src="blank_64.png" width="350" height="50" onContextMenu="return false;">
                         </center>
                     </td>
                 </tr>

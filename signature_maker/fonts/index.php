@@ -2,16 +2,9 @@
     <head>
         <title>Select a font</title>
         <script language="JavaScript">
-            function selectText()
-            {
-                document.getElementsByName("font_text")[0].focus();
-                document.getElementsByName("font_text")[0].select();
-            }
-
             function copyText(input)
             {
-                document.getElementsByName("font_text")[0].value = input;
-                selectText();
+                document.getElementById("font_text").src = document.getElementById(input).src;
 
                 var field_edit = "<?php print $_GET["field_edit"]; ?>";
                 if(field_edit != '')
@@ -31,7 +24,7 @@
                         if($count++) print "                ";
                         print "<tr>\r\n";
                         print "                    <td>\r\n";
-                        print "                        <center><a href=\"#text_link\" onClick=\"copyText('$i');\"><img width=250 src=\"print_font.php?id_font=$i\" onContextMenu=\"return false;\"></a></center>\r\n";
+                        print "                        <center><a href=\"#text_link\" onClick=\"copyText('$i');\"><img width=250 id=\"$i\" src=\"print_font.php?id_font=$i\" onContextMenu=\"return false;\"></a></center>\r\n";
                         print "                    </td>\r\n";
                         print "                </tr>\r\n";
                     }
@@ -40,7 +33,8 @@
                     <td>
                         <center>
                             <a name="text_link">
-                            <input type="text" name="font_text" size="15" style="text-align: center" onClick="selectText();"><br>
+                            Selected font:<br>
+                            <img id="font_text" src="../images/blank_64.png" onContextMenu="return false;">
                         </center>
                     </td>
                 </tr>

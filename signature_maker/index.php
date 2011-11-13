@@ -20,7 +20,7 @@
             {
                 day = new Date();
                 id = day.getTime();
-                eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0, scrollbars=1, location=0, statusbar=0, menubar=0, resizable=0, width=" + X + ", height=" + Y + "');");
+                eval("page" + id + " = window.open(URL, '" + id + "', 'toolbar=0, scrollbars=1, location=0, statusbar=0, menubar=0, resizable=0, width=" + X + ", height=" + Y + ", top=0, left=0');");
                 eval("page" + id + ".creator = self;");
             }
 
@@ -258,7 +258,7 @@
                     <td align="middle"><center><input type="text" name="pg_name"></center></td>
                 </tr>
                 <tr>
-                    <td>Select a background: (select a <a href="javascript:popUp('colors/index.php?field_edit=background', 350, 485)">color</a> or an <a href="javascript:popUp('images/index.php?field_edit=background', 400, 830)">image</a>).</td>
+                    <td>Select a background: (select a <a href="javascript:popUp('colors/index.php?field_edit=background', 350, 500)">color</a> or an <a href="javascript:popUp('images/index.php?field_edit=background', 400, 830)">image</a>).</td>
                     <td align="middle"><center><input type="text" name="background"></center></td>
                 </tr>
                 <tr>
@@ -305,7 +305,7 @@
                     <td align="middle"><center>Yes <input type="radio" name="type_image" value="race_class" checked="checked">&nbsp&nbsp&nbsp&nbspNo <input type="radio" name="type_image" value="class"></center></td>
                 </tr>
                 <tr>
-                    <td>Select the text <a href="javascript:popUp('colors/index.php?field_edit=text_color', 350, 485)">color</a>:</td>
+                    <td>Select the text <a href="javascript:popUp('colors/index.php?field_edit=text_color', 350, 500)">color</a>:</td>
                     <td align="middle"><center><input type="text" name="text_color"></center></td>
                 </tr>
                 <tr>
