@@ -299,7 +299,7 @@
                 <tr>
                     <td colspan="12">
                         <center>
-                            Selected color:
+                            Selected color:<br>
                             <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" borderColor="111111">
                                 <tr>
                                     <td id="text_color" bgColor="ffffff" style="width: 160px; height: 25px;" align="middle"></td>

@@ -321,7 +321,7 @@
                 if($result = mysql_query("SELECT * FROM savedimages WHERE lastEdit < (UNIX_TIMESTAMP() - $image_expire_time);", $connessione))
                 {
                     while($row = mysql_fetch_array($result, MYSQL_ASSOC))
-                        if(file_exists("saved/" . $row["imageName"]) && is_file("saved/" . $row["imageName"]))
+                        if(file_exists("saved/" . $row["imageName"]))
                             unlink("saved/" . $row["imageName"]);
                     mysql_free_result($result);
                 }

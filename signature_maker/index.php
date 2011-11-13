@@ -37,9 +37,9 @@
             //Function that switches signature<->load, if set to true changes from loading to signature, else changes from signature to loading.
             function switchImage(mode)
             {
-                document.getElementById("links").style.display        = (mode ? "block" : "none");
-                document.getElementById("signature").style.display        = (mode ? "block" : "none");
-                document.getElementById("loading").style.display  = (mode ? "none" : "block");
+                document.getElementById("links").style.display      = (mode ? "block" : "none");
+                document.getElementById("signature").style.display  = (mode ? "block" : "none");
+                document.getElementById("loading").style.display    = (mode ? "none" : "block");
             }
 
             //Function called when the signatures are not loaded properly.

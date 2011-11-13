@@ -32,7 +32,7 @@
                     <td>
                         <center>
                             <a name="text_link">
-                            Selected image:
+                            Selected image:<br>
                             <img id="text_image" src="blank_64.png" width="350" height="50" onContextMenu="return false;">
                         </center>
                     </td>
