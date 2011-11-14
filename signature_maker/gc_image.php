@@ -293,9 +293,19 @@
                                     //If is given the url of a valid PNG image i insert it, otherwise insert the default image.
                                     if(isset($_GET["url_image"]) && $_GET["url_image"]!='')
                                     {
-                                        $avatar_img = utf8_decode($_GET["url_image"]);
+                                        $avatar_img  = utf8_decode($_GET["url_image"]);
+                                        $file_name   = "temp_images/" . sha1($avatar_img) . '.' . pathinfo($avatar_img, PATHINFO_EXTENSION); //Search the name of the image.
+
+                                        if(!file_exists($file_name)) //If the image does not exists i copy it to the cache.
+                                        {
+                                            $contents = file_get_contents($avatar_img);
+                                            file_put_contents($file_name, $contents);
+                                        }
+
+                                        $avatar_img = $file_name; //Return the new link to the image.
                                         if(imagecreatefromstring(file_get_contents($avatar_img)) != FALSE)
                                             $external_image = true;
+                                        else unlink($avatar_img); //If the file isn't an image i delete it.
                                     }
 
                                     if(!$external_image)
