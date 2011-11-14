@@ -283,18 +283,12 @@
                     <td onClick="selectButton(this);" bgColor="#FF00FF" style="cursor: hand; width: 15px; height: 20px;"></td>
                 </tr>
                 <tr>
-                    <td onClick="selectButton(this);" bgColor="#000000" style="cursor: hand; width: 15px; height: 20px;"></td>
-                    <td onClick="selectButton(this);" bgColor="#191919" style="cursor: hand; width: 15px; height: 20px;"></td>
-                    <td onClick="selectButton(this);" bgColor="#333333" style="cursor: hand; width: 15px; height: 20px;"></td>
-                    <td onClick="selectButton(this);" bgColor="#4c4c4c" style="cursor: hand; width: 15px; height: 20px;"></td>
-                    <td onClick="selectButton(this);" bgColor="#666666" style="cursor: hand; width: 15px; height: 20px;"></td>
-                    <td onClick="selectButton(this);" bgColor="#7f7f7f" style="cursor: hand; width: 15px; height: 20px;"></td>
-                    <td onClick="selectButton(this);" bgColor="#999999" style="cursor: hand; width: 15px; height: 20px;"></td>
-                    <td onClick="selectButton(this);" bgColor="#b2b2b2" style="cursor: hand; width: 15px; height: 20px;"></td>
-                    <td onClick="selectButton(this);" bgColor="#cccccc" style="cursor: hand; width: 15px; height: 20px;"></td>
-                    <td onClick="selectButton(this);" bgColor="#e5e5e5" style="cursor: hand; width: 15px; height: 20px;"></td>
-                    <td onClick="selectButton(this);" bgColor="#f2f2f2" style="cursor: hand; width: 15px; height: 20px;"></td>
-                    <td onClick="selectButton(this);" bgColor="#FFFFFF" style="cursor: hand; width: 15px; height: 20px;"></td>
+                    <td colspan="2" onClick="selectButton(this);" bgColor="#000000" style="cursor: hand; width: 15px; height: 20px;"></td>
+                    <td colspan="2" onClick="selectButton(this);" bgColor="#333333" style="cursor: hand; width: 15px; height: 20px;"></td>
+                    <td colspan="2" onClick="selectButton(this);" bgColor="#666666" style="cursor: hand; width: 15px; height: 20px;"></td>
+                    <td colspan="2" onClick="selectButton(this);" bgColor="#999999" style="cursor: hand; width: 15px; height: 20px;"></td>
+                    <td colspan="2" onClick="selectButton(this);" bgColor="#CCCCCC" style="cursor: hand; width: 15px; height: 20px;"></td>
+                    <td colspan="2" onClick="selectButton(this);" bgColor="#FFFFFF" style="cursor: hand; width: 15px; height: 20px;"></td>
                 </tr>
                 <tr>
                     <td colspan="12">
