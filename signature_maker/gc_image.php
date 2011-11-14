@@ -293,9 +293,19 @@
                                     //Se viene dato l'url di un'immagine png valida lo inserisco, altrimenti inserisco quella di default della classe.
                                     if(isset($_GET["url_image"]) && $_GET["url_image"]!='')
                                     {
-                                        $avatar_img = utf8_decode($_GET["url_image"]);
+                                        $avatar_img  = utf8_decode($_GET["url_image"]);
+                                        $file_name   = "temp_images/" . sha1($avatar_img) . '.' . pathinfo($avatar_img, PATHINFO_EXTENSION); //Ricavo il nome univoco dell'immagine.
+
+                                        if(!file_exists($file_name)) //Se l'immagine non esiste la copio in cache.
+                                        {
+                                            $contents = file_get_contents($avatar_img);
+                                            file_put_contents($file_name, $contents);
+                                        }
+
+                                        $avatar_img = $file_name; //Restituisco il nuovo link all'immagine.
                                         if(imagecreatefromstring(file_get_contents($avatar_img)) != FALSE)
                                             $external_image = true;
+                                        else unlink($avatar_img); //Se il file non è un'immagine lo rimuovo.
                                     }
 
                                     if(!$external_image)

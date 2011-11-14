@@ -146,6 +146,31 @@
     $backgrounds[] = "bg_drake";
     $backgrounds[] = "bg_lightning";
     $backgrounds[] = "bg_vulcan";
+    $backgrounds[] = "bg_arrow";
+    $backgrounds[] = "bg_black_temple";
+    $backgrounds[] = "bg_cataclysm";
+    $backgrounds[] = "bg_dawn";
+    $backgrounds[] = "bg_deathwing";
+    $backgrounds[] = "bg_eyes";
+    $backgrounds[] = "bg_female_orc";
+    $backgrounds[] = "bg_fire";
+    $backgrounds[] = "bg_frostmurne";
+    $backgrounds[] = "bg_icc_01";
+    $backgrounds[] = "bg_icc_02";
+    $backgrounds[] = "bg_illidan_01";
+    $backgrounds[] = "bg_illidan_02";
+    $backgrounds[] = "bg_lanathel";
+    $backgrounds[] = "bg_lich_king_eyes";
+    $backgrounds[] = "bg_moon_01";
+    $backgrounds[] = "bg_moon_02";
+    $backgrounds[] = "bg_naga";
+    $backgrounds[] = "bg_panda_01";
+    $backgrounds[] = "bg_pumpkin";
+    $backgrounds[] = "bg_vashj";
+    $backgrounds[] = "bg_war";
+    $backgrounds[] = "bg_woodland";
+    $backgrounds[] = "bg_worgren";
+    $backgrounds[] = "bg_wrist";
 
     //Effetti visivi.
     $effects = array();
@@ -236,24 +261,36 @@
     $stats["personalrating5"]    = array("name" => "Personal Rating 5v5", "field_name" => "personalRating5", "text" => "Personal Rating 5v5: %s");
 
     //Una volta ogni 24 ore vengono riscritte le informazioni sugli achievements sul file di configurazione in modo da non leggerli sempre da db.
-    $to_fill_achievements = false;
-    if($file = fopen("custom/check_achievements.lock", 'r'))
+    $check_day = false;
+    if($file = fopen("custom/check_day.lock", 'r'))
     {
         if(!feof($file))
         {
             $time = fgets($file, 255);
             if($time < (time() - (24*60*60)))
-                $to_fill_achievements = true;
-        }else $to_fill_achievements = true;
+                $check_day = true;
+        }else $check_day = true;
         fclose($file);
-    }else $to_fill_achievements = true;
+    }else $check_day = true;
 
-    if($to_fill_achievements)
+    if($check_day)
     {
-        if($file = fopen("custom/check_achievements.lock", 'w'))
+        if($file = fopen("custom/check_day.lock", 'w'))
         {
             fputs($file, time());
             fclose($file);
+        }
+
+        $path_name = "./temp_images/";
+        if($handle = opendir($path_name))
+        {
+            while(false !== ($file = readdir($handle)))
+            {
+                $file_path = $path_name . $file;
+                if(is_file($file_path) && pathinfo($file_path, PATHINFO_EXTENSION)!="htm") //Cancello tutte le immagini.
+                    unlink($file_path);
+            }
+            closedir($handle);
         }
 
         if($ach_file = fopen("custom/achievements.php", 'w'))
