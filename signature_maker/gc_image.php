@@ -125,6 +125,48 @@
             }
         }
     }
+
+    //La funzione restituisce 0 se l'achievement non è valido (ad esempio achievement di first kill oppure Feast of Strenght) oppure i punti dell'achievement se è valido.
+    function isValidAchievement($achievement_id)
+    {
+        global $site_host, $site_username, $site_password, $site_database;
+        $returnValue = 0;
+
+        if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
+        {
+            if(mysql_select_db($site_database, $my_conn))
+                if($my_result = mysql_query("SELECT points FROM achievement WHERE ID = $achievement_id;", $my_conn))
+                {
+                    if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
+                        $returnValue = $my_row["points"];
+                    mysql_free_result($my_result);
+                }
+            mysql_close($my_conn);
+        }
+
+        return $returnValue;
+    }
+
+    //La funzione restituisce le informazioni su un dato talento.
+    function getTalentInfo($spellId)
+    {
+        global $site_host, $site_username, $site_password, $site_database;
+        $returnValue = 0;
+
+        if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
+        {
+            if(mysql_select_db($site_database, $my_conn))
+                if($my_result = mysql_query("SELECT rankId, tabPage FROM talent WHERE spellTalent = $spellId;", $my_conn))
+                {
+                    if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
+                        $returnValue = $my_row;
+                    mysql_free_result($my_result);
+                }
+            mysql_close($my_conn);
+        }
+
+        return $returnValue;
+    }
 ?>
 <?php
     //Variabili globali.
@@ -272,20 +314,14 @@
                                     {
                                         while($talents_row = mysql_fetch_array($talents_result, MYSQL_ASSOC))
                                             if($vet = getTalentInfo($talents_row["spell"]))
-                                            {
-                                                $tab = $vet["tabPage"];
-                                                $talents[$tab] += $vet["rankId"];
-                                            }
+                                                $talents[$vet["tabPage"]] += $vet["rankId"];
                                         mysql_free_result($talents_result);
                                     }
                                     $row["talents"] = $talents[0] . '/' . $talents[1] . '/' . $talents[2]; //Talenti nella forma (x/x/x).
 
                                     //Nome della spec.
                                     if($max_talent = max($talents[0], $talents[1], $talents[2]))
-                                    {
-                                        $i_t = array_search($max_talent, $talents);
-                                        $spec_name .= ' ' . $tab_names[$row["class"]][$i_t];
-                                    }
+                                        $spec_name .= ' ' . $tab_names[$row["class"]][array_search($max_talent, $talents)];
 
                                     //Livello - Classe - Razza.
                                     $string_info = "Level " . $row["level"] . ' ' . $races[$row["race"]] . ' ' . $classes[$row["class"]]["name"] . $spec_name;
@@ -297,15 +333,15 @@
                                         $file_name   = "temp_images/" . sha1($avatar_img) . '.' . pathinfo($avatar_img, PATHINFO_EXTENSION); //Ricavo il nome univoco dell'immagine.
 
                                         if(!file_exists($file_name)) //Se l'immagine non esiste la copio in cache.
-                                        {
-                                            $contents = file_get_contents($avatar_img);
-                                            file_put_contents($file_name, $contents);
-                                        }
+                                            if($contents = file_get_contents($avatar_img))
+                                                file_put_contents($file_name, $contents);
 
                                         $avatar_img = $file_name; //Restituisco il nuovo link all'immagine.
-                                        if(imagecreatefromstring(file_get_contents($avatar_img)) != FALSE)
+                                        if($check_im = imagecreatefromstring(file_get_contents($avatar_img)))
+                                        {
                                             $external_image = true;
-                                        else unlink($avatar_img); //Se il file non è un'immagine lo rimuovo.
+                                            imagedestroy($check_im);
+                                        }else unlink($avatar_img); //Se il file non è un'immagine lo rimuovo.
                                     }
 
                                     if(!$external_image)
@@ -362,14 +398,14 @@
                                                     while($achievements_row = mysql_fetch_array($achievements_result, MYSQL_ASSOC))
                                                         if($punti = isValidAchievement($achievements_row["achievement"]))
                                                         {
-                                                            $ach_count += 1; //Incremento il conto degli achievements ottenuti.
+                                                            $ach_count ++; //Incremento il conto degli achievements ottenuti.
                                                             $ach_points += $punti; //Incremento il punteggio degli achivements ottenuti.
                                                         }
                                                     mysql_free_result($achievements_result);
                                                 }
                                                 //Inserisco nel vettore delle stats i dati ottenuti.
-                                                $row["achievements"] = $ach_count;
-                                                $row["achievementPoints"] = $ach_points;
+                                                $row["achievements"]       = $ach_count;
+                                                $row["achievementPoints"]  = $ach_points;
                                             }
 
                                             if(isset($stats["$get_stat"]["name"]))
@@ -385,10 +421,7 @@
 
                                                 //Check per evitare di mettere stats doppie.
                                                 if(!in_array($temp_string, $show_stats))
-                                                {
-                                                    $show_stats[$index] = $temp_string;
-                                                    $index++;
-                                                }
+                                                    $show_stats[$index++] = $temp_string;
                                             }
                                         }
                                 }else $do_next_step = false;

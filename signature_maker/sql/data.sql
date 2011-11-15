@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS `achievement`;
-CREATE TABLE IF NOT EXISTS `achievement` (
+CREATE TABLE `achievement` (
   `ID` int(4) NOT NULL,
   `points` int(2) NOT NULL DEFAULT '0',
   `name` varchar(255) DEFAULT NULL,
@@ -1829,7 +1829,7 @@ INSERT INTO `achievement` (`ID`, `points`, `name`) VALUES
 
 
 DROP TABLE IF EXISTS `chartitles`;
-CREATE TABLE IF NOT EXISTS `chartitles` (
+CREATE TABLE `chartitles` (
   `titleId` int(3) NOT NULL,
   `wowheadId` int(3) NOT NULL DEFAULT '0',
   `nameString` varchar(255) DEFAULT NULL,
@@ -1983,10 +1983,10 @@ INSERT INTO `chartitles` (`titleId`, `wowheadId`, `nameString`) VALUES
 
 
 DROP TABLE IF EXISTS `immaginisalvate`;
-CREATE TABLE IF NOT EXISTS `immaginisalvate` (
+CREATE TABLE `immaginisalvate` (
   `pgGUID` int(10) NOT NULL,
   `server` varchar(10) COLLATE utf8_bin NOT NULL,
-  `queryString` varchar(255) COLLATE utf8_bin NOT NULL,
+  `queryString` text COLLATE utf8_bin NOT NULL,
   `nomeImmagine` varchar(255) COLLATE utf8_bin NOT NULL,
   `creazione` int(12) NOT NULL,
   `ultimaModifica` int(12) NOT NULL,
@@ -1996,7 +1996,7 @@ CREATE TABLE IF NOT EXISTS `immaginisalvate` (
 
 
 DROP TABLE IF EXISTS `talent`;
-CREATE TABLE IF NOT EXISTS `talent` (
+CREATE TABLE `talent` (
   `spellTalent` int(5) NOT NULL,
   `rankId` int(1) NOT NULL DEFAULT '0',
   `tabPage` int(1) NOT NULL DEFAULT '0',

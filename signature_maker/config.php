@@ -127,6 +127,15 @@
     $fonts["flashd"]['x']                 = 190;
     $fonts["flashd"]['y']                 = 50;
 
+    $fonts["comic"] = array();
+    $fonts["comic"]["text"]              = "Comic Sans";
+    $fonts["comic"]["name"]              = "comicbd.ttf";
+    $fonts["comic"]["nome_pg"]           = 19;
+    $fonts["comic"]["stats"]             = 8;
+    $fonts["comic"]["addictional_info"]  = 10;
+    $fonts["comic"]['x']                 = 230;
+    $fonts["comic"]['y']                 = 50;
+
     //Sfondi per le firme.
     $backgrounds = array();
     $backgrounds[] = "bg_abstract";
@@ -267,7 +276,7 @@
         if(!feof($file))
         {
             $time = fgets($file, 255);
-            if($time < (time() - (24*60*60)))
+            if((time()-$time) >= (24*60*60))
                 $check_day = true;
         }else $check_day = true;
         fclose($file);
@@ -279,18 +288,6 @@
         {
             fputs($file, time());
             fclose($file);
-        }
-
-        $path_name = "./temp_images/";
-        if($handle = opendir($path_name))
-        {
-            while(false !== ($file = readdir($handle)))
-            {
-                $file_path = $path_name . $file;
-                if(is_file($file_path) && pathinfo($file_path, PATHINFO_EXTENSION)!="htm") //Cancello tutte le immagini.
-                    unlink($file_path);
-            }
-            closedir($handle);
         }
 
         if($ach_file = fopen("custom/achievements.php", 'w'))
@@ -338,7 +335,7 @@
         if(!feof($file))
         {
             $time = fgets($file, 255);
-            if($time < (time() - 120))
+            if((time()-$time) >= 120)
                 $todo_clean = true;
         }else $todo_clean = true;
         fclose($file);
@@ -368,50 +365,42 @@
             mysql_close($connessione);
         }
     }
+
+
+    $check_week = false;
+    if($file = fopen("custom/check_week.lock", 'r'))
+    {
+        if(!feof($file))
+        {
+            $time = fgets($file, 255);
+            if((time()-$time) >= (7*24*60*60))
+                $check_week = true;
+        }else $check_week = true;
+        fclose($file);
+    }else $check_week = true;
+
+    if($check_week)
+    {
+        if($file = fopen("custom/check_week.lock", 'w'))
+        {
+            fputs($file, time());
+            fclose($file);
+        }
+
+        $path_name = "./temp_images/";
+        if($handle = opendir($path_name))
+        {
+            while(($file = readdir($handle)) !== false)
+            {
+                $file_path = $path_name . $file;
+                if(is_file($file_path) && pathinfo($file_path, PATHINFO_EXTENSION)!="htm") //Cancello tutte le immagini.
+                    unlink($file_path);
+            }
+            closedir($handle);
+        }
+    }
 ?>
 <?php
-    //La funzione restituisce 0 se l'achievement non è valido (ad esempio achievement di first kill oppure Feast of Strenght) oppure i punti dell'achievement se è valido.
-    function isValidAchievement($achievement_id)
-    {
-        global $site_host, $site_username, $site_password, $site_database;
-        $returnValue = 0;
-
-        if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
-        {
-            if(mysql_select_db($site_database, $my_conn))
-                if($my_result = mysql_query("SELECT points FROM achievement WHERE ID = $achievement_id;", $my_conn))
-                {
-                    if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
-                        $returnValue = $my_row["points"];
-                    mysql_free_result($my_result);
-                }
-            mysql_close($my_conn);
-        }
-
-        return $returnValue;
-    }
-
-    //La funzione restituisce le informazioni su un dato talento.
-    function getTalentInfo($spellId)
-    {
-        global $site_host, $site_username, $site_password, $site_database;
-        $returnValue = 0;
-
-        if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
-        {
-            if(mysql_select_db($site_database, $my_conn))
-                if($my_result = mysql_query("SELECT rankId, tabPage FROM talent WHERE spellTalent = $spellId;", $my_conn))
-                {
-                    if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
-                        $returnValue = $my_row;
-                    mysql_free_result($my_result);
-                }
-            mysql_close($my_conn);
-        }
-
-        return $returnValue;
-    }
-
     //INIZIO FUNZIONI STANDARD GD.
         function isGD2supported()
         {
@@ -427,8 +416,7 @@
                     $GD2 = in_array("imagegd2", get_extension_funcs("gd"));
                 else if($php_ver < 403) // PHP = 4.2.x
                 {
-                    $im = imagecreatetruecolor(10, 10);
-                    if($im)
+                    if($im = imagecreatetruecolor(10, 10))
                     {
                         $GD2 = 1;
                         imagedestroy($im);
@@ -446,17 +434,6 @@
             else if(isGD2supported())
                 return 2;
             else return 1;
-        }
-
-        function IsFormatSupported($format)
-        {
-            if(($format=="gif") && (imagetypes() & IMG_GIF))
-                return true;
-            else if(($format=="jpeg") && (imagetypes() & IMG_JPG))
-                return true;
-            else if(($format=="png") && (imagetypes() & IMG_PNG))
-                return true;
-            else return false;
         }
     //FINE FUNZIONI STANDARD GD.
 ?>
