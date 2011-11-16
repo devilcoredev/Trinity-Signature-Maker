@@ -409,7 +409,7 @@
                     <img src="images/loading.gif"><br>
                 </div>
                 <img id="firma" src="" style="display: none" onLoad="switchImage(true);" onError="showError(this);" onAbort="showError(this);" onContextMenu="return false;"><br>
-                <table id="links" border="0">
+                <table align="center" id="links" width="680" border="0" style="display: none">
                     <tr>
                         <td>Link diretto all'immagine:</td>
                         <td><input type="text" name="direct_link" size="40" readOnly="readonly" onClick="selezionaTesto(this);"></td>
@@ -428,7 +428,7 @@
                     </tr>
                     <tr>
                         <td>Link all'immagine con tag BBCode e link all'armory:</td>
-                        <td><input type="text" name="bbcode_armory_link" size="40" readonly="readonly" onclick="selezionaTesto(this);"></td>
+                        <td><input type="text" name="bbcode_armory_link" size="40" readonly="readonly" onClick="selezionaTesto(this);"></td>
                     </tr>
                 </table>
             </div>
