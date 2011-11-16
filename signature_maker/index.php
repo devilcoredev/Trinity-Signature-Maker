@@ -326,7 +326,7 @@
                 </tr>
                 <tr>
                     <td>Selezinare "sì" per inserire sia la classe che la razza nell'avatar, "no" per inserire solo la classe (avatar Cataclysm) nell'avatar:</td>
-                    <td align="middle"><center>Sì <input type="radio" name="type_image" value="race_class" checked="checked">&nbsp&nbsp&nbsp&nbspNo <input type="radio" name="type_image" value="class"></center></td>
+                    <td align="middle"><center>Sì <input type="radio" name="type_image" value="race_class" checked="checked">&nbsp&nbsp&nbsp&nbsp No <input type="radio" name="type_image" value="class"></center></td>
                 </tr>
                 <tr>
                     <td>Seleziona il <a href="javascript:popUp('colori/index.php?field_edit=colore_testo', 350, 500)">colore</a> del testo:</td>
