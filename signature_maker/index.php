@@ -213,9 +213,10 @@
                         ?>
 
                         var armory_server_name = '';
-                        var pos_server_name = server_keys.indexOf(server)
-                        if(pos_server_name != -1)
-                            armory_server_name = server_armory_names[pos_server_name];
+
+                        for(var i=0; i<server_keys.length; ++i)
+                            if(server_keys[i] == server && armory_server_name=='')
+                                armory_server_name = server_armory_names[i];
 
                         var armory_link = armory_template_link.replace("%s", armory_server_name).replace("%p", maximizeText(pg_name));
 
