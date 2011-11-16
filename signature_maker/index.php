@@ -326,7 +326,7 @@
                 </tr>
                 <tr>
                     <td>Select "yes" to enter the race and the class in the avatar, "no" to insert only the class (Cataclysm Avatar) in the avatar:</td>
-                    <td align="middle"><center>Yes <input type="radio" name="type_image" value="race_class" checked="checked">&nbsp&nbsp&nbsp&nbspNo <input type="radio" name="type_image" value="class"></center></td>
+                    <td align="middle"><center>Yes <input type="radio" name="type_image" value="race_class" checked="checked">&nbsp&nbsp&nbsp&nbsp No <input type="radio" name="type_image" value="class"></center></td>
                 </tr>
                 <tr>
                     <td>Select the text <a href="javascript:popUp('colors/index.php?field_edit=text_color', 350, 500)">color</a>:</td>
