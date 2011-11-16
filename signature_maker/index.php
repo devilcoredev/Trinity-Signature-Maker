@@ -193,7 +193,31 @@
                     if(headers != <?php print $dim_dati_errati; ?>)
                     {
                         var armory_template_link = "<?php print $armory_template_link; ?>";
-                        var armory_link = armory_template_link.replace("%s", server).replace("%p", massimizzaTesto(nome_pg));
+
+                        var server_keys          = new Array();
+                        var server_armory_names  = new Array();
+
+                        <?php
+                            $index = 0;
+                            foreach($armory_name as $i => $value)
+                            {
+                                if($value != '')
+                                {
+                                    if($index) print "                        ";
+                                    print "server_keys[$index]          = \"$i\";\r\n";
+                                    print "                        ";
+                                    print "server_armory_names[$index]  = \"$value\";\r\n";
+                                    $index++;
+                                }
+                            }
+                        ?>
+
+                        var armory_server_name = '';
+                        var pos_server_name = server_keys.indexOf(server)
+                        if(pos_server_name != -1)
+                            armory_server_name = server_armory_names[pos_server_name];
+
+                        var armory_link = armory_template_link.replace("%s", armory_server_name).replace("%p", massimizzaTesto(nome_pg));
 
                         //Inserisco i link nelle caselle di testo.
                         direct_link.value         = absolute_link;

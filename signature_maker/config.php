@@ -13,27 +13,31 @@
     $server_name = "";
 
     //Dati di connessione ai servers (per aggiungere un nuovo server basta copiare un blocco e cambiare la chiave
-    //con l'acronimo del nuovo server), il campo "$realm_name" sarà visualizzato in firma.
+    //con l'acronimo del nuovo server), il campo "$realm_name" sarà visualizzato in firma, il campo "$armory_name"
+    //sarà il nome del server visualizzato nel link all'armory.
     //Dati di connessione al database del primo server.
-    $realm_name[""]  = "";
-    $host[""]        = "";
-    $username[""]    = "";
-    $password[""]    = "";
-    $database[""]    = "";
+    $realm_name[""]   = "";
+    $armory_name[""]  = "";
+    $host[""]         = "";
+    $username[""]     = "";
+    $password[""]     = "";
+    $database[""]     = "";
 
     //Dati di connessione al database del secondo server (se presente, altrimenti commentare questo blocco).
-    $realm_name[""]  = "";
-    $host[""]        = "";
-    $username[""]    = "";
-    $password[""]    = "";
-    $database[""]    = "";
+    $realm_name[""]   = "";
+    $armory_name[""]  = "";
+    $host[""]         = "";
+    $username[""]     = "";
+    $password[""]     = "";
+    $database[""]     = "";
 
     //Dati di connessione al database del terzo server (se presente, altrimenti commentare questo blocco).
-    $realm_name[""]  = "";
-    $host[""]        = "";
-    $username[""]    = "";
-    $password[""]    = "";
-    $database[""]    = "";
+    $realm_name[""]   = "";
+    $armory_name[""]  = "";
+    $host[""]         = "";
+    $username[""]     = "";
+    $password[""]     = "";
+    $database[""]     = "";
 
     //Dati di connessione al database contenente titoli ed achievements.
     $site_host      = "";
