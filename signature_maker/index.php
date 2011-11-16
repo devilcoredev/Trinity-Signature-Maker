@@ -193,7 +193,7 @@
                     if(headers != <?php print $dim_dati_errati; ?>)
                     {
                         var armory_template_link = "<?php print $armory_template_link; ?>";
-                        var armory_link = armory_template_link.replace("%s", server.toUpperCase()).replace("%p", massimizzaTesto(nome_pg));
+                        var armory_link = armory_template_link.replace("%s", server).replace("%p", massimizzaTesto(nome_pg));
 
                         //Inserisco i link nelle caselle di testo.
                         direct_link.value         = absolute_link;
