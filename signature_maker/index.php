@@ -2,10 +2,11 @@
     include("config.php");
 
     //Funzione che stampa un menu a tendina contente le stats supportate.
-    function printMenu($input)
+    function printMenu()
     {
-        print "<option value=\"-\" selected>---</option>\r\n";
-        foreach($input as $i => $value)
+        global $stats;
+        print "                                <option value=\"-\" selected>---</option>\r\n";
+        foreach($stats as $i => $value)
         {
             print "                                <option value=\"$i\">" . $value["name"] . "</option>\r\n";
         }
@@ -280,11 +281,11 @@
                 </tr>
                 <tr>
                     <td>Inserisci il nome del personaggio:</td>
-                    <td align="middle"><center><input type="text" name="nome_pg"></center></td>
+                    <td align="middle"><center><input type="text" name="nome_pg" /></center></td>
                 </tr>
                 <tr>
                     <td>Seleziona uno sfondo: (seleziona un <a href="javascript:popUp('colori/index.php?field_edit=sfondo', 350, 500)">colore</a> oppure una <a href="javascript:popUp('images/index.php?field_edit=sfondo', 400, 830)">immagine</a>).</td>
-                    <td align="middle"><center><input type="text" name="sfondo"></center></td>
+                    <td align="middle"><center><input type="text" name="sfondo" /></center></td>
                 </tr>
                 <tr>
                     <td>Seleziona un effetto per lo sfondo:</td>
@@ -293,16 +294,16 @@
                             <table border="0">
                                 <tr>
                                     <td>Nessuno:</td>
-                                    <td><input type="radio" name="effects" value="none" checked="checked"></td>
+                                    <td><input type="radio" name="effects" value="none" checked="checked" /></td>
                                 </tr>
                                 <?php
                                     foreach($effects as $i => $value)
                                     {
                                         if($i) print "                                ";
                                         print "<tr>\r\n                                    ";
-                                        print "<td><img src=\"images/effects/$value.png\" onContextMenu=\"return false;\"></td>";
+                                        print "<td><img src=\"images/effects/$value.png\" onContextMenu=\"return false;\" /></td>";
                                         print "\r\n                                    ";
-                                        print "<td><input type=\"radio\" name=\"effects\" value=\"$value\"></td>\r\n";
+                                        print "<td><input type=\"radio\" name=\"effects\" value=\"$value\" /></td>\r\n";
                                         print "                                </tr>\r\n";
                                     }
                                 ?>
@@ -322,20 +323,20 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Inserisci un link ad un avatar:<br>(<u><font color="ff0000"><b>ATTENZIONE</b></font>: un link esterno potrebbe ritardare il caricamento della firma</u>), lasciare vuoto per utilizzare l'immagine di default della classe.</td>
-                    <td align="middle"><center><input type="text" name="url_image"></center></td>
+                    <td>Inserisci un link ad un avatar:<br />(<u><font color="ff0000"><b>ATTENZIONE</b></font>: un link esterno potrebbe ritardare il caricamento della firma</u>), lasciare vuoto per utilizzare l'immagine di default della classe.</td>
+                    <td align="middle"><center><input type="text" name="url_image" /></center></td>
                 </tr>
                 <tr>
                     <td>Selezinare "sì" per inserire sia la classe che la razza nell'avatar, "no" per inserire solo la classe (avatar Cataclysm) nell'avatar:</td>
-                    <td align="middle"><center>Sì <input type="radio" name="type_image" value="race_class" checked="checked">&nbsp&nbsp&nbsp&nbsp No <input type="radio" name="type_image" value="class"></center></td>
+                    <td align="middle"><center>Sì <input type="radio" name="type_image" value="race_class" checked="checked" />&nbsp&nbsp&nbsp&nbsp No <input type="radio" name="type_image" value="class" /></center></td>
                 </tr>
                 <tr>
                     <td>Seleziona il <a href="javascript:popUp('colori/index.php?field_edit=colore_testo', 350, 500)">colore</a> del testo:</td>
-                    <td align="middle"><center><input type="text" name="colore_testo"></center></td>
+                    <td align="middle"><center><input type="text" name="colore_testo" /></center></td>
                 </tr>
                 <tr>
                     <td>Seleziona il <a href="javascript:popUp('fonts/index.php?field_edit=text_font', 300, 420)">carattere</a> del testo:</td>
-                    <td align="middle"><center><input type="text" name="text_font"></center></td>
+                    <td align="middle"><center><input type="text" name="text_font" /></center></td>
                 </tr>
                 <?php
                     if($image_resize_enabled)
@@ -344,92 +345,59 @@
                         print "                    <td>Inserisci le dimensioni dell'immagine:</td>\r\n";
                         print "                    <td align=\"middle\">\r\n";
                         print "                        <center>\r\n";
-                        print "                            Dimensione x: <input type=\"text\" name=\"x\" size=3><br>\r\n";
-                        print "                            Dimensione y: <input type=\"text\" name=\"y\" size=3>\r\n";
+                        print "                            Dimensione x: <input type=\"text\" name=\"x\" size=\"3\" /><br />\r\n";
+                        print "                            Dimensione y: <input type=\"text\" name=\"y\" size=\"3\" />\r\n";
+                        print "                        </center>\r\n";
+                        print "                    </td>\r\n";
+                        print "                </tr>\r\n";
+                    }
+
+                    $ordinary_numbers = array("primo", "secondo", "terzo", "quarto", "quinto");
+                    for($i=0; $i<6; ++$i)
+                    {
+                        if($i || $image_resize_enabled)
+                            print "                ";
+                        print "<tr>\r\n";
+                        print "                    <td>Seleziona la statistica per il " . $ordinary_numbers[$i] . " campo:</td>\r\n";
+                        print "                    <td align=\"middle\">\r\n";
+                        print "                        <center>\r\n";
+                        print "                            <select name=\"stat" . ($i+1) . "\">\r\n";
+                        printMenu();
+                        print "                            </select>\r\n";
                         print "                        </center>\r\n";
                         print "                    </td>\r\n";
                         print "                </tr>\r\n";
                     }
                 ?>
-                <tr>
-                    <td>Seleziona la statistica per il primo campo:</td>
-                    <td align="middle">
-                        <center>
-                            <select name="stat1">
-                                <?php printMenu($stats); ?>
-                            </select>
-                        </center>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Seleziona la statistica per il secondo campo:</td>
-                    <td align="middle">
-                        <center>
-                            <select name="stat2">
-                                <?php printMenu($stats); ?>
-                            </select>
-                        </center>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Seleziona la statistica per il terzo campo:</td>
-                    <td align="middle">
-                        <center>
-                            <select name="stat3">
-                                <?php printMenu($stats); ?>
-                            </select>
-                        </center>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Seleziona la statistica per il quarto campo:</td>
-                    <td align="middle">
-                        <center>
-                            <select name="stat4">
-                                <?php printMenu($stats); ?>
-                            </select>
-                        </center>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Seleziona la statistica per il quinto campo:</td>
-                    <td align="middle">
-                        <center>
-                            <select name="stat5">
-                                <?php printMenu($stats); ?>
-                            </select>
-                        </center>
-                    </td>
-                </tr>
-                <tr><td colspan="2"><center><input type="button" value="Crea immagine!" onClick="return show_message();"></center></td></tr>
+                <tr><td colspan="2"><center><input type="button" value="Crea immagine!" onClick="return show_message();" /></center></td></tr>
             </table>
             <div id="output" style="display: none">
-                <br>
+                <br />
                 <div id="caricamento">
-                    Elaborazione firma in corso...<br>
-                    <img src="images/loading.gif"><br>
+                    Elaborazione firma in corso...<br />
+                    <img src="images/loading.gif" /><br />
                 </div>
-                <img id="firma" src="" style="display: none" onLoad="switchImage(true);" onError="showError(this);" onAbort="showError(this);" onContextMenu="return false;"><br>
+                <img id="firma" src="" style="display: none" onLoad="switchImage(true);" onError="showError(this);" onAbort="showError(this);" onContextMenu="return false;" /><br />
                 <table align="center" id="links" width="680" border="0" style="display: none">
                     <tr>
                         <td>Link diretto all'immagine:</td>
-                        <td><input type="text" name="direct_link" size="40" readOnly="readonly" onClick="selezionaTesto(this);"></td>
+                        <td><input type="text" name="direct_link" size="40" readOnly="readonly" onClick="selezionaTesto(this);" /></td>
                     </tr>
                     <tr>
                         <td>Link all'immagine con tag HTML:</td>
-                        <td><input type="text" name="html_link" size="40" readOnly="readonly" onClick="selezionaTesto(this);"></td>
+                        <td><input type="text" name="html_link" size="40" readOnly="readonly" onClick="selezionaTesto(this);" /></td>
                     </tr>
                     <tr>
                         <td>Link all'immagine con tag HTML e link all'armory:</td>
-                        <td><input type="text" name="html_armory_link" size="40" readOnly="readonly" onClick="selezionaTesto(this);"></td>
+                        <td><input type="text" name="html_armory_link" size="40" readOnly="readonly" onClick="selezionaTesto(this);" /></td>
                     </tr>
                     <tr>
                         <td>Link all'immagine con tag BBCode (per il forum di <?php print $server_name; ?>):</td>
-                        <td><input type="text" name="bbcode_link" size="40" readOnly="readonly" onClick="selezionaTesto(this);"></td>
+                        <td><input type="text" name="bbcode_link" size="40" readOnly="readonly" onClick="selezionaTesto(this);" /></td>
                     </tr>
                     <tr>
                         <td>Link all'immagine con tag BBCode e link all'armory:</td>
-                        <td><input type="text" name="bbcode_armory_link" size="40" readonly="readonly" onClick="selezionaTesto(this);"></td>
+                        <td><input type="text" name="bbcode_armory_link" size="40" readonly="readonly" onClick="selezionaTesto(this);" /></td>
                     </tr>
                 </table>
             </div>

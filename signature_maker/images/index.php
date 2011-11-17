@@ -23,7 +23,7 @@
                         if($i) print "                "; //Gli indici sono numeri, quindi non è necessario usare un altro contatore.
                         print "<tr>\r\n";
                         print "                    <td>\r\n";
-                        print "                        <center><a href=\"#ancora_testo\" onClick=\"select('$value');\"><img width=\"350\" id=\"$value\" src=\"bg/$value.png\" onContextMenu=\"return false;\"></a></center>\r\n";
+                        print "                        <center><a href=\"#ancora_testo\" onClick=\"select('$value');\"><img width=\"350\" id=\"$value\" src=\"bg/$value.png\" onContextMenu=\"return false;\" /></a></center>\r\n";
                         print "                    </td>\r\n";
                         print "                </tr>\r\n";
                     }
@@ -31,9 +31,9 @@
                 <tr>
                     <td>
                         <center>
-                            <a name="ancora_testo">
-                            Immagine selezionata:<br>
-                            <img id="testo_immagine" src="blank_64.png" width="350" height="50" onContextMenu="return false;">
+                            <a name="ancora_testo" />
+                            Immagine selezionata:<br />
+                            <img id="testo_immagine" src="blank_64.png" width="350" height="50" onContextMenu="return false;" />
                         </center>
                     </td>
                 </tr>
