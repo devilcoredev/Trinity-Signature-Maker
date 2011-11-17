@@ -24,7 +24,7 @@
                         if($count++) print "                ";
                         print "<tr>\r\n";
                         print "                    <td>\r\n";
-                        print "                        <center><a href=\"#text_link\" onClick=\"copyText('$i');\"><img width=250 id=\"$i\" src=\"print_font.php?id_font=$i\" onContextMenu=\"return false;\"></a></center>\r\n";
+                        print "                        <center><a href=\"#text_link\" onClick=\"copyText('$i');\"><img width=250 id=\"$i\" src=\"print_font.php?id_font=$i\" onContextMenu=\"return false;\" /></a></center>\r\n";
                         print "                    </td>\r\n";
                         print "                </tr>\r\n";
                     }
@@ -32,9 +32,9 @@
                 <tr>
                     <td>
                         <center>
-                            <a name="text_link">
-                            Selected font:<br>
-                            <img id="font_text" src="../images/blank_64.png" onContextMenu="return false;">
+                            <a name="text_link" />
+                            Selected font:<br />
+                            <img id="font_text" src="../images/blank_64.png" onContextMenu="return false;" />
                         </center>
                     </td>
                 </tr>

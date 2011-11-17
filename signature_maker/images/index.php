@@ -23,7 +23,7 @@
                         if($i) print "                "; //Indexes are number, so you don't need to use another counter.
                         print "<tr>\r\n";
                         print "                    <td>\r\n";
-                        print "                        <center><a href=\"#text_link\" onClick=\"select('$value');\"><img width=\"350\" id=\"$value\" src=\"bg/$value.png\" onContextMenu=\"return false;\"></a></center>\r\n";
+                        print "                        <center><a href=\"#text_link\" onClick=\"select('$value');\"><img width=\"350\" id=\"$value\" src=\"bg/$value.png\" onContextMenu=\"return false;\" /></a></center>\r\n";
                         print "                    </td>\r\n";
                         print "                </tr>\r\n";
                     }
@@ -31,9 +31,9 @@
                 <tr>
                     <td>
                         <center>
-                            <a name="text_link">
-                            Selected image:<br>
-                            <img id="text_image" src="blank_64.png" width="350" height="50" onContextMenu="return false;">
+                            <a name="text_link" />
+                            Selected image:<br />
+                            <img id="text_image" src="blank_64.png" width="350" height="50" onContextMenu="return false;" />
                         </center>
                     </td>
                 </tr>
