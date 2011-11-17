@@ -353,7 +353,7 @@
                     }
 
                     $ordinary_numbers = array("primo", "secondo", "terzo", "quarto", "quinto");
-                    for($i=0; $i<6; ++$i)
+                    for($i=0; $i<5; ++$i)
                     {
                         if($i || $image_resize_enabled)
                             print "                ";
