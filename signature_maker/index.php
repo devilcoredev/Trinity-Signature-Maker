@@ -5,10 +5,10 @@
     function printMenu()
     {
         global $stats;
-        print "                                <option value=\"-\" selected>---</option>\r\n";
+        print "                                    <option value=\"-\" selected>---</option>\r\n";
         foreach($stats as $i => $value)
         {
-            print "                                <option value=\"$i\">" . $value["name"] . "</option>\r\n";
+            print "                                    <option value=\"$i\">" . $value["name"] . "</option>\r\n";
         }
     }
 ?>
@@ -155,14 +155,24 @@
                 ?>
 
                 for(var i=1; i<6; ++i)
-                {
-                    var stat = document.getElementsByName("stat"+i)[0].value;
-                    if(stat!='' && stat!="undefined" && stat!='-')
+                    if(document.getElementsByName("enable_custom_stat"+i)[0].checked == true)
                     {
-                        indirizzo += (count++ ? '&' : '?');
-                        indirizzo += "stat" + i + '=' + stat;
+                        var custom_stat = encodeURIComponent(document.getElementsByName("custom_stat"+i)[0].value);
+                        if(custom_stat!='' && custom_stat!="undefined")
+                        {
+                            indirizzo += (count++ ? '&' : '?');
+                            indirizzo += "custom_stat" + i + '=' + custom_stat;
+                        }
                     }
-                }
+                    else
+                    {
+                        var stat = document.getElementsByName("stat"+i)[0].value;
+                        if(stat!='' && stat!="undefined" && stat!='-')
+                        {
+                            indirizzo += (count++ ? '&' : '?');
+                            indirizzo += "stat" + i + '=' + stat;
+                        }
+                    }
 
                 //Mi trovo l'indirizzo del collegamento escludendo index.php ed inserendo gc_image + la queryString.
                 var indirizzo_path = location.href;
@@ -253,9 +263,23 @@
                 testo.focus();
                 testo.select();
             }
+
+            function switchStat(index)
+            {
+                var isChecked = document.getElementsByName("enable_custom_stat"+index)[0].checked;
+
+                document.getElementById("display_stat"+index).style.display         = (isChecked ? "none" : "block");
+                document.getElementById("display_custom_stat"+index).style.display  = (isChecked ? "block" : "none");
+            }
+
+            function initializeText()
+            {
+                for(var i=1; i<6; ++i)
+                    switchStat(i);
+            }
         </script>
     </head>
-    <body>
+    <body onLoad="initializeText()">
         <center>
             <table width="<?php print $x; ?>" cellSpacing="0" border="1">
                 <tr>
@@ -358,12 +382,18 @@
                         if($i || $image_resize_enabled)
                             print "                ";
                         print "<tr>\r\n";
-                        print "                    <td>Seleziona la statistica per il " . $ordinary_numbers[$i] . " campo:</td>\r\n";
+                        print "                    <td>\r\n";
+                        print "                        Seleziona la statistica per il " . $ordinary_numbers[$i] . " campo<br />\r\n";
+                        print "                        (testo custom: <input type=\"checkbox\" name=\"enable_custom_stat" . ($i+1) . "\" onClick=\"switchStat(" . ($i+1) . ");\"/>):\r\n";
+                        print "                    </td>\r\n";
                         print "                    <td align=\"middle\">\r\n";
                         print "                        <center>\r\n";
-                        print "                            <select name=\"stat" . ($i+1) . "\">\r\n";
+                        print "                            <div id=\"display_stat" . ($i+1) . "\" style=\"display: block;\">\r\n";
+                        print "                                <select name=\"stat" . ($i+1) . "\">\r\n";
                         printMenu();
-                        print "                            </select>\r\n";
+                        print "                                </select>\r\n";
+                        print "                            </div><br />\r\n";
+                        print "                            <div id=\"display_custom_stat" . ($i+1) . "\" style=\"display: none;\"><input type=\"text\" name=\"custom_stat" . ($i+1) . "\" maxlength=\"20\" /></div>\r\n";
                         print "                        </center>\r\n";
                         print "                    </td>\r\n";
                         print "                </tr>\r\n";
