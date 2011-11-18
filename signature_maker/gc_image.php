@@ -382,8 +382,12 @@
                                     //Stats (in an array).
                                     $index = 0;
                                     $show_stats = array();
+                                    $temp_string = '';
                                     for($i=1; $i<6; ++$i) //Up to 5 stats of your choice.
-                                        if(isset($_GET["stat$i"]) && $_GET["stat$i"]!='') //Check if there is a template of that stat.
+                                    {
+                                        if(isset($_GET["custom_stat$i"]) && $_GET["custom_stat$i"]!='')
+                                            $temp_string = substr(utf8_decode($_GET["custom_stat$i"]), 0, 20);
+                                        else if(isset($_GET["stat$i"]) && $_GET["stat$i"]!='') //Check if there is a template of that stat.
                                         {
                                             $get_stat = strtolower($_GET["stat$i"]);
 
@@ -418,12 +422,13 @@
 
                                                 //Replace the values to the template strings.
                                                 $temp_string = str_replace("%s", $field_value, $stats["$get_stat"]["text"]);
-
-                                                //Check to make sure to avoid double stats.
-                                                if(!in_array($temp_string, $show_stats))
-                                                    $show_stats[$index++] = $temp_string;
                                             }
                                         }
+
+                                        //Check to make sure to avoid double stats.
+                                        if(!in_array($temp_string, $show_stats))
+                                            $show_stats[$index++] = $temp_string;
+                                    }
                                 }else $do_next_step = false;
                                 mysql_free_result($result);
                             }else $do_next_step = false;
