@@ -437,5 +437,12 @@
                 return 2;
             else return 1;
         }
+
+        function imageCreateFromVersion($x, $y)
+        {
+            if(GDVersion() == 1)
+                return imagecreate($x, $y);
+            else return imagecreatetruecolor($x, $y);
+        }
     //STANDARD GD FUNCTION - END.
 ?>
