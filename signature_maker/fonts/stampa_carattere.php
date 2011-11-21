@@ -11,9 +11,7 @@
             $dim_x = $font['x'];
             $dim_y = $font['y'];
 
-            if(GDVersion() == 1)
-                $im = imagecreate($dim_x, $dim_y);
-            else $im = imagecreatetruecolor($dim_x, $dim_y);
+            $im = imageCreateFromVersion($dim_x, $dim_y);
 
             $col = imagecolorallocate($im, 255, 255, 25);
             imagefilledrectangle($im, 0, 0, $dim_x, $dim_y, $col);

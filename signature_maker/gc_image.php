@@ -426,7 +426,7 @@
                                         }
 
                                         //Check per evitare di mettere stats doppie.
-                                        if(!in_array($temp_string, $show_stats))
+                                        if(!in_array($temp_string, $show_stats) && $temp_string!='')
                                             $show_stats[$index++] = $temp_string;
                                     }
                                 }else $do_next_step = false;
@@ -449,9 +449,7 @@
             header("Content-type: image/png");
 
             //Dipende dalla versione di GD l'immagine viene creata in modo diverso.
-            if(GDVersion() == 1)
-                $im = imagecreate($x, $y);
-            else $im = imagecreatetruecolor($x, $y);
+            $im = imageCreateFromVersion($x, $y);
 
             $gold          = imagecolorallocate($im, 255, 215, 0); //Colore rettangolo.
             $ombra         = imagecolorallocate($im, 0, 0, 0); //Colore delle ombre.
@@ -596,9 +594,7 @@
                     {
                         $new_x = $x * $prop;
                         $new_y = $y * $prop;
-                        if(GDVersion() == 1)
-                            $img_resized = imagecreate($new_x, $new_y);
-                        else $img_resized = imagecreatetruecolor($new_x, $new_y);
+                        $img_resized = imageCreateFromVersion($new_x, $new_y);
                         if(imagecopyresampled($img_resized, $im, 0, 0, 0, 0, $new_x, $new_y, $x, $y))
                         {
                             imagedestroy($im);
