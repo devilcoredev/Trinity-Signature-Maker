@@ -69,22 +69,29 @@
 
                 //Add new fields to the queryString if they are defined.
 
+                //Change only if you have inserted the name of the pg.
+                var pg_name = document.getElementsByName("pg_name")[0].value;
+                if(pg_name=='')
+                {
+                    alert("<?php print $error_pg; ?>");
+                    return false;
+                }
+
                 var server = document.getElementsByName("server")[0].value;
-                if(server!='' && server!="undefined")
+                if(server!='')
                 {
                     count++;
                     pLocation += "?server=" + server;
                 }
 
-                var pg_name = document.getElementsByName("pg_name")[0].value;
-                if(pg_name!='' && pg_name!="undefined")
+                if(pg_name!='')
                 {
                     pLocation += (count++ ? '&' : '?');
                     pLocation += "pg_name=" + pg_name;
                 }
 
                 var background = document.getElementsByName("background")[0].value;
-                if(background!='' && background!="undefined")
+                if(background!='')
                 {
                     pLocation += (count++ ? '&' : '?');
                     pLocation += "background=" + background;
@@ -99,14 +106,14 @@
                     }
 
                 var filter = document.getElementsByName("filter")[0].value;
-                if(filter!='' && filter!="undefined")
+                if(filter!='')
                 {
                     pLocation += (count++ ? '&' : '?');
                     pLocation += "filter=" + filter;
                 }
 
                 var url_image = encodeURIComponent(document.getElementsByName("url_image")[0].value);
-                if(url_image!='' && url_image!="undefined")
+                if(url_image!='')
                 {
                     pLocation += (count++ ? '&' : '?');
                     pLocation += "url_image=" + url_image;
@@ -121,32 +128,32 @@
                     }
 
                 var text_color = document.getElementsByName("text_color")[0].value;
-                if(text_color!='' && text_color!="undefined")
+                if(text_color!='')
                 {
                     pLocation += (count++ ? '&' : '?');
                     pLocation += "text_color=" + text_color;
                 }
 
                 var text_font = document.getElementsByName("text_font")[0].value;
-                if(text_font!='' && text_font!="undefined")
+                if(text_font!='')
                 {
                     pLocation += (count++ ? '&' : '?');
                     pLocation += "text_font=" + text_font;
                 }
 
-                //This part is only enabled by config.
                 <?php
+                    //This part is only enabled by config.
                     if($image_resize_enabled)
                     {
                         print "var x = document.getElementsByName('x')[0].value;\r\n";
-                        print "                if(x!='' && x!=\"undefined\")\r\n";
+                        print "                if(x!='')\r\n";
                         print "                {\r\n";
                         print "                    pLocation += (count++ ? '&' : '?');\r\n";
                         print "                    pLocation += \"x=\" + x;\r\n";
                         print "                }\r\n\r\n";
 
                         print "                var y = document.getElementsByName('y')[0].value;\r\n";
-                        print "                if(y!='' && y!=\"undefined\")\r\n";
+                        print "                if(y!='')\r\n";
                         print "                {\r\n";
                         print "                    pLocation += (count++ ? '&' : '?');\r\n";
                         print "                    pLocation += \"y=\" + y;\r\n";
@@ -158,7 +165,7 @@
                     if(document.getElementsByName("enable_custom_stat"+i)[0].checked == true)
                     {
                         var custom_stat = encodeURIComponent(document.getElementsByName("custom_stat"+i)[0].value);
-                        if(custom_stat!='' && custom_stat!="undefined")
+                        if(custom_stat!='')
                         {
                             pLocation += (count++ ? '&' : '?');
                             pLocation += "custom_stat" + i + '=' + custom_stat;
@@ -167,7 +174,7 @@
                     else
                     {
                         var stat = document.getElementsByName("stat"+i)[0].value;
-                        if(stat!='' && stat!="undefined" && stat!='-')
+                        if(stat!='' && stat!='-')
                         {
                             pLocation += (count++ ? '&' : '?');
                             pLocation += "stat" + i + '=' + stat;
@@ -183,77 +190,73 @@
                 if(location_path[location_path.length - 1] != '/')
                     location_path += '/';
 
-                //Change only if you have inserted the name of the pg.
-                if(pg_name!='' && pg_name!="undefined")
+                var absolute_link = location_path + pLocation;
+
+                var direct_link         = document.getElementsByName("direct_link")[0];
+                var html_link           = document.getElementsByName("html_link")[0];
+                var html_armory_link    = document.getElementsByName("html_armory_link")[0];
+                var bbcode_link         = document.getElementsByName("bbcode_link")[0];
+                var bbcode_armory_link  = document.getElementsByName("bbcode_armory_link")[0];
+
+                //I find the size of the error file (PNG will be much larger than the size of signatures).
+                var req = new XMLHttpRequest();
+                req.open("GET", absolute_link, false);
+                req.send(null);
+                var headers = req.getResponseHeader("Content-Length");
+
+                //If the size of the image matches that error then I empty fields, otherwise the normal view.
+                if(headers != <?php print $dim_incorrect_data; ?>)
                 {
-                    var absolute_link = location_path + pLocation;
+                    var armory_template_link = "<?php print $armory_template_link; ?>";
 
-                    var direct_link         = document.getElementsByName("direct_link")[0];
-                    var html_link           = document.getElementsByName("html_link")[0];
-                    var html_armory_link    = document.getElementsByName("html_armory_link")[0];
-                    var bbcode_link         = document.getElementsByName("bbcode_link")[0];
-                    var bbcode_armory_link  = document.getElementsByName("bbcode_armory_link")[0];
+                    var server_keys          = new Array();
+                    var server_armory_names  = new Array();
 
-                    //I find the size of the error file (PNG will be much larger than the size of signatures).
-                    var req = new XMLHttpRequest();
-                    req.open("GET", absolute_link, false);
-                    req.send(null);
-                    var headers = req.getResponseHeader("Content-Length");
-
-                    //If the size of the image matches that error then I empty fields, otherwise the normal view.
-                    if(headers != <?php print $dim_incorrect_data; ?>)
-                    {
-                        var armory_template_link = "<?php print $armory_template_link; ?>";
-
-                        var server_keys          = new Array();
-                        var server_armory_names  = new Array();
-
-                        <?php
-                            $index = 0;
-                            foreach($armory_name as $i => $value)
+                    <?php
+                        $index = 0;
+                        foreach($armory_name as $i => $value)
+                        {
+                            if($value != '')
                             {
-                                if($value != '')
-                                {
-                                    if($index) print "                        ";
-                                    print "server_keys[$index]          = \"$i\";\r\n";
-                                    print "                        ";
-                                    print "server_armory_names[$index]  = \"$value\";\r\n";
-                                    $index++;
-                                }
+                                if($index) print "                        ";
+                                print "server_keys[$index]          = \"$i\";\r\n";
+                                print "                        ";
+                                print "server_armory_names[$index]  = \"$value\";\r\n";
+                                $index++;
                             }
-                        ?>
+                        }
+                    ?>
 
-                        var armory_server_name = '';
+                    var armory_server_name = '';
 
-                        for(var i=0; i<server_keys.length; ++i)
-                            if(server_keys[i] == server && armory_server_name=='')
-                                armory_server_name = server_armory_names[i];
+                    for(var i=0; i<server_keys.length; ++i)
+                        if(server_keys[i] == server && armory_server_name=='')
+                            armory_server_name = server_armory_names[i];
 
-                        var armory_link = armory_template_link.replace("%s", armory_server_name).replace("%p", maximizeText(pg_name));
+                    var armory_link = armory_template_link.replace("%s", armory_server_name).replace("%p", maximizeText(pg_name));
 
-                        //I put links in the text boxes.
-                        direct_link.value         = absolute_link;
-                        html_link.value           = "<img src=\"" + absolute_link + "\">";
-                        html_armory_link.value    = "<a href=\"" + armory_link + "\"><img src=\"" + absolute_link + "\"></a>";
-                        bbcode_link.value         = "[img]" + absolute_link + "[/img]";
-                        bbcode_armory_link.value  = "[url=" + armory_link + "][img]" + absolute_link + "[/img][/url]";
-                    }
-                    else
-                    {
-                        direct_link.value         = '';
-                        html_link.value           = '';
-                        html_armory_link.value    = '';
-                        bbcode_link.value         = '';
-                        bbcode_armory_link.value  = '';
-                    }
+                    //I put links in the text boxes.
+                    direct_link.value         = absolute_link;
+                    html_link.value           = "<img src=\"" + absolute_link + "\">";
+                    html_armory_link.value    = "<a href=\"" + armory_link + "\"><img src=\"" + absolute_link + "\"></a>";
+                    bbcode_link.value         = "[img]" + absolute_link + "[/img]";
+                    bbcode_armory_link.value  = "[url=" + armory_link + "][img]" + absolute_link + "[/img][/url]";
+                }
+                else
+                {
+                    direct_link.value         = '';
+                    html_link.value           = '';
+                    html_armory_link.value    = '';
+                    bbcode_link.value         = '';
+                    bbcode_armory_link.value  = '';
+                }
 
-                    document.getElementById("signature").src = absolute_link; //I change the path of the image.
-                    document.getElementById("output").style.display = "block"; //Display the output.
+                document.getElementById("signature").src = absolute_link; //I change the path of the image.
+                document.getElementById("output").style.display = "block"; //Display the output.
 
-                    //I do the switch images only if the signature is not already loaded.
-                    if(!document.getElementById("signature").complete)
-                        switchImage(false);
-                }else alert("<?php print $error_pg; ?>");
+                //I do the switch images only if the signature is not already loaded.
+                if(!document.getElementById("signature").complete)
+                    switchImage(false);
 
                 return true;
             }
