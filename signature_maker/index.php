@@ -233,7 +233,7 @@
                         if(server_keys[i] == server && armory_server_name=='')
                             armory_server_name = server_armory_names[i];
 
-                        var armory_link = armory_template_link.replace("%s", armory_server_name).replace("%p", massimizzaTesto(nome_pg));
+                    var armory_link = armory_template_link.replace("%s", armory_server_name).replace("%p", massimizzaTesto(nome_pg));
 
                     //Inserisco i link nelle caselle di testo.
                     direct_link.value         = absolute_link;
