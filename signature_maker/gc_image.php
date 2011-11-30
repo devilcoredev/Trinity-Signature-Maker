@@ -36,6 +36,78 @@
         return $txt[1];
     }
 
+    function getItemTemplate($item_id)
+    {
+        global $site_host, $site_username, $site_password, $site_database;
+        $returnValue = 0;
+
+        if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
+        {
+            if(mysql_select_db($site_database, $my_conn))
+                if($my_result = mysql_query("SELECT * FROM itemtemplate WHERE entry = $item_id;", $my_conn))
+                {
+                    if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
+                        $returnValue = $my_row;
+                    mysql_free_result($my_result);
+                }
+            mysql_close($my_conn);
+        }
+
+        return $returnValue;
+    }
+
+    function sumItemEnchantments(&$input, $data)
+    {
+        global $site_host, $site_username, $site_password, $site_database, $stats_rating_div;
+
+        if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
+        {
+            if(mysql_select_db($site_database, $my_conn))
+            {
+                $data_array = explode(' ', $data);
+                for($i=0; $i<count($data_array); $i+=3)
+                {
+                    if($data_array[$i] != 0)
+                    {
+                        $query = "SELECT * FROM itemenchantment WHERE ID = " . $data_array[$i] . ';';
+                        if($my_result = mysql_query($query, $my_conn))
+                        {
+                            if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
+                                for($j=0; $j<3; ++$j)
+                                    if($my_row["type$j"]==5 && in_array($my_row["spellid$j"], $stats_rating_div))
+                                    {
+                                        $key = array_search($my_row["spellid$j"], $stats_rating_div);
+                                        $input["$key"] += $my_row["amount$j"];
+                                    }
+                            mysql_free_result($my_result);
+                        }
+                    }
+                }
+            }
+            mysql_close($my_conn);
+        }
+    }
+
+    function getRating($level, $rating_name)
+    {
+        global $site_host, $site_username, $site_password, $site_database;
+        $returnValue = 1;
+
+        if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
+        {
+            if(mysql_select_db($site_database, $my_conn))
+                if($my_result = mysql_query("SELECT $rating_name FROM rating WHERE level = $level;", $my_conn))
+                {
+                    if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
+                        $returnValue = $my_row["$rating_name"];
+                    mysql_free_result($my_result);
+                }
+            mysql_close($my_conn);
+        }
+
+        return $returnValue;
+    }
+
     //La funzione ricava tutte le stats del PG, cerca prima nella tabella character_stats, se non trova nulla cerca in armory_character_stats.
     function fill_stats(&$input, $intput_conn)
     {
@@ -124,6 +196,45 @@
                 mysql_free_result($result);
             }
         }
+
+        //Haste e Hit.
+        $hit_hast_names = array("hit", "meleeHit", "rangedHit", "spellHit", "haste", "meleeHaste", "rangedHaste", "spellHaste");
+        foreach($hit_hast_names as $i => $value)
+        {
+            $input["$value"] = 0;
+        }
+        $query = "SELECT item_instance.itemEntry, item_instance.enchantments FROM character_inventory, item_instance
+                    WHERE character_inventory.item = item_instance.guid AND character_inventory.guid = $guid AND character_inventory.slot<18;";
+        if($result = mysql_query($query, $intput_conn))
+        {
+            global $stats_rating_div;
+            while($row = mysql_fetch_array($result, MYSQL_ASSOC))
+            {
+                sumItemEnchantments($input, $row["enchantments"]);
+                if($item_template = getItemTemplate($row["itemEntry"]))
+                    for($i=1; $i<=$item_template["StatsCount"]; ++$i)
+                        if(in_array($item_template["stat_type$i"], $stats_rating_div))
+                        {
+                            $key = array_search($item_template["stat_type$i"], $stats_rating_div);
+                            $input["$key"] += $item_template["stat_value$i"];
+                        }
+            }
+            $input["meleeHit"]     += $input["hit"];
+            $input["rangedHit"]    += $input["hit"];
+            $input["spellHit"]     += $input["hit"];
+            $input["meleeHaste"]   += $input["haste"];
+            $input["rangedHaste"]  += $input["haste"];
+            $input["spellHaste"]   += $input["haste"];
+            mysql_free_result($result);
+        }
+        $input["hit"]          /= getRating($input["level"], "CR_HIT_MELEE");
+        $input["meleeHit"]     /= getRating($input["level"], "CR_HIT_MELEE");
+        $input["rangedHit"]    /= getRating($input["level"], "CR_HIT_RANGED");
+        $input["spellHit"]     /= getRating($input["level"], "CR_HIT_SPELL");
+        $input["haste"]        /= getRating($input["level"], "CR_HASTE_MELEE");
+        $input["meleeHaste"]   /= getRating($input["level"], "CR_HASTE_MELEE");
+        $input["rangedHaste"]  /= getRating($input["level"], "CR_HASTE_RANGED");
+        $input["spellHaste"]   /= getRating($input["level"], "CR_HASTE_SPELL");
     }
 
     //La funzione restituisce 0 se l'achievement non è valido (ad esempio achievement di first kill oppure Feast of Strenght) oppure i punti dell'achievement se è valido.
