@@ -256,6 +256,14 @@
     $stats["critpct"]            = array("name" => "Crit Pct", "field_name" => "critPct", "text" => "Crit Chance: %s%");
     $stats["rangedcritpct"]      = array("name" => "Ranged Crit Pct", "field_name" => "rangedCritPct", "text" => "Ranged Crit: %s%");
     $stats["spellcritpct"]       = array("name" => "Spell Crit Pct", "field_name" => "spellCritPct", "text" => "Spell Crit: %s%");
+    $stats["hit"]                = array("name" => "Hit Pct", "field_name" => "hit", "text" => "Hit: %s%");
+    $stats["meleehit"]           = array("name" => "Melee Hit Pct", "field_name" => "meleeHit", "text" => "Melee Hit: %s%");
+    $stats["rangedhit"]          = array("name" => "Ranged Hit Pct", "field_name" => "rangedHit", "text" => "Ranged Hit: %s%");
+    $stats["spellhit"]           = array("name" => "Spell Hit Pct", "field_name" => "spellHit", "text" => "Spell Hit: %s%");
+    $stats["haste"]              = array("name" => "Haste Pct", "field_name" => "haste", "text" => "Haste: %s%");
+    $stats["meleehaste"]         = array("name" => "Melee Haste Pct", "field_name" => "meleeHaste", "text" => "Melee Haste: %s%");
+    $stats["rangedhaste"]        = array("name" => "Ranged Haste Pct", "field_name" => "rangedHaste", "text" => "Ranged Haste: %s%");
+    $stats["spellhaste"]         = array("name" => "Spell Haste Pct", "field_name" => "spellHaste", "text" => "Spell Haste: %s%");
     $stats["attackpower"]        = array("name" => "Attack Power", "field_name" => "attackPower", "text" => "Attack Pwr: %s");
     $stats["rangedattackpower"]  = array("name" => "Ranged Attack Power", "field_name" => "rangedAttackPower", "text" => "Ranged Attack Pwr: %s");
     $stats["spellpower"]         = array("name" => "Spell Power", "field_name" => "spellPower", "text" => "Spell Pwr: %s");
@@ -270,6 +278,17 @@
     $stats["personalrating2"]    = array("name" => "Personal Rating 2v2", "field_name" => "personalRating2", "text" => "Personal Rating 2v2: %s");
     $stats["personalrating3"]    = array("name" => "Personal Rating 3v3", "field_name" => "personalRating3", "text" => "Personal Rating 3v3: %s");
     $stats["personalrating5"]    = array("name" => "Personal Rating 5v5", "field_name" => "personalRating5", "text" => "Personal Rating 5v5: %s");
+
+    //Item stats.
+    $stats_rating_div = array();
+    $stats_rating_div["meleeHit"]     = 16;
+    $stats_rating_div["rangedHit"]    = 17;
+    $stats_rating_div["spellHit"]     = 18;
+    $stats_rating_div["meleeHaste"]   = 28;
+    $stats_rating_div["rangedHaste"]  = 29;
+    $stats_rating_div["spellHaste"]   = 30;
+    $stats_rating_div["hit"]          = 31;
+    $stats_rating_div["haste"]        = 36;
 
     //Once every 24 hours are re-written information on achievements in the configuration file so you must not always read them from db.
     $check_day = false;
