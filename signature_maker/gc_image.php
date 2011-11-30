@@ -352,6 +352,15 @@
                 }
             }
 
+            //The user has selected a end bg color.
+            if(isset($_GET["end_background"]) && $_GET["end_background"]!='')
+            {
+                $bg_vet = GetRGBFromHex(strtolower($_GET["end_background"]));
+                $end_bg_red      = $bg_vet[0];
+                $end_bg_green    = $bg_vet[1];
+                $end_bg_blue     = $bg_vet[2];
+            }
+
             //Background effect.
             if(isset($_GET["effects"]) && $_GET["effects"]!='')
             {
@@ -569,22 +578,25 @@
             //CENTRAL COLOUR - START.
                 if($to_img == false) //Colour in shade.
                 {
-                    //Proportions for the attenuation of the color to black (r=0, g=0, b=0).
-                    $prop_bg_red    = ($start_bg_red/$y)/($y/$gradient_proportion_y);
-                    $prop_bg_green  = ($start_bg_green/$y)/($y/$gradient_proportion_y);
-                    $prop_bg_blue   = ($start_bg_blue/$y)/($y/$gradient_proportion_y);
+                    $size_to_div_color = $y;
+                    if(strtolower($_GET["background_method"]) == "vertical")
+                        $size_to_div_color = $x;
 
-                    $bg_red    = $start_bg_red;
-                    $bg_green  = $start_bg_green;
-                    $bg_blue   = $start_bg_blue;
-                    for($i=0; $i<$y; ++$i) //Those with a for loop i colour the image into strips of 1 px.
+                    //Proportions for the attenuation of the color.
+                    $prop_bg_red    = ($start_bg_red - $end_bg_red)/$size_to_div_color;
+                    $prop_bg_green  = ($start_bg_green - $end_bg_green)/$size_to_div_color;
+                    $prop_bg_blue   = ($start_bg_blue - $end_bg_blue)/$size_to_div_color;
+
+                    for($i=0; $i<$size_to_div_color; ++$i) //Those with a for loop i colour the image into strips of 1 px.
                     {
-                        $bg_red    -= ($i * $prop_bg_red);
-                        $bg_green  -= ($i * $prop_bg_green);
-                        $bg_blue   -= ($i * $prop_bg_blue);
+                        $bg_red    = $start_bg_red - ($i * $prop_bg_red);
+                        $bg_green  = $start_bg_green - ($i * $prop_bg_green);
+                        $bg_blue   = $start_bg_blue - ($i * $prop_bg_blue);
 
                         $col = imagecolorallocate($im, $bg_red, $bg_green, $bg_blue);
-                        imagefilledrectangle($im, 0, $i, $x, $i+1, $col);
+                        if(strtolower($_GET["background_method"]) == "vertical")
+                            imageline($im, $i, 0, $i, $y, $col);
+                        else imageline($im, 0, $i, $x, $i, $col);
                         imagecolordeallocate($im, $col);
                     }
                 }

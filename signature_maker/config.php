@@ -68,18 +68,18 @@
     //Enable resizing of images (in proportion) using query string.
     $image_resize_enabled = false;
 
-    //Default background color (red).
+    //Default background color (red to black).
     $to_img          = false;
     $start_bg_red    = 255;
     $start_bg_green  = 0;
     $start_bg_blue   = 0;
+    $end_bg_red      = 0;
+    $end_bg_green    = 0;
+    $end_bg_blue     = 0;
 
     //Default text color (gold).
     //                      red green blue.
     $text_vet_color = array(255, 215, 0);
-
-    //Changing this value can change the start of the gradient to black.
-    $gradient_proportion_y = 2.5;
 
     //Fonts.
     //To add a new font, copy the font file in the folder "fonts" and add a new block with its characteristics as described below.

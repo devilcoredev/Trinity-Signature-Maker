@@ -97,6 +97,20 @@
                     pLocation += "background=" + background;
                 }
 
+                var end_background = document.getElementsByName("end_background")[0].value;
+                if(end_background!='' && background.indexOf("bg_")!=0)
+                {
+                    pLocation += (count++ ? '&' : '?');
+                    pLocation += "end_background=" + end_background;
+                }
+
+                var background_method = document.getElementsByName("background_method")[0].value;
+                if(background_method!='' && background.indexOf("bg_")!=0)
+                {
+                    pLocation += (count++ ? '&' : '?');
+                    pLocation += "background_method=" + background_method;
+                }
+
                 var effects = document.getElementsByName("effects");
                 for(var i=0; i<effects.length; ++i)
                     if(effects[i].checked==1)
@@ -313,6 +327,19 @@
                 <tr>
                     <td>Select a background: (select a <a href="javascript:popUp('colors/index.php?field_edit=background', 350, 500)">color</a> or an <a href="javascript:popUp('images/index.php?field_edit=background', 400, 830)">image</a>).</td>
                     <td align="middle"><center><input type="text" name="background" /></center></td>
+                </tr>
+                <tr>
+                    <td>Select a end background <a href="javascript:popUp('colors/index.php?field_edit=end_background', 350, 500)">color</a> (optional):</td>
+                    <td align="middle"><center><input type="text" name="end_background" /></center></td>
+                </tr>
+                <tr>
+                    <td>Select a background color shade method (optional):</td>
+                    <td align="middle">
+                        <select name="background_method">
+                            <option value="horizontal">Horizontal</option>
+                            <option value="vertical">Vertical</option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <td>Select a background effect:</td>
