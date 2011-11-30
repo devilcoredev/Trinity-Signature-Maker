@@ -69,18 +69,18 @@
     //Abilitazione ridimensionamento delle immagini (in proporzione) tramite query string.
     $image_resize_enabled = false;
 
-    //Colore dello sfondo di default (rosso).
+    //Colore dello sfondo di default (dal rosso al nero).
     $to_img          = false;
     $start_bg_red    = 255;
     $start_bg_green  = 0;
     $start_bg_blue   = 0;
+    $end_bg_red      = 0;
+    $end_bg_green    = 0;
+    $end_bg_blue     = 0;
 
     //Colore del testo di default (oro).
     //                    rosso verde blu.
     $text_vet_color = array(255, 215, 0);
-
-    //Modificando questo valore è possibile modificare l'inizio della sfumatura verso il nero.
-    $proporzione_sfumatura_y = 2.5;
 
     //Caratteri.
     //Per aggiungere un nuovo font, copiare il file del font nella cartella "fonts" e aggiungere un nuovo blocco con le sue caratteristiche

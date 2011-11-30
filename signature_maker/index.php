@@ -97,6 +97,20 @@
                     indirizzo += "sfondo=" + sfondo;
                 }
 
+                var fine_sfondo = document.getElementsByName("fine_sfondo")[0].value;
+                if(fine_sfondo!='' && sfondo.indexOf("bg_")!=0)
+                {
+                    indirizzo += (count++ ? '&' : '?');
+                    indirizzo += "fine_sfondo=" + fine_sfondo;
+                }
+
+                var metodo_sfondo = document.getElementsByName("metodo_sfondo")[0].value;
+                if(metodo_sfondo!='' && sfondo.indexOf("bg_")!=0)
+                {
+                    indirizzo += (count++ ? '&' : '?');
+                    indirizzo += "metodo_sfondo=" + metodo_sfondo;
+                }
+
                 var effects = document.getElementsByName("effects");
                 for(var i=0; i<effects.length; ++i)
                     if(effects[i].checked==1)
@@ -313,6 +327,19 @@
                 <tr>
                     <td>Seleziona uno sfondo: (seleziona un <a href="javascript:popUp('colori/index.php?field_edit=sfondo', 350, 500)">colore</a> oppure una <a href="javascript:popUp('images/index.php?field_edit=sfondo', 400, 830)">immagine</a>).</td>
                     <td align="middle"><center><input type="text" name="sfondo" /></center></td>
+                </tr>
+                <tr>
+                    <td>Seleziona il <a href="javascript:popUp('colori/index.php?field_edit=fine_sfondo', 350, 500)">colore</a> finale dello sfondo (opzionale):</td>
+                    <td align="middle"><center><input type="text" name="fine_sfondo" /></center></td>
+                </tr>
+                <tr>
+                    <td>Seleziona il metodo di sfumatura dello sfondo (opzionale):</td>
+                    <td align="middle">
+                        <select name="metodo_sfondo">
+                            <option value="horizontal">Orizontale</option>
+                            <option value="vertical">Verticale</option>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <td>Seleziona un effetto per lo sfondo:</td>
