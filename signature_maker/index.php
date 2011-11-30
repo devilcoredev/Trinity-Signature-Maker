@@ -336,7 +336,7 @@
                     <td>Seleziona il metodo di sfumatura dello sfondo (opzionale):</td>
                     <td align="middle">
                         <select name="metodo_sfondo">
-                            <option value="horizontal">Orizontale</option>
+                            <option value="horizontal">Orizzontale</option>
                             <option value="vertical">Verticale</option>
                         </select>
                     </td>
