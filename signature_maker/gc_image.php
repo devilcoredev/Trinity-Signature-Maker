@@ -613,7 +613,7 @@
                         break;
                     default:
                         $size_to_div_color = $y;
-                        if(strtolower($_GET["metodo_sfondo"]) == "vertical")
+                        if($metodo_sfondo == "vertical")
                             $size_to_div_color = $x;
 
                         //Proporzioni per l'attenuazione del colore.
@@ -628,7 +628,7 @@
                             $bg_blue   = $start_bg_blue - ($i * $prop_bg_blue);
 
                             $col = imagecolorallocate($im, $bg_red, $bg_green, $bg_blue);
-                            if(strtolower($_GET["metodo_sfondo"]) == "vertical")
+                            if($metodo_sfondo == "vertical")
                                 imageline($im, $i, 0, $i, $y, $col);
                             else imageline($im, 0, $i, $x, $i, $col);
                             imagecolordeallocate($im, $col);
