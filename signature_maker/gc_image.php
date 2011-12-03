@@ -580,7 +580,7 @@
                         $prop_bg_green  = ($start_bg_green - $end_bg_green) / $size_to_div_color;
                         $prop_bg_blue   = ($start_bg_blue - $end_bg_blue) / $size_to_div_color;
 
-                        for($i=0; $i<$size_to_div_color; ++$i) //Con un ciclo for coloro l'immagine a cerchi di 1 px.
+                        for($i=0; $i<$size_to_div_color; ++$i) //Those with a for loop i colour the image into circles of 1 px.
                         {
                             $bg_red    = $start_bg_red - ($i * $prop_bg_red);
                             $bg_green  = $start_bg_green - ($i * $prop_bg_green);
@@ -595,12 +595,12 @@
                     case "radial":
                         $size_to_div_color = floor($y / 2);
 
-                        //Proporzioni per l'attenuazione del colore.
+                        //Proportions for the attenuation of the color.
                         $prop_bg_red    = ($start_bg_red - $end_bg_red) / $size_to_div_color;
                         $prop_bg_green  = ($start_bg_green - $end_bg_green) / $size_to_div_color;
                         $prop_bg_blue   = ($start_bg_blue - $end_bg_blue) / $size_to_div_color;
 
-                        for($i=0; $i<$size_to_div_color; ++$i) //Con un ciclo for coloro l'immagine a rettangoli di 1 px.
+                        for($i=0; $i<$size_to_div_color; ++$i) //Those with a for loop i colour the image into rectangles of 1 px.
                         {
                             $bg_red    = $start_bg_red - ($i * $prop_bg_red);
                             $bg_green  = $start_bg_green - ($i * $prop_bg_green);
