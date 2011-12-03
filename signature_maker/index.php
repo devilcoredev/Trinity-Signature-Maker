@@ -338,6 +338,8 @@
                         <select name="metodo_sfondo">
                             <option value="horizontal">Orizzontale</option>
                             <option value="vertical">Verticale</option>
+                            <option value="radial">Radiale</option>
+                            <option value="circle">Cerchio</option>
                         </select>
                     </td>
                 </tr>
