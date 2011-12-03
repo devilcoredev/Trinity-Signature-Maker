@@ -338,6 +338,8 @@
                         <select name="background_method">
                             <option value="horizontal">Horizontal</option>
                             <option value="vertical">Vertical</option>
+                            <option value="radial">Radial</option>
+                            <option value="circle">Circle</option>
                         </select>
                     </td>
                 </tr>

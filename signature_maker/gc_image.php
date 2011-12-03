@@ -12,21 +12,9 @@
     //Returns the queryString ordered alphabetically.
     function getOrderQueryString($input)
     {
-        $output = '';
-
-        $input = strtolower($input);
-        $arr = explode('&', $input); //I divide the queryString into an array containing key = value.
-        $count_elements = count($arr);
+        $arr = explode('&', strtolower($input)); //I divide the queryString into an array containing key = value.
         sort($arr); //Sort the array in alphabetical order (in this case are ordered only the keys of the queryString).
-
-        for($i=0; $i<$count_elements; ++$i) //Reconstruct the queryString ordered alphabetically.
-        {
-            $output .= $arr[$i];
-            if($i < ($count_elements - 1))
-                $output .= '&';
-        }
-
-        return mysql_real_escape_string($output); //To avoid SQL-Injections.
+        return mysql_real_escape_string(implode('&', $arr));
     }
 
     //Function that performs a conversion from UInt32 to float.
@@ -66,8 +54,7 @@
             {
                 $data_array = explode(' ', $data);
                 for($i=0; $i<count($data_array); $i+=3)
-                {
-                    if($data_array[$i] != 0)
+                    if($data_array[$i])
                     {
                         $query = "SELECT * FROM itemenchantment WHERE ID = " . $data_array[$i] . ';';
                         if($my_result = mysql_query($query, $my_conn))
@@ -82,7 +69,6 @@
                             mysql_free_result($my_result);
                         }
                     }
-                }
             }
             mysql_close($my_conn);
         }
@@ -198,16 +184,15 @@
         }
 
         //Haste and Hit.
-        $hit_hast_names = array("hit", "meleeHit", "rangedHit", "spellHit", "haste", "meleeHaste", "rangedHaste", "spellHaste");
-        foreach($hit_hast_names as $i => $value)
+        global $stats_rating_div;
+        foreach($stats_rating_div as $i => $value)
         {
-            $input["$value"] = 0;
+            $input["$i"] = 0;
         }
         $query = "SELECT item_instance.itemEntry, item_instance.enchantments FROM character_inventory, item_instance
                     WHERE character_inventory.item = item_instance.guid AND character_inventory.guid = $guid AND character_inventory.slot<18;";
         if($result = mysql_query($query, $intput_conn))
         {
-            global $stats_rating_div;
             while($row = mysql_fetch_array($result, MYSQL_ASSOC))
             {
                 sumItemEnchantments($input, $row["enchantments"]);
@@ -578,26 +563,77 @@
             //CENTRAL COLOUR - START.
                 if($to_img == false) //Colour in shade.
                 {
-                    $size_to_div_color = $y;
-                    if(strtolower($_GET["background_method"]) == "vertical")
-                        $size_to_div_color = $x;
-
-                    //Proportions for the attenuation of the color.
-                    $prop_bg_red    = ($start_bg_red - $end_bg_red)/$size_to_div_color;
-                    $prop_bg_green  = ($start_bg_green - $end_bg_green)/$size_to_div_color;
-                    $prop_bg_blue   = ($start_bg_blue - $end_bg_blue)/$size_to_div_color;
-
-                    for($i=0; $i<$size_to_div_color; ++$i) //Those with a for loop i colour the image into strips of 1 px.
+                    $background_method = strtolower($_GET["background_method"]);
+                    switch($background_method)
                     {
-                        $bg_red    = $start_bg_red - ($i * $prop_bg_red);
-                        $bg_green  = $start_bg_green - ($i * $prop_bg_green);
-                        $bg_blue   = $start_bg_blue - ($i * $prop_bg_blue);
+                    case "circle":
+                        $bg = imagecolorallocate($im, $start_bg_red, $start_bg_green, $start_bg_blue);
+                        imagefill($im, 0, 0, $bg);
+                        imagecolordeallocate($im, $bg);
 
-                        $col = imagecolorallocate($im, $bg_red, $bg_green, $bg_blue);
-                        if(strtolower($_GET["background_method"]) == "vertical")
-                            imageline($im, $i, 0, $i, $y, $col);
-                        else imageline($im, 0, $i, $x, $i, $col);
-                        imagecolordeallocate($im, $col);
+                        $size_to_div_color = ceil(sqrt(pow($x, 2) + pow($y, 2)) / 4);
+                        $center_x = floor($x / 2);
+                        $center_y = floor($y / 2);
+
+                        //Proportions for the attenuation of the color.
+                        $prop_bg_red    = ($start_bg_red - $end_bg_red) / $size_to_div_color;
+                        $prop_bg_green  = ($start_bg_green - $end_bg_green) / $size_to_div_color;
+                        $prop_bg_blue   = ($start_bg_blue - $end_bg_blue) / $size_to_div_color;
+
+                        for($i=0; $i<$size_to_div_color; ++$i) //Con un ciclo for coloro l'immagine a cerchi di 1 px.
+                        {
+                            $bg_red    = $start_bg_red - ($i * $prop_bg_red);
+                            $bg_green  = $start_bg_green - ($i * $prop_bg_green);
+                            $bg_blue   = $start_bg_blue - ($i * $prop_bg_blue);
+                            $size = ($size_to_div_color - $i) * 2;
+
+                            $col = imagecolorallocate($im, $bg_red, $bg_green, $bg_blue);
+                            imagefilledarc($im, $center_x, $center_y, $size, $size, 0, 360, $col, IMG_ARC_PIE);
+                            imagecolordeallocate($im, $col);
+                        }
+                        break;
+                    case "radial":
+                        $size_to_div_color = floor($y / 2);
+
+                        //Proporzioni per l'attenuazione del colore.
+                        $prop_bg_red    = ($start_bg_red - $end_bg_red) / $size_to_div_color;
+                        $prop_bg_green  = ($start_bg_green - $end_bg_green) / $size_to_div_color;
+                        $prop_bg_blue   = ($start_bg_blue - $end_bg_blue) / $size_to_div_color;
+
+                        for($i=0; $i<$size_to_div_color; ++$i) //Con un ciclo for coloro l'immagine a rettangoli di 1 px.
+                        {
+                            $bg_red    = $start_bg_red - ($i * $prop_bg_red);
+                            $bg_green  = $start_bg_green - ($i * $prop_bg_green);
+                            $bg_blue   = $start_bg_blue - ($i * $prop_bg_blue);
+
+                            $col = imagecolorallocate($im, $bg_red, $bg_green, $bg_blue);
+                            imagerectangle($im, $i, $i, $x-$i-1, $y-$i-1, $col);
+                            imagecolordeallocate($im, $col);
+                        }
+                        break;
+                    default:
+                        $size_to_div_color = $y;
+                        if($background_method == "vertical")
+                            $size_to_div_color = $x;
+
+                        //Proportions for the attenuation of the color.
+                        $prop_bg_red    = ($start_bg_red - $end_bg_red) / $size_to_div_color;
+                        $prop_bg_green  = ($start_bg_green - $end_bg_green) / $size_to_div_color;
+                        $prop_bg_blue   = ($start_bg_blue - $end_bg_blue) / $size_to_div_color;
+
+                        for($i=0; $i<$size_to_div_color; ++$i) //Those with a for loop i colour the image into strips of 1 px.
+                        {
+                            $bg_red    = $start_bg_red - ($i * $prop_bg_red);
+                            $bg_green  = $start_bg_green - ($i * $prop_bg_green);
+                            $bg_blue   = $start_bg_blue - ($i * $prop_bg_blue);
+
+                            $col = imagecolorallocate($im, $bg_red, $bg_green, $bg_blue);
+                            if($background_method == "vertical")
+                                imageline($im, $i, 0, $i, $y, $col);
+                            else imageline($im, 0, $i, $x, $i, $col);
+                            imagecolordeallocate($im, $col);
+                        }
+                        break;
                     }
                 }
                 else //Background image.
