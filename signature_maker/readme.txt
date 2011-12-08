@@ -12,6 +12,9 @@
 
 Author: giuseppe1991 / devilcoredev
 Date: 04/10/2011
+Tool info: This tool is used to generate dynamic signatures for characters of World of Warcraft
+           and is compatible with the character database of TrinityCore emulator
+           (http://www.trinitycore.org/f/).
 Use: Apply the file data.sql contained within the folder to sql database site, fill out the
      required fields of the file config.php
 Addictional info: the tool has no graphical interface, so that it is adaptable to to any site,
@@ -19,4 +22,4 @@ Addictional info: the tool has no graphical interface, so that it is adaptable t
                   and images/index.htm.
                   It is recommended to set the folder "custom" as the writable because the site
                   uses it for special configurations.
-Support: montesanto.giuseppe@live.it
+Support: giuseppe1991-coname@live.it
