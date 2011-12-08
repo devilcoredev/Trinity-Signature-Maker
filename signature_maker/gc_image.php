@@ -639,8 +639,7 @@
                 else //Immagine di sfondo.
                 {
                     $src_bg = imagecreatefrompng("images/bg/$img_name.png"); //Apro l'immagine di sfondo.
-                    list($width_bg, $height_bg) = getimagesize("images/bg/$img_name.png");
-                    imagecopyresampled($im, $src_bg, 0, 0, 0, 0, $x, $y, $width_bg, $height_bg); //ridimensiono alle dimensioni di quella di destinazione.
+                    imagecopyresampled($im, $src_bg, 0, 0, 0, 0, $x, $y, imagesx($src_bg), imagesy($src_bg)); //ridimensiono alle dimensioni di quella di destinazione.
                     imagedestroy($src_bg);
                 }
             //FINE COLORAZIONE CENTRALE.
@@ -648,8 +647,9 @@
             //INIZIO INSERIMENTO EFFETTO.
                 if($effect != '')
                 {
-                    list($width_effect, $height_effect) = getimagesize("images/effects/$effect.png");
                     $src_effect = imagecreatefrompng("images/effects/$effect.png");
+                    $width_effect = imagesx($src_effect);
+                    $height_effect = imagesy($src_effect);
                     for($i=0; $i<ceil($y/$height_effect); ++$i)
                         for($j=0; $j<ceil($x/$width_effect); ++$j)
                             imagecopyresampled($im, $src_effect, $j*$width_effect, $i*$height_effect, 0, 0, $width_effect, $height_effect, $width_effect, $height_effect);
@@ -703,11 +703,10 @@
 
             //INIZIO COPIA CLASSE.
                 $src_avatar = imagecreatefromstring(file_get_contents($avatar_img));
-                list($width_avatar, $height_avatar) = getimagesize($avatar_img);
                 if($external_image) //Se è un'immagine esterna la rimpicciolisco di 10px e la riposiziono.
-                    imagecopyresampled($im, $src_avatar, 5, 5, 0, 0, $y-10, $y-10, $width_avatar, $height_avatar);
+                    imagecopyresampled($im, $src_avatar, 5, 5, 0, 0, $y-10, $y-10, imagesx($src_avatar), imagesy($src_avatar));
                 else //Immagine interna, effettuo il ridimensionamento a seconda del tipo di immagine scelta.
-                    imagecopyresampled($im, $src_avatar, 5, ($is_gif ? 5 : 0), 0, 0, $y-($is_gif ? 10 : 0), $y-($is_gif ? 10 : 0), $width_avatar, $height_avatar);
+                    imagecopyresampled($im, $src_avatar, 5, ($is_gif ? 5 : 0), 0, 0, $y-($is_gif ? 10 : 0), $y-($is_gif ? 10 : 0), imagesx($src_avatar), imagesy($src_avatar));
                 imagedestroy($src_avatar);
             //FINE COPIA CLASSE.
 

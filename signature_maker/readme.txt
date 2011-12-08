@@ -12,6 +12,9 @@
 
 Autore: giuseppe1991 / devilcoredev
 Data: 04/10/2011
+Informazioni sul tool: Questo tool serve a generare firme dinamiche per i personaggi di
+                       World of Warcraft ed è compatibile con il database character dell'emulatore
+                       TrinityCore (http://www.trinitycore.org/f/).
 Uso: Applicare il file data.sql contenuto dentro la cartella sql al database del sito, compilare
      i campi necessari del file config.php
 Informazioni addizionali: il tool non presenta interfaccia grafica, in modo che sia adattabile a
@@ -19,4 +22,4 @@ Informazioni addizionali: il tool non presenta interfaccia grafica, in modo che 
                           colori/tabella.htm, fonts/index.php, images/index.htm.
                           Si raccomanda di settare la cartella "custom" scrivibile poichè il
                           sito la utilizzerà per delle particolari configurazioni.
-Supporto: montesanto.giuseppe@live.it
+Supporto: giuseppe1991-coname@live.it
