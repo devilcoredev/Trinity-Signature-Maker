@@ -157,7 +157,7 @@
             $input["rune"]       = "N/D";
             $input["runicPower"] = "N/D";
         }
-        if($input["class"]==1 || $input["class"]==2 || $input["class"]==6) //Warrior, rogue e Death Knight non hanno mana.
+        if($input["class"]==1 || $input["class"]==4 || $input["class"]==6) //Warrior, rogue e Death Knight non hanno mana.
             $input["mana"] = "N/D";
 
         //Personal e team rating 2v2, 3v3 e 5v5.
