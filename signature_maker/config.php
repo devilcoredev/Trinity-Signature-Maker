@@ -366,7 +366,7 @@
             while(($file = readdir($handle)) !== false)
             {
                 $file_path = $path_name . $file;
-                if(is_file($file_path) && pathinfo($file_path, PATHINFO_EXTENSION)!="htm") //Cancello tutte le immagini.
+                if(is_file($file_path) && pathinfo($file_path, PATHINFO_EXTENSION) != "htm") //Cancello tutte le immagini.
                     unlink($file_path);
             }
             closedir($handle);

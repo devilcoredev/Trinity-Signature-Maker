@@ -53,15 +53,15 @@
             if(mysql_select_db($site_database, $my_conn))
             {
                 $data_array = explode(' ', $data);
-                for($i=0; $i<count($data_array); $i+=3)
+                for($i = 0; $i < count($data_array); $i += 3)
                     if($data_array[$i])
                     {
                         $query = "SELECT * FROM itemenchantment WHERE ID = " . $data_array[$i] . ';';
                         if($my_result = mysql_query($query, $my_conn))
                         {
                             if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
-                                for($j=0; $j<3; ++$j)
-                                    if($my_row["type$j"]==5 && in_array($my_row["spellid$j"], $stats_rating_div))
+                                for($j = 0; $j < 3; ++$j)
+                                    if($my_row["type$j"] == 5 && in_array($my_row["spellid$j"], $stats_rating_div))
                                     {
                                         $key = array_search($my_row["spellid$j"], $stats_rating_div);
                                         $input["$key"] += $my_row["amount$j"];
@@ -141,11 +141,11 @@
                     $input["resilience"]         = $input_array[0x0006 + 0x008E + 0x043B + 0x0010];         //OBJECT_END + UNIT_END + PLAYER_FIELD_COMBAT_RATING_1 + CR_CRIT_TAKEN_SPELL.
 
                     $input["spellPower"]         = $input_array[0x0494];                                    //OBJECT_END + UNIT_END + PLAYER_FIELD_MOD_DAMAGE_DONE_POS.
-                    for($i=0x0495; $i<0x049A; ++$i) //Il valore minimo è lo spell power attuale del PG.
+                    for($i = 0x0495; $i < 0x049A; ++$i) //Il valore minimo è lo spell power attuale del PG.
                         $input["spellPower"]     = min($input["spellPower"], $input_array[$i]);
 
                     $input["spellCritPct"]       = UInt32ToFloat($input_array[0x0409]);                     //OBJECT_END + UNIT_END + PLAYER_SPELL_CRIT_PERCENTAGE1.
-                    for($i=0x040A; $i<0x040F; ++$i) //Il valore minimo è lo spell crit attuale del PG.
+                    for($i = 0x040A; $i < 0x040F; ++$i) //Il valore minimo è lo spell crit attuale del PG.
                         $input["spellCritPct"]   = min($input["spellCritPct"], UInt32ToFloat($input_array[$i]));
                 }
                 mysql_free_result($result);
@@ -157,7 +157,7 @@
             $input["rune"]       = "N/D";
             $input["runicPower"] = "N/D";
         }
-        if($input["class"]==1 || $input["class"]==4 || $input["class"]==6) //Warrior, rogue e Death Knight non hanno mana.
+        if($input["class"] == 1 || $input["class"] == 4 || $input["class"] == 6) //Warrior, rogue e Death Knight non hanno mana.
             $input["mana"] = "N/D";
 
         //Personal e team rating 2v2, 3v3 e 5v5.
@@ -197,7 +197,7 @@
             {
                 sumItemEnchantments($input, $row["enchantments"]);
                 if($item_template = getItemTemplate($row["itemEntry"]))
-                    for($i=1; $i<=$item_template["StatsCount"]; ++$i)
+                    for($i = 1; $i <= $item_template["StatsCount"]; ++$i)
                         if(in_array($item_template["stat_type$i"], $stats_rating_div))
                         {
                             $key = array_search($item_template["stat_type$i"], $stats_rating_div);
@@ -307,13 +307,13 @@
     //Recupero dei dati per la creazione dell'immagine.
     if($to_make_image)
     {
-        if(GDVersion()==0) //Nel sistema non esiste GC.
+        if(GDVersion() == 0) //Nel sistema non esiste GC.
             $do_next_step = false;
 
         if($do_next_step)
         {
             //L'utente ha selezionato uno sfondo diverso da quello di default (graduazione di rosso).
-            if(isset($_GET["sfondo"]) && $_GET["sfondo"]!='')
+            if(isset($_GET["sfondo"]) && $_GET["sfondo"] != '')
             {
                 $sfondo = strtolower($_GET["sfondo"]);
                 //Lo sfondo è un'immagine, (comincia con bg_), mi costruisco il link all'immagine.
@@ -338,7 +338,7 @@
             }
 
             //L'utente ha selezionato il colore finale dello sfondo.
-            if(isset($_GET["fine_sfondo"]) && $_GET["fine_sfondo"]!='')
+            if(isset($_GET["fine_sfondo"]) && $_GET["fine_sfondo"] != '')
             {
                 $bg_vet = GetRGBFromHex(strtolower($_GET["fine_sfondo"]));
                 $end_bg_red      = $bg_vet[0];
@@ -347,18 +347,18 @@
             }
 
             //Effetto per lo sfondo.
-            if(isset($_GET["effects"]) && $_GET["effects"]!='')
+            if(isset($_GET["effects"]) && $_GET["effects"] != '')
             {
                 $effect = strtolower($_GET["effects"]);
                 if(!in_array($effect, $effects)) $effect = '';
             }
 
             //L'utente ha selezionato un colore di testo diverso da quello di default, elaboro il codice esadecimale.
-            if(isset($_GET["colore_testo"]) && $_GET["colore_testo"]!='')
+            if(isset($_GET["colore_testo"]) && $_GET["colore_testo"] != '')
                 $text_vet_color = GetRGBFromHex($_GET["colore_testo"]);
 
             //L'utente ha selezionato un carattere per il testo diverso da quello di default, lo estraggo.
-            if(isset($_GET["text_font"]) && $_GET["text_font"]!='')
+            if(isset($_GET["text_font"]) && $_GET["text_font"] != '')
             {
                 $name_font = strtolower($_GET["text_font"]);
                 if(isset($fonts["$name_font"]["name"]))
@@ -373,7 +373,7 @@
             $font = "fonts/$font";
 
             //Controllo dei campi inseriti, e controllo dell'esistenza del realm selezionato.
-            if(isset($_GET["server"]) && $_GET["server"]!='' && isset($_GET["nome_pg"]) && $_GET["nome_pg"]!='')
+            if(isset($_GET["server"]) && $_GET["server"] != '' && isset($_GET["nome_pg"]) && $_GET["nome_pg"] != '')
             {
                 $server_id = strtolower($_GET["server"]);
                 if(isset($realm_name["$server_id"]))
@@ -432,7 +432,7 @@
                                     $string_info = "Level " . $row["level"] . ' ' . $races[$row["race"]] . ' ' . $classes[$row["class"]]["name"] . $spec_name;
 
                                     //Se viene dato l'url di un'immagine png valida lo inserisco, altrimenti inserisco quella di default della classe.
-                                    if(isset($_GET["url_image"]) && $_GET["url_image"]!='')
+                                    if(isset($_GET["url_image"]) && $_GET["url_image"] != '')
                                     {
                                         $avatar_img  = utf8_decode($_GET["url_image"]);
                                         $file_name   = "temp_images/" . sha1($avatar_img) . '.' . pathinfo($avatar_img, PATHINFO_EXTENSION); //Ricavo il nome univoco dell'immagine.
@@ -452,16 +452,16 @@
                                     if(!$external_image)
                                     {
                                         //L'immagine indica sia la razza che la classe del personaggio.
-                                        if(isset($_GET["type_image"]) && strtolower($_GET["type_image"])=="race_class")
+                                        if(isset($_GET["type_image"]) && strtolower($_GET["type_image"]) == "race_class")
                                         {
                                             $is_gif = true;
                                             //Le immagini sono nella forma "gender-race-class.gif".
                                             $avatar_img = $row["gender"] . '-' . $row["race"] . '-' . $row["class"] . ".gif";
-                                            if($row["class"]==6 || $row["level"]>=80) //Se è livello 80 oppure è un Death Knight seleziono gli avatar livello 80 (i DK hanno solo avatar livello 80).
+                                            if($row["class"] == 6 || $row["level"] >= 80) //Se è livello 80 oppure è un Death Knight seleziono gli avatar livello 80 (i DK hanno solo avatar livello 80).
                                                 $avatar_img = "Level_80_Forum_Avatars/$avatar_img";
-                                            else if($row["level"]>=70) //Livello compreso tra 70 e 79, seleziono gli avatar livello 70.
+                                            else if($row["level"] >= 70) //Livello compreso tra 70 e 79, seleziono gli avatar livello 70.
                                                 $avatar_img = "Level_70_Forum_Avatars/$avatar_img";
-                                            else if($row["level"]>=60) //Livello compreso tra 60 e 69, seleziono gli avatar livello 60.
+                                            else if($row["level"] >= 60) //Livello compreso tra 60 e 69, seleziono gli avatar livello 60.
                                                 $avatar_img = "Level_60_Forum_Avatars/$avatar_img";
                                             else $avatar_img = "Level_1_Forum_Avatars/$avatar_img"; //Livello compreso tra 1 e 59, seleziono gli avatar livello 1.
                                         }else $avatar_img = $classes[$row["class"]]["img"] . ".png"; //L'immagine indica solo la classe del personaggio, faccio riferimento ai config.
@@ -477,10 +477,10 @@
                                             $string_guild = '"' . $guild_row["rname"] . "\" of <" . $guild_row["name"] . "> "; //"Rank" of <Nome Guild>
                                         mysql_free_result($guild_result);
                                     }
-                                    if($server_name!='' || $server_id!='') //[Nome_Server Nome_Realm]
+                                    if($server_name != '' || $server_id != '') //[Nome_Server Nome_Realm]
                                     {
                                         $string_guild .= "[$server_name";
-                                        if($server_name!='' && $server_id!='') $string_guild .= ' ';
+                                        if($server_name != '' && $server_id != '') $string_guild .= ' ';
                                         $string_guild .= $realm_name["$server_id"] . ']';
                                     }
 
@@ -488,16 +488,16 @@
                                     $index = 0;
                                     $show_stats = array();
                                     $temp_string = '';
-                                    for($i=1; $i<6; ++$i) //Al massimo 5 stats a scelta.
+                                    for($i = 1; $i < 6; ++$i) //Al massimo 5 stats a scelta.
                                     {
-                                        if(isset($_GET["custom_stat$i"]) && $_GET["custom_stat$i"]!='')
+                                        if(isset($_GET["custom_stat$i"]) && $_GET["custom_stat$i"] != '')
                                             $temp_string = substr(utf8_decode($_GET["custom_stat$i"]), 0, 20);
-                                        else if(isset($_GET["stat$i"]) && $_GET["stat$i"]!='') //Controllo se esiste il template di quella stat.
+                                        else if(isset($_GET["stat$i"]) && $_GET["stat$i"] != '') //Controllo se esiste il template di quella stat.
                                         {
                                             $get_stat = strtolower($_GET["stat$i"]);
 
                                             //Achievements, eseguo questa operazione solo se richiesta per risparmiare risorse.
-                                            if(($get_stat=="achievements" && !isset($row["achievements"])) || ($get_stat=="achievementpoints" && !isset($row["achievementPoints"])))
+                                            if(($get_stat == "achievements" && !isset($row["achievements"])) || ($get_stat == "achievementpoints" && !isset($row["achievementPoints"])))
                                             {
                                                 $ach_count = 0;
                                                 $ach_points = 0;
@@ -531,7 +531,7 @@
                                         }
 
                                         //Check per evitare di mettere stats doppie.
-                                        if(!in_array($temp_string, $show_stats) && $temp_string!='')
+                                        if(!in_array($temp_string, $show_stats) && $temp_string != '')
                                             $show_stats[$index++] = $temp_string;
                                     }
                                 }else $do_next_step = false;
@@ -580,7 +580,7 @@
                         $prop_bg_green  = ($start_bg_green - $end_bg_green) / $size_to_div_color;
                         $prop_bg_blue   = ($start_bg_blue - $end_bg_blue) / $size_to_div_color;
 
-                        for($i=0; $i<$size_to_div_color; ++$i) //Con un ciclo for coloro l'immagine a cerchi di 1 px.
+                        for($i = 0; $i < $size_to_div_color; ++$i) //Con un ciclo for coloro l'immagine a cerchi di 1 px.
                         {
                             $bg_red    = $start_bg_red - ($i * $prop_bg_red);
                             $bg_green  = $start_bg_green - ($i * $prop_bg_green);
@@ -600,7 +600,7 @@
                         $prop_bg_green  = ($start_bg_green - $end_bg_green) / $size_to_div_color;
                         $prop_bg_blue   = ($start_bg_blue - $end_bg_blue) / $size_to_div_color;
 
-                        for($i=0; $i<$size_to_div_color; ++$i) //Con un ciclo for coloro l'immagine a rettangoli di 1 px.
+                        for($i = 0; $i < $size_to_div_color; ++$i) //Con un ciclo for coloro l'immagine a rettangoli di 1 px.
                         {
                             $bg_red    = $start_bg_red - ($i * $prop_bg_red);
                             $bg_green  = $start_bg_green - ($i * $prop_bg_green);
@@ -621,7 +621,7 @@
                         $prop_bg_green  = ($start_bg_green - $end_bg_green) / $size_to_div_color;
                         $prop_bg_blue   = ($start_bg_blue - $end_bg_blue) / $size_to_div_color;
 
-                        for($i=0; $i<$size_to_div_color; ++$i) //Con un ciclo for coloro l'immagine a strisce di 1 px.
+                        for($i = 0; $i < $size_to_div_color; ++$i) //Con un ciclo for coloro l'immagine a strisce di 1 px.
                         {
                             $bg_red    = $start_bg_red - ($i * $prop_bg_red);
                             $bg_green  = $start_bg_green - ($i * $prop_bg_green);
@@ -650,15 +650,15 @@
                     $src_effect = imagecreatefrompng("images/effects/$effect.png");
                     $width_effect = imagesx($src_effect);
                     $height_effect = imagesy($src_effect);
-                    for($i=0; $i<ceil($y/$height_effect); ++$i)
-                        for($j=0; $j<ceil($x/$width_effect); ++$j)
+                    for($i = 0; $i < ceil($y / $height_effect); ++$i)
+                        for($j = 0; $j < ceil($x / $width_effect); ++$j)
                             imagecopyresampled($im, $src_effect, $j*$width_effect, $i*$height_effect, 0, 0, $width_effect, $height_effect, $width_effect, $height_effect);
                     imagedestroy($src_effect);
                 }
             //FINE INSERIMENTO EFFETTO.
 
             //INIZIO FILTRI.
-                if(isset($_GET["filter"]) && $_GET["filter"]!='')
+                if(isset($_GET["filter"]) && $_GET["filter"] != '')
                 {
                     switch(strtolower($_GET["filter"]))
                     {
@@ -681,7 +681,7 @@
             //FINE COLORAZIONE BORDO.
 
             //INIZIO LINEA A META' IMMAGINE.
-                $pos_line = $y/2.5; //Calcolo la posizione della linea in proporzione all'altezza dell'immagine.
+                $pos_line = $y / 2.5; //Calcolo la posizione della linea in proporzione all'altezza dell'immagine.
                 imageline($im, $y+6, $pos_line+1, $x-$y-73, $pos_line+1, $ombra); //Disegno prima l'ombra spostata di 1px verso il basso e verso destra.
                 imageline($im, $y+5, $pos_line, $x-$y-74, $pos_line, $gold); //Disegno la linea.
             //FINE LINEA A META' IMMAGINE.
@@ -692,8 +692,8 @@
             //FINE NOME PG.
 
             //INIZIO STATS.
-                $prop_text = $y/5 - 1; //Mi calcolo il distanziamento tra una stat e l'altra in proporzione all'altezza dell'immagine.
-                for($i=0; $i<count($show_stats); ++$i) //Stampo le stats selezionate.
+                $prop_text = $y / 5 - 1; //Mi calcolo il distanziamento tra una stat e l'altra in proporzione all'altezza dell'immagine.
+                for($i = 0; $i < count($show_stats); ++$i) //Stampo le stats selezionate.
                 {
                     $box = imagettfbbox($dim_stats, 0, $font, $show_stats[$i]);
                     imagettftext($im, $dim_stats, 0, $x-$box[2]-5, 13+$prop_text*$i, $ombra, $font, $show_stats[$i]); //Ombra della stat.
@@ -722,13 +722,13 @@
 
             //INIZIO RIDIMENSIONAMENTO IMMAGINE (MOMENTANEAMENTE DISABILITATO).
                 //Se da config è abilitato il ridimensionamento delle immagini.
-                if($image_resize_enabled && ((isset($_GET['x']) && $_GET['x']!='' && is_numeric($_GET['x'])) || (isset($_GET['y']) && $_GET['y']!='' && is_numeric($_GET['y']))))
+                if($image_resize_enabled && ((isset($_GET['x']) && $_GET['x'] != '' && is_numeric($_GET['x'])) || (isset($_GET['y']) && $_GET['y'] != '' && is_numeric($_GET['y']))))
                 {
                     //Mi calcolo le proporzioni delle dimensioni x e y.
-                    if(isset($_GET['x']) && $_GET['x']!='' && is_numeric($_GET['x']))
+                    if(isset($_GET['x']) && $_GET['x'] != '' && is_numeric($_GET['x']))
                         $prop_x = $_GET['x'] / $x;
                     else $prop_x = 1;
-                    if(isset($_GET['y']) && $_GET['y']!='' && is_numeric($_GET['y']))
+                    if(isset($_GET['y']) && $_GET['y'] != '' && is_numeric($_GET['y']))
                         $prop_y = $_GET['y'] / $y;
                     else $prop_y = 1;
 
@@ -737,13 +737,13 @@
                     // - Se le proporzioni sono entrambe minori di 1 scelgo la più piccola,
                     // - Se le proporzioni sono una minore di 1 e una maggiore di 1 scelgo la più piccola,
                     // - Se una delle proporzioni è uguale ad 1 scelgo quella diversa da 1.
-                    if($prop_x>1 && $prop_y>1)
+                    if($prop_x > 1 && $prop_y > 1)
                         $prop = $prop_x>$prop_y ? $prop_x : $prop_y;
-                    else if($prop_x<1 && $prop_y<1)
+                    else if($prop_x < 1 && $prop_y < 1)
                         $prop = $prop_x<$prop_y ? $prop_x : $prop_y;
-                    else if(($prop_x!=1 && $prop_y==1) || ($prop_x<1 && $prop_y>1))
+                    else if(($prop_x != 1 && $prop_y == 1) || ($prop_x < 1 && $prop_y > 1))
                         $prop = $prop_x;
-                    else if(($prop_x==1 && $prop_y!=1) || ($prop_x>1 && $prop_y<1))
+                    else if(($prop_x == 1 && $prop_y != 1) || ($prop_x > 1 && $prop_y < 1))
                         $prop = $prop_y;
                     else $prop = 1;
 
