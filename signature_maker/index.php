@@ -15,6 +15,7 @@
 <html>
     <head>
         <title>Crea la tua firma!</title>
+        <script language="JavaScript" type="text/javascript" src="jquery-1.7.1.min.js"></script>
         <script language="JavaScript">
             //Funzione che apre una finestra di popup di dimensione XxY e indirizzo URL.
             function popUp(URL, X, Y)
@@ -38,161 +39,112 @@
             //Funzione che switcha firma<->caricamento, se posta a true passa da caricamento a firma, altrimenti da firma a caricamento.
             function switchImage(mode)
             {
-                document.getElementById("links").style.display        = (mode ? "block" : "none");
-                document.getElementById("firma").style.display        = (mode ? "block" : "none");
-                document.getElementById("caricamento").style.display  = (mode ? "none" : "block");
+                $("#links").css("display", (mode ? "block" : "none"));
+                $("#firma").css("display", (mode ? "block" : "none"));
+                $("#caricamento").css("display", (mode ? "none" : "block"));
             }
 
             //Funzione richiamata quando le firme non vengono caricate correttamente.
             function showError(input)
             {
                 //Azzero gli input.
-                document.getElementsByName("direct_link")[0].value         = '';
-                document.getElementsByName("html_link")[0].value           = '';
-                document.getElementsByName("html_armory_link")[0].value    = '';
-                document.getElementsByName("bbcode_link")[0].value         = '';
-                document.getElementsByName("bbcode_armory_link")[0].value  = '';
+                $("input[name=direct_link]").eq(0).val('');
+                $("input[name=html_link]").eq(0).val('');
+                $("input[name=html_armory_link]").eq(0).val('');
+                $("input[name=bbcode_link]").eq(0).val('');
+                $("input[name=bbcode_armory_link]").eq(0).val('');
 
                 //Sostituisco l'immagine con una d'errore.
                 input.src = "images/<?php print $errore_caricamento; ?>";
 
                 //Visualizzo l'immagine e nascondo il caricamento.
                 input.style.display = "block";
-                document.getElementById("caricamento").style.display = "none";
+                $("#caricamento").css("display", "none");
             }
 
             //Funzione che carica la queryString della firma.
             function show_message()
             {
                 var indirizzo = "gc_image.php";
-                var count = 0;
 
                 //Aggiungo nuovi campi alla queryString solo se sono stati definiti.
 
                 //Effettua il cambio solo se è stato inserito il nome del pg.
-                var nome_pg = document.getElementsByName("nome_pg")[0].value;
-                if(nome_pg=='')
+                var nome_pg = $("input[name=nome_pg]").eq(0).val();
+                if(nome_pg == '')
                 {
                     alert("<?php print $error_pg; ?>");
                     return false;
                 }
 
-                var server = document.getElementsByName("server")[0].value;
-                if(server!='')
-                {
-                    count++;
+                var server = $("select[name=server]").eq(0).val();
+                if(server != '')
                     indirizzo += "?server=" + server;
-                }
 
-                if(nome_pg!='')
-                {
-                    indirizzo += (count++ ? '&' : '?');
-                    indirizzo += "nome_pg=" + nome_pg;
-                }
+                indirizzo += "&nome_pg=" + nome_pg;
 
-                var sfondo = document.getElementsByName("sfondo")[0].value;
-                if(sfondo!='')
-                {
-                    indirizzo += (count++ ? '&' : '?');
-                    indirizzo += "sfondo=" + sfondo;
-                }
+                var sfondo = $("input[name=sfondo]").eq(0).val();
+                if(sfondo != '')
+                    indirizzo += "&sfondo=" + sfondo;
 
-                var fine_sfondo = document.getElementsByName("fine_sfondo")[0].value;
-                if(fine_sfondo!='' && sfondo.indexOf("bg_")!=0)
-                {
-                    indirizzo += (count++ ? '&' : '?');
-                    indirizzo += "fine_sfondo=" + fine_sfondo;
-                }
+                var fine_sfondo = $("input[name=fine_sfondo]").eq(0).val();
+                if(fine_sfondo != '' && sfondo.indexOf("bg_") != 0)
+                    indirizzo += "&fine_sfondo=" + fine_sfondo;
 
-                var metodo_sfondo = document.getElementsByName("metodo_sfondo")[0].value;
-                if(metodo_sfondo!='' && sfondo.indexOf("bg_")!=0)
-                {
-                    indirizzo += (count++ ? '&' : '?');
-                    indirizzo += "metodo_sfondo=" + metodo_sfondo;
-                }
+                var metodo_sfondo = $("select[name=metodo_sfondo]").eq(0).val();
+                if(metodo_sfondo != '' && sfondo.indexOf("bg_") != 0)
+                    indirizzo += "&metodo_sfondo=" + metodo_sfondo;
 
-                var effects = document.getElementsByName("effects");
-                for(var i=0; i<effects.length; ++i)
-                    if(effects[i].checked==1)
-                    {
-                        indirizzo += (count++ ? '&' : '?');
-                        indirizzo += "effects=" + effects[i].value;
-                    }
+                var effects = $("input[name=effects]:checked").val();
+                if(effects != '')
+                    indirizzo += "&effects=" + effects;
 
-                var filter = document.getElementsByName("filter")[0].value;
-                if(filter!='')
-                {
-                    indirizzo += (count++ ? '&' : '?');
-                    indirizzo += "filter=" + filter;
-                }
+                var filter = $("select[name=filter]").eq(0).val();
+                if(filter != '')
+                    indirizzo += "&filter=" + filter;
 
-                var url_image = encodeURIComponent(document.getElementsByName("url_image")[0].value);
-                if(url_image!='')
-                {
-                    indirizzo += (count++ ? '&' : '?');
-                    indirizzo += "url_image=" + url_image;
-                }
+                var url_image = encodeURIComponent($("input[name=url_image]").eq(0).val());
+                if(url_image != '')
+                    indirizzo += "&url_image=" + url_image;
 
-                var type_image = document.getElementsByName("type_image");
-                for(var i=0; i<type_image.length; ++i)
-                    if(type_image[i].checked==1)
-                    {
-                        indirizzo += (count++ ? '&' : '?');
-                        indirizzo += "type_image=" + type_image[i].value;
-                    }
+                var type_image = $("input[name=type_image]:checked").val();
+                if(type_image != '')
+                    indirizzo += "&type_image=" + type_image;
 
-                var colore_testo = document.getElementsByName("colore_testo")[0].value;
-                if(colore_testo!='')
-                {
-                    indirizzo += (count++ ? '&' : '?');
-                    indirizzo += "colore_testo=" + colore_testo;
-                }
+                var colore_testo = $("input[name=colore_testo]").eq(0).val();
+                if(colore_testo != '')
+                    indirizzo += "&colore_testo=" + colore_testo;
 
-                var text_font = document.getElementsByName("text_font")[0].value;
-                if(text_font!='')
-                {
-                    indirizzo += (count++ ? '&' : '?');
-                    indirizzo += "text_font=" + text_font;
-                }
+                var text_font = $("input[name=text_font]").eq(0).val();
+                if(text_font != '')
+                    indirizzo += "&text_font=" + text_font;
 
-                //Questa parte viene abilitata soltanto da config.
                 <?php
+                    //Questa parte viene abilitata soltanto da config.
                     if($image_resize_enabled)
                     {
-                        print "var x = document.getElementsByName('x')[0].value;\r\n";
-                        print "                if(x!='')\r\n";
-                        print "                {\r\n";
-                        print "                    indirizzo += (count++ ? '&' : '?');\r\n";
-                        print "                    indirizzo += \"x=\" + x;\r\n";
-                        print "                }\r\n\r\n";
+                        print "var x = $(\"input[name=x]\").eq(0).val();\r\n";
+                        print "                if(x != '')\r\n";
+                        print "                    indirizzo += \"&x=\" + x;\r\n";
 
-                        print "                var y = document.getElementsByName('y')[0].value;\r\n";
-                        print "                if(y!='')\r\n";
-                        print "                {\r\n";
-                        print "                    indirizzo += (count++ ? '&' : '?');\r\n";
-                        print "                    indirizzo += \"y=\" + y;\r\n";
-                        print "                }\r\n";
+                        print "                var y = $(\"input[name=y]\").eq(0).val();\r\n";
+                        print "                if(y != '')\r\n";
+                        print "                    indirizzo += \"&y=\" + y;\r\n";
                     }
                 ?>
 
                 for(var i=1; i<6; ++i)
-                    if(document.getElementsByName("enable_custom_stat"+i)[0].checked == true)
+                    if($("input[name=enable_custom_stat" + i + "]").eq(0).attr("checked"))
                     {
-                        var custom_stat = encodeURIComponent(document.getElementsByName("custom_stat"+i)[0].value);
-                        if(custom_stat!='')
-                        {
-                            indirizzo += (count++ ? '&' : '?');
-                            indirizzo += "custom_stat" + i + '=' + custom_stat;
-                        }
+                        var custom_stat = encodeURIComponent($("input[name=custom_stat" + i + "]").eq(0).val());
+                        if(custom_stat != '')
+                            indirizzo += "&custom_stat" + i + '=' + custom_stat;
                     }
                     else
                     {
-                        var stat = document.getElementsByName("stat"+i)[0].value;
-                        if(stat!='' && stat!='-')
-                        {
-                            indirizzo += (count++ ? '&' : '?');
-                            indirizzo += "stat" + i + '=' + stat;
-                        }
+                        var stat = $("select[name=stat" + i + "]").eq(0).val();
+                        if(stat != '' && stat != '-')
+                            indirizzo += "&stat" + i + '=' + stat;
                     }
 
                 //Mi trovo l'indirizzo del collegamento escludendo index.php ed inserendo gc_image + la queryString.
@@ -206,11 +158,11 @@
 
                 var absolute_link = indirizzo_path + indirizzo;
 
-                var direct_link         = document.getElementsByName("direct_link")[0];
-                var html_link           = document.getElementsByName("html_link")[0];
-                var html_armory_link    = document.getElementsByName("html_armory_link")[0];
-                var bbcode_link         = document.getElementsByName("bbcode_link")[0];
-                var bbcode_armory_link  = document.getElementsByName("bbcode_armory_link")[0];
+                var direct_link         = $("input[name=direct_link]").eq(0);
+                var html_link           = $("input[name=html_link]").eq(0);
+                var html_armory_link    = $("input[name=html_armory_link]").eq(0);
+                var bbcode_link         = $("input[name=bbcode_link]").eq(0);
+                var bbcode_armory_link  = $("input[name=bbcode_armory_link]").eq(0);
 
                 //Trovo la dimensione del file d'errore (dato che è png sarà molto maggiore delle dimensioni delle firme).
                 var req = new XMLHttpRequest();
@@ -244,32 +196,35 @@
                     var armory_server_name = '';
 
                     for(var i=0; i<server_keys.length; ++i)
-                        if(server_keys[i] == server && armory_server_name=='')
+                        if(server_keys[i] == server)
+                        {
                             armory_server_name = server_armory_names[i];
+                            break;
+                        }
 
                     var armory_link = armory_template_link.replace("%s", armory_server_name).replace("%p", massimizzaTesto(nome_pg));
 
                     //Inserisco i link nelle caselle di testo.
-                    direct_link.value         = absolute_link;
-                    html_link.value           = "<img src=\"" + absolute_link + "\">";
-                    html_armory_link.value    = "<a href=\"" + armory_link + "\"><img src=\"" + absolute_link + "\"></a>";
-                    bbcode_link.value         = "[img]" + absolute_link + "[/img]";
-                    bbcode_armory_link.value  = "[url=" + armory_link + "][img]" + absolute_link + "[/img][/url]";
+                    direct_link.val(absolute_link);
+                    html_link.val("<img src=\"" + absolute_link + "\">");
+                    html_armory_link.val("<a href=\"" + armory_link + "\"><img src=\"" + absolute_link + "\"></a>");
+                    bbcode_link.val("[img]" + absolute_link + "[/img]");
+                    bbcode_armory_link.val("[url=" + armory_link + "][img]" + absolute_link + "[/img][/url]");
                 }
                 else
                 {
-                    direct_link.value         = '';
-                    html_link.value           = '';
-                    html_armory_link.value    = '';
-                    bbcode_link.value         = '';
-                    bbcode_armory_link.value  = '';
+                    direct_link.val('');
+                    html_link.val('');
+                    html_armory_link.val('');
+                    bbcode_link.val('');
+                    bbcode_armory_link.val('');
                 }
 
-                document.getElementById("firma").src = absolute_link; //Modifico il path dell'immagine.
-                document.getElementById("output").style.display = "block"; //Visualizzo l'output.
+                $("#firma").attr("src", absolute_link); //Modifico il path dell'immagine.
+                $("#output").css("display", "block"); //Visualizzo l'output.
 
                 //Effettuo lo switch delle immagini solo se la firma non è stata già caricata.
-                if(!document.getElementById("firma").complete)
+                if(!$("#firma").get().complete)
                     switchImage(false);
 
                 return true;
@@ -283,10 +238,10 @@
 
             function switchStat(index)
             {
-                var isChecked = document.getElementsByName("enable_custom_stat"+index)[0].checked;
+                var isChecked = $("input[name=enable_custom_stat" + index + "]").eq(0).attr("checked");
 
-                document.getElementById("display_stat"+index).style.display         = (isChecked ? "none" : "block");
-                document.getElementById("display_custom_stat"+index).style.display  = (isChecked ? "block" : "none");
+                $("#display_stat" + index).css("display", (isChecked ? "none" : "block"));
+                $("#display_custom_stat" + index).css("display", (isChecked ? "block" : "none"));
             }
 
             function initializeText()

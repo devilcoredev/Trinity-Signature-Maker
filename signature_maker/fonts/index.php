@@ -1,14 +1,15 @@
 <html>
     <head>
         <title>Seleziona un font</title>
+        <script language="JavaScript" type="text/javascript" src="../jquery-1.7.1.min.js"></script>
         <script language="JavaScript">
             function copiaTesto(input)
             {
-                document.getElementById("testo_font").src = document.getElementById(input).src;
+                $("#testo_font").attr("src", $('#' + input).attr("src"));
 
                 var field_edit = "<?php print $_GET["field_edit"]; ?>";
                 if(field_edit != '')
-                    eval("opener.document.getElementsByName('" + field_edit + "')[0].value = '" + input + "';");
+                    opener.$("[name=" + field_edit + ']').eq(0).val(input); //eval("opener.document.getElementsByName('" + field_edit + "')[0].value = '" + input + "';");
             }
         </script>
     </head>

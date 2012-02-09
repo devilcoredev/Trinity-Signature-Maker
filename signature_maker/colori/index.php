@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Tabella colori HTML</title>
+        <script language="JavaScript" type="text/javascript" src="../jquery-1.7.1.min.js"></script>
         <script language="JavaScript">
             function intToHex(d)
             {
@@ -17,12 +18,12 @@
                 var g = 255 - parseInt(colorValue.substring(2, 4), 16);
                 var b = 255 - parseInt(colorValue.substring(4, 6), 16);
 
-                document.getElementById("testo_colore").bgColor = colorValue;
-                document.getElementById("testo_colore").innerHTML = "<font size='2' color='" + intToHex(r) + intToHex(g) + intToHex(b) + "'><b>" + colorValue.toUpperCase() + "</b></font>";
+                $("#testo_colore").css("background-color", colorValue);
+                $("#testo_colore").html("<font size='2' color='" + intToHex(r) + intToHex(g) + intToHex(b) + "'><b>" + colorValue.toUpperCase() + "</b></font>");
 
                 var field_edit = "<?php print $_GET["field_edit"]; ?>";
                 if(field_edit != '')
-                    eval("opener.document.getElementsByName('" + field_edit + "')[0].value = '" + colorValue + "';");
+                    opener.$("[name=" + field_edit + ']').eq(0).val(colorValue);
             }
         </script>
     </head>
