@@ -8,7 +8,7 @@
                 $("#text_image").attr("src", $('#' + input).attr("src"));
 
                 var field_edit = "<?php print $_GET["field_edit"]; ?>";
-                if (field_edit != '')
+                if(field_edit != '')
                     opener.$("[name=" + field_edit + ']').eq(0).val(input);
             }
         </script>
