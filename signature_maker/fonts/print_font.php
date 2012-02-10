@@ -1,9 +1,9 @@
 <?php
     include("/../config.php");
-    if(GDVersion() && isset($_GET["id_font"]) && $_GET["id_font"]!='')
+    if(GDVersion() && isset($_GET["id_font"]) && $_GET["id_font"] != '')
     {
         $id_font = strtolower($_GET["id_font"]);
-        if(isset($fonts["$id_font"]["text"]) && $fonts["$id_font"]["text"]!='')
+        if(isset($fonts["$id_font"]["text"]) && $fonts["$id_font"]["text"] != '')
         {
             header("Content-type: image/png");
 
@@ -19,7 +19,7 @@
 
             $box = imagettfbbox(30, 0, $font["name"], $font["text"]);
             $black = imagecolorallocate($im, 0, 0, 0);
-            imagettftext($im, 30, 0, ($dim_x - $box[2])/2, 40, $black, $font["name"], $font["text"]);
+            imagettftext($im, 30, 0, ($dim_x - $box[2]) / 2, 40, $black, $font["name"], $font["text"]);
             imagecolordeallocate($im, $black);
 
             imagepng($im);

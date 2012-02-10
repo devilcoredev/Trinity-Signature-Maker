@@ -133,16 +133,16 @@
                     }
                 ?>
 
-                for(var i=1; i<6; ++i)
-                    if($("input[name=enable_custom_stat" + i + "]").eq(0).attr("checked"))
+                for(var i = 1; i < 6; ++i)
+                    if($("input[name=enable_custom_stat" + i + ']').eq(0).attr("checked"))
                     {
-                        var custom_stat = encodeURIComponent($("input[name=custom_stat" + i + "]").eq(0).val());
+                        var custom_stat = encodeURIComponent($("input[name=custom_stat" + i + ']').eq(0).val());
                         if(custom_stat != '')
                             pLocation += "&custom_stat" + i + '=' + custom_stat;
                     }
                     else
                     {
-                        var stat = $("select[name=stat" + i + "]").eq(0).val();
+                        var stat = $("select[name=stat" + i + ']').eq(0).val();
                         if(stat != '' && stat != '-')
                             pLocation += "&stat" + i + '=' + stat;
                     }
@@ -195,7 +195,7 @@
 
                     var armory_server_name = '';
 
-                    for(var i=0; i<server_keys.length; ++i)
+                    for(var i = 0; i < server_keys.length; ++i)
                         if(server_keys[i] == server)
                         {
                             armory_server_name = server_armory_names[i];
@@ -263,7 +263,7 @@
                                     $count = 0;
                                     foreach($realm_name as $i => $value)
                                     {
-                                        if($i!='' && $value!='')
+                                        if($i != '' && $value != '')
                                         {
                                             if($count++) print "                                ";
                                             print "<option value=\"$i\">$value</option>\r\n";
@@ -364,7 +364,7 @@
                     }
 
                     $ordinary_numbers = array("first", "second", "third", "fourth", "fifth");
-                    for($i=0; $i<5; ++$i)
+                    for($i = 0; $i < 5; ++$i)
                     {
                         if($i || $image_resize_enabled)
                             print "                ";

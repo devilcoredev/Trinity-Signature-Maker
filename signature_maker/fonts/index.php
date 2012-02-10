@@ -9,7 +9,7 @@
 
                 var field_edit = "<?php print $_GET["field_edit"]; ?>";
                 if(field_edit != '')
-                    opener.$("[name=" + field_edit + ']').eq(0).val(input); //eval("opener.document.getElementsByName('" + field_edit + "')[0].value = '" + input + "';");
+                    opener.$("[name=" + field_edit + ']').eq(0).val(input);
             }
         </script>
     </head>
