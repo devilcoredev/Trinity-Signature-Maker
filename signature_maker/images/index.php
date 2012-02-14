@@ -1,14 +1,15 @@
 <html>
     <head>
         <title>Select an image</title>
+        <script language="JavaScript" type="text/javascript" src="../jquery-1.7.1.min.js"></script>
         <script language="JavaScript">
             function select(input)
             {
-                document.getElementById("text_image").src = document.getElementById(input).src;
+                $("#text_image").attr("src", $('#' + input).attr("src"));
 
                 var field_edit = "<?php print $_GET["field_edit"]; ?>";
                 if(field_edit != '')
-                    eval("opener.document.getElementsByName('" + field_edit + "')[0].value = '" + input + "';");
+                    opener.$("[name=" + field_edit + ']').eq(0).val(input);
             }
         </script>
     </head>

@@ -291,57 +291,37 @@
     $stats_rating_div["haste"]        = 36;
 
     //Once every 24 hours are re-written information on achievements in the configuration file so you must not always read them from db.
-    $check_day = false;
-    if($file = fopen("custom/check_day.lock", 'r'))
+    $time = file_get_contents("custom/check_day.lock");
+    if($time == false || (time()-$time) >= (24*60*60))
     {
-        if(!feof($file))
-        {
-            $time = fgets($file, 255);
-            if((time()-$time) >= (24*60*60))
-                $check_day = true;
-        }else $check_day = true;
-        fclose($file);
-    }else $check_day = true;
+        file_put_contents("custom/check_day.lock", time());
 
-    if($check_day)
-    {
-        if($file = fopen("custom/check_day.lock", 'w'))
+        //Total number of achievements (extracted from db).
+        $num_ach = 0;
+        if($conn = mysql_connect($site_host, $site_username, $site_password, true))
         {
-            fputs($file, time());
-            fclose($file);
+            if(mysql_select_db($site_database, $conn))
+                if($result = mysql_query("SELECT COUNT(*) AS number FROM achievement WHERE points <> 0;", $conn))
+                {
+                    if($row = mysql_fetch_array($result, MYSQL_ASSOC)) //I select only the obtanible achievements (those that give points) and insert them into the vector $achievements.
+                        $num_ach = $row["number"];
+                    mysql_free_result($result);
+                }
+            mysql_close($conn);
         }
 
-        if($ach_file = fopen("custom/achievements.php", 'w'))
+        //If there are achievements i put the last 2 entries for stat's configuring.
+        if($num_ach)
         {
-            fputs($ach_file, "<?php\r\n");
-
-            //Total number of achievements (extracted from db).
-            $num_ach = 0;
-            if($conn = mysql_connect($site_host, $site_username, $site_password, true))
+            if($ach_file = fopen("custom/achievements.php", 'w'))
             {
-                if(mysql_select_db($site_database, $conn))
-                    if($result = mysql_query("SELECT COUNT(*) AS number FROM achievement WHERE points <> 0;", $conn))
-                    {
-                        if($row = mysql_fetch_array($result, MYSQL_ASSOC)) //I select only the obtanible achievements (those that give points) and insert them into the vector $achievements.
-                        {
-                            $num_ach = $row["number"];
-                            fputs($ach_file, "    \$num_achievements = $num_ach;\r\n\r\n");
-                        }
-                        mysql_free_result($result);
-                    }
-                mysql_close($conn);
-            }
-
-            //If there are achievements i put the last 2 entries for stat's configuring.
-            if($num_ach)
-            {
+                fputs($ach_file, "<?php\r\n");
+                fputs($ach_file, "    \$num_achievements = $num_ach;\r\n\r\n");
                 fputs($ach_file, "    \$stats[\"achievements\"]       = array(\"name\" => \"Achievements\", \"field_name\" => \"achievements\", \"text\" => \"Ach.: %s/\$num_achievements\"); //Obtained achievements / Obtanible achievements.\r\n");
                 fputs($ach_file, "    \$stats[\"achievementpoints\"]  = array(\"name\" => \"Achievement Points\", \"field_name\" => \"achievementPoints\", \"text\" => \"Ach. Pts: %s\");\r\n");
+                fputs($ach_file, "?>");
+                fclose($ach_file);
             }
-
-            fputs($ach_file, "?>");
-
-            fclose($file);
         }
     }
 
@@ -350,63 +330,33 @@
 ?>
 <?php
     //Code that automatically deletes all the images are not used for 10 minutes (check carried out every 2 minutes to avoid spam).
-    $todo_clean = false;
-    if($file = fopen("custom/check_clean.lock", 'r'))
+    $time = file_get_contents("custom/check_clean.lock");
+    if($time == false || (time()-$time) >= 120)
     {
-        if(!feof($file))
-        {
-            $time = fgets($file, 255);
-            if((time()-$time) >= 120)
-                $todo_clean = true;
-        }else $todo_clean = true;
-        fclose($file);
-    }else $todo_clean = true;
+        file_put_contents("custom/check_clean.lock", time());
 
-    if($todo_clean)
-    {
-        if($file = fopen("custom/check_clean.lock", 'w'))
+        if($conn = mysql_connect($site_host, $site_username, $site_password, true))
         {
-            fputs($file, time());
-            fclose($file);
-        }
-
-        if($connessione = mysql_connect($site_host, $site_username, $site_password, true))
-        {
-            if(mysql_select_db($site_database, $connessione))
+            if(mysql_select_db($site_database, $conn))
             {
-                if($result = mysql_query("SELECT * FROM savedimages WHERE lastEdit < (UNIX_TIMESTAMP() - $image_expire_time);", $connessione))
+                if($result = mysql_query("SELECT * FROM savedimages WHERE lastEdit < (UNIX_TIMESTAMP() - $image_expire_time);", $conn))
                 {
                     while($row = mysql_fetch_array($result, MYSQL_ASSOC))
                         if(file_exists("saved/" . $row["imageName"]))
                             unlink("saved/" . $row["imageName"]);
                     mysql_free_result($result);
                 }
-                mysql_query("DELETE FROM savedimages WHERE lastEdit < (UNIX_TIMESTAMP() - $image_expire_time);", $connessione);
+                mysql_query("DELETE FROM savedimages WHERE lastEdit < (UNIX_TIMESTAMP() - $image_expire_time);", $conn);
             }
-            mysql_close($connessione);
+            mysql_close($conn);
         }
     }
 
 
-    $check_week = false;
-    if($file = fopen("custom/check_week.lock", 'r'))
+    $time = file_get_contents("custom/check_week.lock");
+    if($time == false || (time()-$time) >= (7*24*60*60))
     {
-        if(!feof($file))
-        {
-            $time = fgets($file, 255);
-            if((time()-$time) >= (7*24*60*60))
-                $check_week = true;
-        }else $check_week = true;
-        fclose($file);
-    }else $check_week = true;
-
-    if($check_week)
-    {
-        if($file = fopen("custom/check_week.lock", 'w'))
-        {
-            fputs($file, time());
-            fclose($file);
-        }
+        file_put_contents("custom/check_week.lock", time());
 
         $path_name = "./temp_images/";
         if($handle = opendir($path_name))
@@ -414,7 +364,7 @@
             while(false !== ($file = readdir($handle)))
             {
                 $file_path = $path_name . $file;
-                if(is_file($file_path) && pathinfo($file_path, PATHINFO_EXTENSION)!="htm") //Delete all images.
+                if(is_file($file_path) && pathinfo($file_path, PATHINFO_EXTENSION) != "htm") //Delete all images.
                     unlink($file_path);
             }
             closedir($handle);

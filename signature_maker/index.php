@@ -14,7 +14,8 @@
 ?>
 <html>
     <head>
-        <title>Create yout signature!</title>
+        <title>Create your signature!</title>
+        <script language="JavaScript" type="text/javascript" src="jquery-1.7.1.min.js"></script>
         <script language="JavaScript">
             //Function that opens a popup window size XxY and location URL.
             function popUp(URL, X, Y)
@@ -38,161 +39,112 @@
             //Function that switches signature<->load, if set to true changes from loading to signature, else changes from signature to loading.
             function switchImage(mode)
             {
-                document.getElementById("links").style.display      = (mode ? "block" : "none");
-                document.getElementById("signature").style.display  = (mode ? "block" : "none");
-                document.getElementById("loading").style.display    = (mode ? "none" : "block");
+                $("#links").css("display", (mode ? "block" : "none"));
+                $("#signature").css("display", (mode ? "block" : "none"));
+                $("#loading").css("display", (mode ? "none" : "block"));
             }
 
             //Function called when the signatures are not loaded properly.
             function showError(input)
             {
                 //I reset inputs.
-                document.getElementsByName("direct_link")[0].value         = '';
-                document.getElementsByName("html_link")[0].value           = '';
-                document.getElementsByName("html_armory_link")[0].value    = '';
-                document.getElementsByName("bbcode_link")[0].value         = '';
-                document.getElementsByName("bbcode_armory_link")[0].value  = '';
+                $("input[name=direct_link]").eq(0).val('');
+                $("input[name=html_link]").eq(0).val('');
+                $("input[name=html_armory_link]").eq(0).val('');
+                $("input[name=bbcode_link]").eq(0).val('');
+                $("input[name=bbcode_armory_link]").eq(0).val('');
 
                 //I replace the image with an error.
                 input.src = "images/<?php print $charging_error; ?>";
 
                 //Display the image and hide the loading.
                 input.style.display = "block";
-                document.getElementById("loading").style.display = "none";
+                $("#loading").css("display", "none");
             }
 
             //Function that loads the queryString of the signature.
             function showMessage()
             {
                 var pLocation = "gc_image.php";
-                var count = 0;
 
                 //Add new fields to the queryString if they are defined.
 
                 //Change only if you have inserted the name of the pg.
-                var pg_name = document.getElementsByName("pg_name")[0].value;
-                if(pg_name=='')
+                var pg_name = $("input[name=pg_name]").eq(0).val();
+                if(pg_name == '')
                 {
                     alert("<?php print $error_pg; ?>");
                     return false;
                 }
 
-                var server = document.getElementsByName("server")[0].value;
-                if(server!='')
-                {
-                    count++;
+                var server = $("select[name=server]").eq(0).val();
+                if(server != '')
                     pLocation += "?server=" + server;
-                }
 
-                if(pg_name!='')
-                {
-                    pLocation += (count++ ? '&' : '?');
-                    pLocation += "pg_name=" + pg_name;
-                }
+                pLocation += "&pg_name=" + pg_name;
 
-                var background = document.getElementsByName("background")[0].value;
-                if(background!='')
-                {
-                    pLocation += (count++ ? '&' : '?');
-                    pLocation += "background=" + background;
-                }
+                var background = $("input[name=background]").eq(0).val();
+                if(background != '')
+                    pLocation += "&background=" + background;
 
-                var end_background = document.getElementsByName("end_background")[0].value;
-                if(end_background!='' && background.indexOf("bg_")!=0)
-                {
-                    pLocation += (count++ ? '&' : '?');
-                    pLocation += "end_background=" + end_background;
-                }
+                var end_background = $("input[name=end_background]").eq(0).val();
+                if(end_background != '' && background.indexOf("bg_") != 0)
+                    pLocation += "&end_background=" + end_background;
 
-                var background_method = document.getElementsByName("background_method")[0].value;
-                if(background_method!='' && background.indexOf("bg_")!=0)
-                {
-                    pLocation += (count++ ? '&' : '?');
-                    pLocation += "background_method=" + background_method;
-                }
+                var background_method = $("select[name=background_method]").eq(0).val();
+                if(background_method != '' && background.indexOf("bg_") != 0)
+                    pLocation += "&background_method=" + background_method;
 
-                var effects = document.getElementsByName("effects");
-                for(var i=0; i<effects.length; ++i)
-                    if(effects[i].checked==1)
-                    {
-                        pLocation += (count++ ? '&' : '?');
-                        pLocation += "effects=" + effects[i].value;
-                    }
+                var effects = $("input[name=effects]:checked").val();
+                if(effects != '')
+                    pLocation += "&effects=" + effects;
 
-                var filter = document.getElementsByName("filter")[0].value;
-                if(filter!='')
-                {
-                    pLocation += (count++ ? '&' : '?');
-                    pLocation += "filter=" + filter;
-                }
+                var filter = $("select[name=filter]").eq(0).val();
+                if(filter != '')
+                    pLocation += "&filter=" + filter;
 
-                var url_image = encodeURIComponent(document.getElementsByName("url_image")[0].value);
-                if(url_image!='')
-                {
-                    pLocation += (count++ ? '&' : '?');
-                    pLocation += "url_image=" + url_image;
-                }
+                var url_image = encodeURIComponent($("input[name=url_image]").eq(0).val());
+                if(url_image != '')
+                    pLocation += "&url_image=" + url_image;
 
-                var type_image = document.getElementsByName("type_image");
-                for(var i=0; i<type_image.length; ++i)
-                    if(type_image[i].checked==1)
-                    {
-                        pLocation += (count++ ? '&' : '?');
-                        pLocation += "type_image=" + type_image[i].value;
-                    }
+                var type_image = $("input[name=type_image]:checked").val();
+                if(type_image != '')
+                    pLocation += "&type_image=" + type_image;
 
-                var text_color = document.getElementsByName("text_color")[0].value;
-                if(text_color!='')
-                {
-                    pLocation += (count++ ? '&' : '?');
-                    pLocation += "text_color=" + text_color;
-                }
+                var text_color = $("input[name=text_color]").eq(0).val();
+                if(text_color != '')
+                    pLocation += "&text_color=" + text_color;
 
-                var text_font = document.getElementsByName("text_font")[0].value;
-                if(text_font!='')
-                {
-                    pLocation += (count++ ? '&' : '?');
-                    pLocation += "text_font=" + text_font;
-                }
+                var text_font = $("input[name=text_font]").eq(0).val();
+                if(text_font != '')
+                    pLocation += "&text_font=" + text_font;
 
                 <?php
                     //This part is only enabled by config.
                     if($image_resize_enabled)
                     {
-                        print "var x = document.getElementsByName('x')[0].value;\r\n";
-                        print "                if(x!='')\r\n";
-                        print "                {\r\n";
-                        print "                    pLocation += (count++ ? '&' : '?');\r\n";
-                        print "                    pLocation += \"x=\" + x;\r\n";
-                        print "                }\r\n\r\n";
+                        print "var x = $(\"input[name=x]\").eq(0).val();\r\n";
+                        print "                if(x != '')\r\n";
+                        print "                    pLocation += \"&x=\" + x;\r\n";
 
-                        print "                var y = document.getElementsByName('y')[0].value;\r\n";
-                        print "                if(y!='')\r\n";
-                        print "                {\r\n";
-                        print "                    pLocation += (count++ ? '&' : '?');\r\n";
-                        print "                    pLocation += \"y=\" + y;\r\n";
-                        print "                }\r\n";
+                        print "                var y = $(\"input[name=y]\").eq(0).val();\r\n";
+                        print "                if(y != '')\r\n";
+                        print "                    pLocation += \"&y=\" + y;\r\n";
                     }
                 ?>
 
-                for(var i=1; i<6; ++i)
-                    if(document.getElementsByName("enable_custom_stat"+i)[0].checked == true)
+                for(var i = 1; i < 6; ++i)
+                    if($("input[name=enable_custom_stat" + i + ']').eq(0).attr("checked"))
                     {
-                        var custom_stat = encodeURIComponent(document.getElementsByName("custom_stat"+i)[0].value);
-                        if(custom_stat!='')
-                        {
-                            pLocation += (count++ ? '&' : '?');
-                            pLocation += "custom_stat" + i + '=' + custom_stat;
-                        }
+                        var custom_stat = encodeURIComponent($("input[name=custom_stat" + i + ']').eq(0).val());
+                        if(custom_stat != '')
+                            pLocation += "&custom_stat" + i + '=' + custom_stat;
                     }
                     else
                     {
-                        var stat = document.getElementsByName("stat"+i)[0].value;
-                        if(stat!='' && stat!='-')
-                        {
-                            pLocation += (count++ ? '&' : '?');
-                            pLocation += "stat" + i + '=' + stat;
-                        }
+                        var stat = $("select[name=stat" + i + ']').eq(0).val();
+                        if(stat != '' && stat != '-')
+                            pLocation += "&stat" + i + '=' + stat;
                     }
 
                 //I find the location of the link excluding the index.php and entering gc_image + queryString.
@@ -206,11 +158,11 @@
 
                 var absolute_link = location_path + pLocation;
 
-                var direct_link         = document.getElementsByName("direct_link")[0];
-                var html_link           = document.getElementsByName("html_link")[0];
-                var html_armory_link    = document.getElementsByName("html_armory_link")[0];
-                var bbcode_link         = document.getElementsByName("bbcode_link")[0];
-                var bbcode_armory_link  = document.getElementsByName("bbcode_armory_link")[0];
+                var direct_link         = $("input[name=direct_link]").eq(0);
+                var html_link           = $("input[name=html_link]").eq(0);
+                var html_armory_link    = $("input[name=html_armory_link]").eq(0);
+                var bbcode_link         = $("input[name=bbcode_link]").eq(0);
+                var bbcode_armory_link  = $("input[name=bbcode_armory_link]").eq(0);
 
                 //I find the size of the error file (PNG will be much larger than the size of signatures).
                 var req;
@@ -259,33 +211,36 @@
 
                     var armory_server_name = '';
 
-                    for(var i=0; i<server_keys.length; ++i)
-                        if(server_keys[i] == server && armory_server_name=='')
+                    for(var i = 0; i < server_keys.length; ++i)
+                        if(server_keys[i] == server)
+                        {
                             armory_server_name = server_armory_names[i];
+                            break;
+                        }
 
                     var armory_link = armory_template_link.replace("%s", armory_server_name).replace("%p", maximizeText(pg_name));
 
                     //I put links in the text boxes.
-                    direct_link.value         = absolute_link;
-                    html_link.value           = "<img src=\"" + absolute_link + "\">";
-                    html_armory_link.value    = "<a href=\"" + armory_link + "\"><img src=\"" + absolute_link + "\"></a>";
-                    bbcode_link.value         = "[img]" + absolute_link + "[/img]";
-                    bbcode_armory_link.value  = "[url=" + armory_link + "][img]" + absolute_link + "[/img][/url]";
+                    direct_link.val(absolute_link);
+                    html_link.val("<img src=\"" + absolute_link + "\">");
+                    html_armory_link.val("<a href=\"" + armory_link + "\"><img src=\"" + absolute_link + "\"></a>");
+                    bbcode_link.val("[img]" + absolute_link + "[/img]");
+                    bbcode_armory_link.val("[url=" + armory_link + "][img]" + absolute_link + "[/img][/url]");
                 }
                 else
                 {
-                    direct_link.value         = '';
-                    html_link.value           = '';
-                    html_armory_link.value    = '';
-                    bbcode_link.value         = '';
-                    bbcode_armory_link.value  = '';
+                    direct_link.val('');
+                    html_link.val('');
+                    html_armory_link.val('');
+                    bbcode_link.val('');
+                    bbcode_armory_link.val('');
                 }
 
-                document.getElementById("signature").src = absolute_link; //I change the path of the image.
-                document.getElementById("output").style.display = "block"; //Display the output.
+                $("#signature").attr("src", absolute_link); //I change the path of the image.
+                $("#output").css("display", "block"); //Display the output.
 
                 //I do the switch images only if the signature is not already loaded.
-                if(!document.getElementById("signature").complete)
+                if(!$("#signature").get().complete)
                     switchImage(false);
 
                 return true;
@@ -299,10 +254,10 @@
 
             function switchStat(index)
             {
-                var isChecked = document.getElementsByName("enable_custom_stat"+index)[0].checked;
+                var isChecked = $("input[name=enable_custom_stat" + index + "]").eq(0).attr("checked");
 
-                document.getElementById("display_stat"+index).style.display         = (isChecked ? "none" : "block");
-                document.getElementById("display_custom_stat"+index).style.display  = (isChecked ? "block" : "none");
+                $("#display_stat" + index).css("display", (isChecked ? "none" : "block"));
+                $("#display_custom_stat" + index).css("display", (isChecked ? "block" : "none"));
             }
 
             function initializeText()
@@ -324,7 +279,7 @@
                                     $count = 0;
                                     foreach($realm_name as $i => $value)
                                     {
-                                        if($i!='' && $value!='')
+                                        if($i != '' && $value != '')
                                         {
                                             if($count++) print "                                ";
                                             print "<option value=\"$i\">$value</option>\r\n";
@@ -425,7 +380,7 @@
                     }
 
                     $ordinary_numbers = array("first", "second", "third", "fourth", "fifth");
-                    for($i=0; $i<5; ++$i)
+                    for($i = 0; $i < 5; ++$i)
                     {
                         if($i || $image_resize_enabled)
                             print "                ";
