@@ -165,7 +165,23 @@
                 var bbcode_armory_link  = $("input[name=bbcode_armory_link]").eq(0);
 
                 //Trovo la dimensione del file d'errore (dato che è png sarà molto maggiore delle dimensioni delle firme).
-                var req = new XMLHttpRequest();
+                var req;
+                try { req = new ActiveXObject("Microsoft.XMLHTTP"); } // Internet Explorer
+                catch(e)
+                {
+                    try { req = new XMLHttpRequest(); } // Firefox, Opera 8.0+, Safari
+                    catch(e)
+                    {
+                        try { req = new ActiveXObject("MSXML2.XMLHTTP.3.0"); }
+                        catch(e)
+                        {
+                            prompt("Il tuo browser non supporta AJAX!\nVerrà fatto un redirect all'immagine.\nUsa il link quì sotto per utilizzare la firma:", absolute_link);
+                            document.location.href = absolute_link;
+                            return false;      
+                        }    
+                    }  
+                }
+
                 req.open("GET", absolute_link, false);
                 req.send(null);
                 var headers = req.getResponseHeader("Content-Length");
