@@ -213,7 +213,23 @@
                 var bbcode_armory_link  = document.getElementsByName("bbcode_armory_link")[0];
 
                 //I find the size of the error file (PNG will be much larger than the size of signatures).
-                var req = new XMLHttpRequest();
+                var req;
+                try { req = new ActiveXObject("Microsoft.XMLHTTP"); } // Internet Explorer
+                catch(e)
+                {
+                    try { req = new XMLHttpRequest(); } // Firefox, Opera 8.0+, Safari
+                    catch(e)
+                    {
+                        try { req = new ActiveXObject("MSXML2.XMLHTTP.3.0"); }
+                        catch(e)
+                        {
+                            prompt("Your browser does not support AJAX!\nA redirect to the image will be done.\nUse the link below to use the signature:", absolute_link);
+                            document.location.href = absolute_link;
+                            return false;
+                        }
+                    }
+                }
+
                 req.open("GET", absolute_link, false);
                 req.send(null);
                 var headers = req.getResponseHeader("Content-Length");
