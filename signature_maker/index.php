@@ -177,9 +177,9 @@
                         {
                             prompt("Il tuo browser non supporta AJAX!\nVerrà fatto un redirect all'immagine.\nUsa il link quì sotto per utilizzare la firma:", absolute_link);
                             document.location.href = absolute_link;
-                            return false;      
-                        }    
-                    }  
+                            return false;
+                        }
+                    }
                 }
 
                 req.open("GET", absolute_link, false);
