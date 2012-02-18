@@ -23,7 +23,7 @@
 
                 var field_edit = "<?php print $_GET["field_edit"]; ?>";
                 if(field_edit != '')
-                    opener.$("[name=" + field_edit + ']').eq(0).val(colorValue);
+                    opener.$('#' + field_edit).val(colorValue);
             }
         </script>
     </head>
