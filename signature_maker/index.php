@@ -255,7 +255,7 @@
                 $("#output").show(); //Visualizzo l'output.
 
                 //Effettuo lo switch delle immagini solo se la firma non è stata già caricata.
-                if(!$("#firma").get().complete)
+                if(!$("#firma").get(0).complete)
                     switchImage(false);
 
                 return true;
