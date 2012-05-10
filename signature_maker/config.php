@@ -333,8 +333,8 @@
     {
         file_put_contents("custom/check_clean.lock", time());
 
-        $num_query_clean = $site_connection->query("SELECT * FROM immaginisalvate WHERE ultimaModifica < (UNIX_TIMESTAMP() - $image_expire_time);");
-        while($row = $site_connection->getNextResult($num_query_clean))
+        $id_query_clean = $site_connection->query("SELECT * FROM immaginisalvate WHERE ultimaModifica < (UNIX_TIMESTAMP() - $image_expire_time);");
+        while($row = $site_connection->getNextResult($id_query_clean))
             if(file_exists("saved/" . $row["nomeImmagine"]))
                 unlink("saved/" . $row["nomeImmagine"]);
 

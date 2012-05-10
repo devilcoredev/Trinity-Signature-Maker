@@ -71,7 +71,6 @@
         }
 
         if(!$find_stats)
-        {
             if($row = $intput_conn->query("SELECT data FROM armory_character_stats WHERE guid = $guid;", true)) //Shadez armory (solo se l'armory interna non è abilitata).
             {
                 $input_array = explode(' ', $row["data"]);
@@ -103,7 +102,6 @@
                 for($i = 0x040A; $i < 0x040F; ++$i) //Il valore minimo è lo spell crit attuale del PG.
                     $input["spellCritPct"]   = min($input["spellCritPct"], UInt32ToFloat($input_array[$i]));
             }
-        }
 
         if($input["class"] != 6) //Solo i Death Knight hanno rune e runic power.
         {
@@ -140,10 +138,10 @@
         }
         $query = "SELECT item_instance.itemEntry, item_instance.enchantments FROM character_inventory, item_instance
                     WHERE character_inventory.item = item_instance.guid AND character_inventory.guid = $guid AND character_inventory.slot<18;";
-        $num_query = $intput_conn->query($query);
-        if($num_query != -1)
+        $id_query = $intput_conn->query($query);
+        if($id_query != -1)
         {
-            while($row = $intput_conn->getNextResult($num_query))
+            while($row = $intput_conn->getNextResult($id_query))
             {
                 sumItemEnchantments($input, $row["enchantments"]);
                 if($item_template = getItemTemplate($row["itemEntry"]))
@@ -177,7 +175,7 @@
         global $site_connection;
         if($row = $site_connection->query("SELECT points FROM achievement WHERE ID = $achievement_id;", true))
             return $row["points"];
-        return 0;
+        return false;
     }
 
     //La funzione restituisce le informazioni su un dato talento.
@@ -213,7 +211,13 @@
         {
             $to_make_image = false;
             $site_connection->query("UPDATE immaginisalvate SET ultimaModifica = UNIX_TIMESTAMP() WHERE queryString = '$query_string';", true);
-            header("location: saved/" . $row["nomeImmagine"]); //Se l'immagine esiste faccio un redirect a quella preesistete.
+
+            //Se l'immagine esiste faccio un redirect a quella preesistete.
+            header("Content-disposition: inline; filename=firma.png");
+            header("Content-type: image/png");
+            $im = imagecreatefrompng("saved/" . $row["nomeImmagine"]);
+            imagepng($im);
+            imagedestroy($im);
         }
 ?>
 <?php
@@ -319,8 +323,8 @@
 
                 //Talenti, eseguo questa operazione a prescindere per trovare il nome della spec.
                 $talents = array(0, 0, 0);
-                $talents_result_id = $server_conn->query("SELECT spell FROM character_talent WHERE guid = $pg_GUID AND spec = $spec_id;");
-                while($talents_row = $server_conn->getNextResult($talents_result_id))
+                $id_query_talents = $server_conn->query("SELECT spell FROM character_talent WHERE guid = $pg_GUID AND spec = $spec_id;");
+                while($talents_row = $server_conn->getNextResult($id_query_talents))
                     if($vet = getTalentInfo($talents_row["spell"]))
                         $talents[$vet["tabPage"]] += $vet["rankId"];
                 $row["talents"] = $talents[0] . '/' . $talents[1] . '/' . $talents[2]; //Talenti nella forma (x/x/x).
@@ -399,8 +403,8 @@
                             $ach_count = 0;
                             $ach_points = 0;
                             //Seleziono solo gli achievements che danno punti, il resto sono "Feats of Strength" oppure first kill.
-                            $achievements_result_id = $server_conn->query("SELECT achievement FROM character_achievement WHERE guid = $pg_GUID;");
-                            while($achievements_row = $server_conn->getNextResult($achievements_result_id))
+                            $id_query_achievements = $server_conn->query("SELECT achievement FROM character_achievement WHERE guid = $pg_GUID;");
+                            while($achievements_row = $server_conn->getNextResult($id_query_achievements))
                                 if($punti = isValidAchievement($achievements_row["achievement"]))
                                 {
                                     $ach_count ++; //Incremento il conto degli achievements ottenuti.

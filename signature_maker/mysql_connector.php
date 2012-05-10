@@ -70,7 +70,7 @@
                 return false;
             $return_row = mysql_fetch_array($this->results[$query_number], MYSQL_ASSOC);
 
-            if((!$return_row || $free_result) && $this->results[$query_number])
+            if(!$return_row || $free_result)
                 mysql_free_result($this->results[$query_number]);
 
             return $return_row;
