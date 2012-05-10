@@ -71,7 +71,6 @@
         }
 
         if(!$find_stats)
-        {
             if($row = $intput_conn->query("SELECT data FROM armory_character_stats WHERE guid = $guid;", true))
             {
                 $input_array = explode(' ', $row["data"]);
@@ -103,7 +102,6 @@
                 for($i = 0x040A; $i < 0x040F; ++$i) //The min-value is the spell crit.
                     $input["spellCritPct"]   = min($input["spellCritPct"], UInt32ToFloat($input_array[$i]));
             }
-        }
 
         if($input["class"] != 6) //Only Death Knights have got rune and runic power.
         {
@@ -140,10 +138,10 @@
         }
         $query = "SELECT item_instance.itemEntry, item_instance.enchantments FROM character_inventory, item_instance
                     WHERE character_inventory.item = item_instance.guid AND character_inventory.guid = $guid AND character_inventory.slot<18;";
-        $num_query = $intput_conn->query($query);
-        if($num_query != -1)
+        $id_query = $intput_conn->query($query);
+        if($id_query != -1)
         {
-            while($row = $intput_conn->getNextResult($num_query))
+            while($row = $intput_conn->getNextResult($id_query))
             {
                 sumItemEnchantments($input, $row["enchantments"]);
                 if($item_template = getItemTemplate($row["itemEntry"]))
@@ -177,7 +175,7 @@
         global $site_connection;
         if($row = $site_connection->query("SELECT points FROM achievement WHERE ID = $achievement_id;", true))
             return $row["points"];
-        return 0;
+        return false;
     }
 
     //The function returns information about a given talents.
@@ -213,7 +211,13 @@
         {
             $to_make_image = false;
             $site_connection->query("UPDATE savedimages SET lastEdit = UNIX_TIMESTAMP() WHERE queryString = '$query_string';", true);
-            header("location: saved/" . $row["imageName"]); //If the image exists do a redirect to it.
+
+            //If the image exists do a redirect to it.
+            header("Content-disposition: inline; filename=signature.png");
+            header("Content-type: image/png");
+            $im = imagecreatefrompng("saved/" . $row["imageName"]);
+            imagepng($im);
+            imagedestroy($im);
         }
 ?>
 <?php
@@ -319,8 +323,8 @@
 
                 //Talents, do it for find the spec name.
                 $talents = array(0, 0, 0);
-                $talents_result_id = $server_conn->query("SELECT spell FROM character_talent WHERE guid = $pg_GUID AND spec = $spec_id;");
-                while($talents_row = $server_conn->getNextResult($talents_result_id))
+                $id_query_talents = $server_conn->query("SELECT spell FROM character_talent WHERE guid = $pg_GUID AND spec = $spec_id;");
+                while($talents_row = $server_conn->getNextResult($id_query_talents))
                     if($vet = getTalentInfo($talents_row["spell"]))
                         $talents[$vet["tabPage"]] += $vet["rankId"];
                 $row["talents"] = $talents[0] . '/' . $talents[1] . '/' . $talents[2]; //Talents in the form (x/x/x).
@@ -399,8 +403,8 @@
                             $ach_count = 0;
                             $ach_points = 0;
                             //Select only the achievements that give points, the rest are "Feats of Strength" or first kill.
-                            $achievements_result_id = $server_conn->query("SELECT achievement FROM character_achievement WHERE guid = $pg_GUID;");
-                            while($achievements_row = $server_conn->getNextResult($achievements_result_id))
+                            $id_query_achievements = $server_conn->query("SELECT achievement FROM character_achievement WHERE guid = $pg_GUID;");
+                            while($achievements_row = $server_conn->getNextResult($id_query_achievements))
                                 if($points = isValidAchievement($achievements_row["achievement"]))
                                 {
                                     $ach_count++; //Increase the count of the obtained achievements.
