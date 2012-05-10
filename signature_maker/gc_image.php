@@ -26,72 +26,33 @@
 
     function getItemTemplate($item_id)
     {
-        global $site_host, $site_username, $site_password, $site_database;
-        $returnValue = 0;
-
-        if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
-        {
-            if(mysql_select_db($site_database, $my_conn))
-                if($my_result = mysql_query("SELECT * FROM itemtemplate WHERE entry = $item_id;", $my_conn))
-                {
-                    if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
-                        $returnValue = $my_row;
-                    mysql_free_result($my_result);
-                }
-            mysql_close($my_conn);
-        }
-
-        return $returnValue;
+        global $site_connection;
+        return $site_connection->query("SELECT * FROM itemtemplate WHERE entry = $item_id;", true);
     }
 
     function sumItemEnchantments(&$input, $data)
     {
-        global $site_host, $site_username, $site_password, $site_database, $stats_rating_div;
+        global $site_connection, $stats_rating_div;
 
-        if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
-        {
-            if(mysql_select_db($site_database, $my_conn))
-            {
-                $data_array = explode(' ', $data);
-                for($i = 0; $i < count($data_array); $i += 3)
-                    if($data_array[$i])
+        $data_array = explode(' ', $data);
+        for($i = 0; $i < count($data_array); $i += 3)
+            if($row = $site_connection->query("SELECT * FROM itemenchantment WHERE ID = " . $data_array[$i] . ';', true))
+                for($j = 0; $j < 3; ++$j)
+                    if($row["type$j"] == 5 && in_array($row["spellid$j"], $stats_rating_div))
                     {
-                        $query = "SELECT * FROM itemenchantment WHERE ID = " . $data_array[$i] . ';';
-                        if($my_result = mysql_query($query, $my_conn))
-                        {
-                            if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
-                                for($j = 0; $j < 3; ++$j)
-                                    if($my_row["type$j"] == 5 && in_array($my_row["spellid$j"], $stats_rating_div))
-                                    {
-                                        $key = array_search($my_row["spellid$j"], $stats_rating_div);
-                                        $input["$key"] += $my_row["amount$j"];
-                                    }
-                            mysql_free_result($my_result);
-                        }
+                        $key = array_search($row["spellid$j"], $stats_rating_div);
+                        $input["$key"] += $row["amount$j"];
                     }
-            }
-            mysql_close($my_conn);
-        }
     }
 
     function getRating($level, $rating_name)
     {
-        global $site_host, $site_username, $site_password, $site_database;
-        $returnValue = 1;
+        global $site_connection;
 
-        if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
-        {
-            if(mysql_select_db($site_database, $my_conn))
-                if($my_result = mysql_query("SELECT $rating_name FROM rating WHERE level = $level;", $my_conn))
-                {
-                    if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
-                        $returnValue = $my_row["$rating_name"];
-                    mysql_free_result($my_result);
-                }
-            mysql_close($my_conn);
-        }
+        if($row = $site_connection->query("SELECT $rating_name FROM rating WHERE level = $level;", true))
+            return $row["$rating_name"];
 
-        return $returnValue;
+        return 1;
     }
 
     //The function gets all the stats of the PG, searches first in the table character_stats, if it doesn't find anything searches in the table armory_character_stats.
@@ -103,52 +64,44 @@
         $query = "SELECT maxhealth, maxpower1 AS mana, maxpower6 AS rune, maxpower7 AS runicPower, strength, agility, stamina, intellect, spirit,
                     armor, blockPct, dodgePct, parryPct, critPct, rangedCritPct, spellCritPct, attackPower, rangedAttackPower, spellPower,
                     resilience FROM character_stats WHERE guid = $guid;";
-        if($result = mysql_query($query, $intput_conn)) //Internal armory (if enabled).
+        if($row = $intput_conn->query($query, true)) //Internal armory (if enabled).
         {
-            if($row = mysql_fetch_array($result, MYSQL_ASSOC))
-            {
-                $find_stats = true;
-                $input = array_merge($input, $row);
-            }
-            mysql_free_result($result);
+            $find_stats = true;
+            $input = array_merge($input, $row);
         }
 
         if(!$find_stats)
         {
-            if($result = mysql_query("SELECT data FROM armory_character_stats WHERE guid = $guid;", $intput_conn))
+            if($row = $intput_conn->query("SELECT data FROM armory_character_stats WHERE guid = $guid;", true))
             {
-                if($row = mysql_fetch_array($result, MYSQL_ASSOC)) //Shadez armory (only if the internal armory is disabled).
-                {
-                    $input_array = explode(' ', $row["data"]);
+                $input_array = explode(' ', $row["data"]);
 
-                    $input["maxhealth"]          = $input_array[0x0006 + 0x001A];                           //OBJECT_END + UNIT_FIELD_MAXHEALTH.
-                    $input["mana"]               = $input_array[0x0006 + 0x001B];                           //OBJECT_END + UNIT_FIELD_MAXPOWER1.
-                    $input["rune"]               = $input_array[0x0006 + 0x001B + 0x0005];                  //OBJECT_END + UNIT_FIELD_MAXPOWER6.
-                    $input["runicPower"]         = $input_array[0x0006 + 0x001B + 0x0006];                  //OBJECT_END + UNIT_FIELD_MAXPOWER7.
-                    $input["strength"]           = $input_array[0x0006 + 0x004E];                           //OBJECT_END + UNIT_FIELD_STAT0.
-                    $input["agility"]            = $input_array[0x0006 + 0x004E + 0x0001];                  //OBJECT_END + UNIT_FIELD_STAT1.
-                    $input["stamina"]            = $input_array[0x0006 + 0x004E + 0x0002];                  //OBJECT_END + UNIT_FIELD_STAT2.
-                    $input["intellect"]          = $input_array[0x0006 + 0x004E + 0x0003];                  //OBJECT_END + UNIT_FIELD_STAT3.
-                    $input["spirit"]             = $input_array[0x0006 + 0x004E + 0x0004];                  //OBJECT_END + UNIT_FIELD_STAT4.
-                    $input["armor"]              = $input_array[0x0006 + 0x005D];                           //OBJECT_END + UNIT_FIELD_RESISTANCES.
-                    $input["blockPct"]           = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x036C]);   //OBJECT_END + UNIT_END + PLAYER_BLOCK_PERCENTAGE.
-                    $input["dodgePct"]           = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x036D]);   //OBJECT_END + UNIT_END + PLAYER_DODGE_PERCENTAGE.
-                    $input["parryPct"]           = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x036E]);   //OBJECT_END + UNIT_END + PLAYER_PARRY_PERCENTAGE.
-                    $input["critPct"]            = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x0371]);   //OBJECT_END + UNIT_END + PLAYER_CRIT_PERCENTAGE.
-                    $input["rangedCritPct"]      = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x0372]);   //OBJECT_END + UNIT_END + PLAYER_RANGED_CRIT_PERCENTAGE.
-                    $input["attackPower"]        = $input_array[0x0006 + 0x0075];                           //OBJECT_END + UNIT_FIELD_ATTACK_POWER.
-                    $input["rangedAttackPower"]  = $input_array[0x0006 + 0x0078];                           //OBJECT_END + UNIT_FIELD_RANGED_ATTACK_POWER.
-                    $input["resilience"]         = $input_array[0x0006 + 0x008E + 0x043B + 0x0010];         //OBJECT_END + UNIT_END + PLAYER_FIELD_COMBAT_RATING_1 + CR_CRIT_TAKEN_SPELL.
+                $input["maxhealth"]          = $input_array[0x0006 + 0x001A];                           //OBJECT_END + UNIT_FIELD_MAXHEALTH.
+                $input["mana"]               = $input_array[0x0006 + 0x001B];                           //OBJECT_END + UNIT_FIELD_MAXPOWER1.
+                $input["rune"]               = $input_array[0x0006 + 0x001B + 0x0005];                  //OBJECT_END + UNIT_FIELD_MAXPOWER6.
+                $input["runicPower"]         = $input_array[0x0006 + 0x001B + 0x0006];                  //OBJECT_END + UNIT_FIELD_MAXPOWER7.
+                $input["strength"]           = $input_array[0x0006 + 0x004E];                           //OBJECT_END + UNIT_FIELD_STAT0.
+                $input["agility"]            = $input_array[0x0006 + 0x004E + 0x0001];                  //OBJECT_END + UNIT_FIELD_STAT1.
+                $input["stamina"]            = $input_array[0x0006 + 0x004E + 0x0002];                  //OBJECT_END + UNIT_FIELD_STAT2.
+                $input["intellect"]          = $input_array[0x0006 + 0x004E + 0x0003];                  //OBJECT_END + UNIT_FIELD_STAT3.
+                $input["spirit"]             = $input_array[0x0006 + 0x004E + 0x0004];                  //OBJECT_END + UNIT_FIELD_STAT4.
+                $input["armor"]              = $input_array[0x0006 + 0x005D];                           //OBJECT_END + UNIT_FIELD_RESISTANCES.
+                $input["blockPct"]           = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x036C]);   //OBJECT_END + UNIT_END + PLAYER_BLOCK_PERCENTAGE.
+                $input["dodgePct"]           = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x036D]);   //OBJECT_END + UNIT_END + PLAYER_DODGE_PERCENTAGE.
+                $input["parryPct"]           = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x036E]);   //OBJECT_END + UNIT_END + PLAYER_PARRY_PERCENTAGE.
+                $input["critPct"]            = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x0371]);   //OBJECT_END + UNIT_END + PLAYER_CRIT_PERCENTAGE.
+                $input["rangedCritPct"]      = UInt32ToFloat($input_array[0x0006 + 0x008E + 0x0372]);   //OBJECT_END + UNIT_END + PLAYER_RANGED_CRIT_PERCENTAGE.
+                $input["attackPower"]        = $input_array[0x0006 + 0x0075];                           //OBJECT_END + UNIT_FIELD_ATTACK_POWER.
+                $input["rangedAttackPower"]  = $input_array[0x0006 + 0x0078];                           //OBJECT_END + UNIT_FIELD_RANGED_ATTACK_POWER.
+                $input["resilience"]         = $input_array[0x0006 + 0x008E + 0x043B + 0x0010];         //OBJECT_END + UNIT_END + PLAYER_FIELD_COMBAT_RATING_1 + CR_CRIT_TAKEN_SPELL.
 
-                    $input["spellPower"]         = $input_array[0x0494];                                    //OBJECT_END + UNIT_END + PLAYER_FIELD_MOD_DAMAGE_DONE_POS.
-                    for($i = 0x0495; $i < 0x049A; ++$i) //The min-value is the spell power.
-                        $input["spellPower"]     = min($input["spellPower"], $input_array[$i]);
+                $input["spellPower"]         = $input_array[0x0494];                                    //OBJECT_END + UNIT_END + PLAYER_FIELD_MOD_DAMAGE_DONE_POS.
+                for($i = 0x0495; $i < 0x049A; ++$i) //The min-value is the spell power.
+                    $input["spellPower"]     = min($input["spellPower"], $input_array[$i]);
 
-                    $input["spellCritPct"]       = UInt32ToFloat($input_array[0x0409]);                     //OBJECT_END + UNIT_END + PLAYER_SPELL_CRIT_PERCENTAGE1.
-                    for($i = 0x040A; $i < 0x040F; ++$i) //The min-value is the spell crit.
-                        $input["spellCritPct"]   = min($input["spellCritPct"], UInt32ToFloat($input_array[$i]));
-                }
-                mysql_free_result($result);
+                $input["spellCritPct"]       = UInt32ToFloat($input_array[0x0409]);                     //OBJECT_END + UNIT_END + PLAYER_SPELL_CRIT_PERCENTAGE1.
+                for($i = 0x040A; $i < 0x040F; ++$i) //The min-value is the spell crit.
+                    $input["spellCritPct"]   = min($input["spellCritPct"], UInt32ToFloat($input_array[$i]));
             }
         }
 
@@ -171,15 +124,11 @@
             $query = "SELECT arena_team.name, arena_team.rating, arena_team_member.personalRating FROM arena_team,
                         arena_team_member WHERE arena_team.arenaTeamId = arena_team_member.arenaTeamId AND
                         arena_team_member.guid = $guid AND arena_team.type = $value;";
-            if($result = mysql_query($query, $intput_conn))
+            if($row = $intput_conn->query($query, true))
             {
-                if($row = mysql_fetch_array($result, MYSQL_ASSOC))
-                {
-                    $input["teamName$value"]        = $row["name"];
-                    $input["teamRating$value"]      = $row["rating"];
-                    $input["personalRating$value"]  = $row["personalRating"];
-                }
-                mysql_free_result($result);
+                $input["teamName$value"]        = $row["name"];
+                $input["teamRating$value"]      = $row["rating"];
+                $input["personalRating$value"]  = $row["personalRating"];
             }
         }
 
@@ -191,9 +140,10 @@
         }
         $query = "SELECT item_instance.itemEntry, item_instance.enchantments FROM character_inventory, item_instance
                     WHERE character_inventory.item = item_instance.guid AND character_inventory.guid = $guid AND character_inventory.slot<18;";
-        if($result = mysql_query($query, $intput_conn))
+        $num_query = $intput_conn->query($query);
+        if($num_query != -1)
         {
-            while($row = mysql_fetch_array($result, MYSQL_ASSOC))
+            while($row = $intput_conn->getNextResult($num_query))
             {
                 sumItemEnchantments($input, $row["enchantments"]);
                 if($item_template = getItemTemplate($row["itemEntry"]))
@@ -210,7 +160,6 @@
             $input["meleeHaste"]   += $input["haste"];
             $input["rangedHaste"]  += $input["haste"];
             $input["spellHaste"]   += $input["haste"];
-            mysql_free_result($result);
         }
         $input["hit"]          /= getRating($input["level"], "CR_HIT_MELEE");
         $input["meleeHit"]     /= getRating($input["level"], "CR_HIT_MELEE");
@@ -225,43 +174,17 @@
     //The function returns 0 if the achievement is not valid (eg achievement of first kill, or Feast of Strength) or achievement's points if it's valid.
     function isValidAchievement($achievement_id)
     {
-        global $site_host, $site_username, $site_password, $site_database;
-        $returnValue = 0;
-
-        if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
-        {
-            if(mysql_select_db($site_database, $my_conn))
-                if($my_result = mysql_query("SELECT points FROM achievement WHERE ID = $achievement_id;", $my_conn))
-                {
-                    if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
-                        $returnValue = $my_row["points"];
-                    mysql_free_result($my_result);
-                }
-            mysql_close($my_conn);
-        }
-
-        return $returnValue;
+        global $site_connection;
+        if($row = $site_connection->query("SELECT points FROM achievement WHERE ID = $achievement_id;", true))
+            return $row["points"];
+        return 0;
     }
 
     //The function returns information about a given talents.
     function getTalentInfo($spellId)
     {
-        global $site_host, $site_username, $site_password, $site_database;
-        $returnValue = 0;
-
-        if($my_conn = mysql_connect($site_host, $site_username, $site_password, true))
-        {
-            if(mysql_select_db($site_database, $my_conn))
-                if($my_result = mysql_query("SELECT rankId, tabPage FROM talent WHERE spellTalent = $spellId;", $my_conn))
-                {
-                    if($my_row = mysql_fetch_array($my_result, MYSQL_ASSOC))
-                        $returnValue = $my_row;
-                    mysql_free_result($my_result);
-                }
-            mysql_close($my_conn);
-        }
-
-        return $returnValue;
+        global $site_connection;
+        return $site_connection->query("SELECT rankId, tabPage FROM talent WHERE spellTalent = $spellId;", true);
     }
 ?>
 <?php
@@ -280,32 +203,35 @@
     $spec_name       = '';        //Spec's name.
     $effect          = '';        //Background effect.
     $img_name        = '';        //Background image.
+    $server_id       = '';        //Id of chosen server.
 ?>
 <?php
     //If the same image already exists i don't rebuild it.
-    if($connection = mysql_connect($site_host, $site_username, $site_password, true))
-    {
-        if(mysql_select_db($site_database, $connection))
+    $query_string = getOrderQueryString($_SERVER["QUERY_STRING"]); //Check if exists an image with the same queryString.
+    if($row = $site_connection->query("SELECT * FROM savedimages WHERE queryString = '$query_string';", true)) //Force-refresh the image every 24 hours.
+        if(file_exists("saved/" . $row["imageName"]) && (time()-$row["creation"])<(24*60*60))
         {
-            $query_string = getOrderQueryString($_SERVER["QUERY_STRING"]); //Check if exists an image with the same queryString.
-            if($result = mysql_query("SELECT * FROM savedimages WHERE queryString = '$query_string';", $connection))
-            {
-                if($row = mysql_fetch_array($result, MYSQL_ASSOC))  //Force-refresh the image every 24 hours.
-                    if(file_exists("saved/" . $row["imageName"]) && (time()-$row["creation"])<(24*60*60))
-                    {
-                        $to_make_image = false;
-                        mysql_query("UPDATE savedimages SET lastEdit = UNIX_TIMESTAMP() WHERE queryString = '$query_string';", $connection);
-                        header("location: saved/" . $row["imageName"]); //If the image exists do a redirect to it.
-                    }
-                mysql_free_result($result);
-            }
+            $to_make_image = false;
+            $site_connection->query("UPDATE savedimages SET lastEdit = UNIX_TIMESTAMP() WHERE queryString = '$query_string';", true);
+            header("location: saved/" . $row["imageName"]); //If the image exists do a redirect to it.
         }
-        mysql_close($connection);
+?>
+<?php
+    //Check of inserted fields and check if the selected realm exists.
+    if(isset($_GET["server"]) && $_GET["server"] != '' && isset($_GET["pg_name"]) && $_GET["pg_name"] != '')
+    {
+        $server_id = strtolower($_GET["server"]);
+        if(isset($realm_name["$server_id"]))
+        {
+            $server_conn = new mysql_connector($host["$server_id"], $username["$server_id"], $password["$server_id"], $database["$server_id"]);
+            $server_conn->connect();
+            $do_next_step = $server_conn->isOpen();
+        }
     }
 ?>
 <?php
     //Recovery data for the creation image.
-    if($to_make_image)
+    if($to_make_image && $do_next_step)
     {
         if(GDVersion() == 0) //On the system GD doesn't exist.
             $do_next_step = false;
@@ -372,175 +298,136 @@
             //Complete the path of the font file.
             $font = "fonts/$font";
 
-            //Check of inserted fields and check if the selected realm exists.
-            if(isset($_GET["server"]) && $_GET["server"] != '' && isset($_GET["pg_name"]) && $_GET["pg_name"] != '')
+            //First uppercase, rest lowercase. Eg: TEST=>Test, test=>Test, tEsT=>Test.
+            $pg_name = mysql_real_escape_string(ucfirst(strtolower($_GET["pg_name"]))); //Avoid SQL-Injections.
+
+            //Name, Race, Class, Level, Title, Spec, Arena Points, Honor Points, PvP Kills.
+            $query = "SELECT guid, name, race, class, gender, level, chosenTitle, activespec, arenaPoints, totalHonorPoints,
+                        totalKills FROM characters WHERE name = '$pg_name';";
+            if($row = $server_conn->query($query, true))
             {
-                $server_id = strtolower($_GET["server"]);
-                if(isset($realm_name["$server_id"]))
+                $pg_GUID = $row["guid"];
+                $pg_name = $row["name"];
+                $spec_id = $row["activespec"];
+                fill_stats($row, $server_conn); //Fill stats.
+
+                //If the PG has a title (searching it in the site database) i insert it in the signature.
+                $name_string = $row["name"];
+                if($row["chosenTitle"] != 0)
+                    if($title_row = $site_connection->query("SELECT nameString FROM chartitles WHERE titleId = " . $row["chosenTitle"] . ';', true))
+                        $name_string = str_replace("%s", $row["name"], $title_row["nameString"]);
+
+                //Talents, do it for find the spec name.
+                $talents = array(0, 0, 0);
+                $talents_result_id = $server_conn->query("SELECT spell FROM character_talent WHERE guid = $pg_GUID AND spec = $spec_id;");
+                while($talents_row = $server_conn->getNextResult($talents_result_id))
+                    if($vet = getTalentInfo($talents_row["spell"]))
+                        $talents[$vet["tabPage"]] += $vet["rankId"];
+                $row["talents"] = $talents[0] . '/' . $talents[1] . '/' . $talents[2]; //Talents in the form (x/x/x).
+
+                //Spec name.
+                if($max_talent = max($talents[0], $talents[1], $talents[2]))
+                    $spec_name .= ' ' . $tab_names[$row["class"]][array_search($max_talent, $talents)];
+
+                //Level - Class - Race.
+                $string_info = "Level " . $row["level"] . ' ' . $races[$row["race"]] . ' ' . $classes[$row["class"]]["name"] . $spec_name;
+
+                //If is given the url of a valid PNG image i insert it, otherwise insert the default image.
+                if(isset($_GET["url_image"]) && $_GET["url_image"] != '')
                 {
-                    //Connect to character's database and recovery data.
-                    if($connection = mysql_connect($host["$server_id"], $username["$server_id"], $password["$server_id"], true))
+                    $avatar_img  = utf8_decode($_GET["url_image"]);
+                    $file_name   = "temp_images/" . sha1($avatar_img) . '.' . pathinfo($avatar_img, PATHINFO_EXTENSION); //Search the name of the image.
+
+                    if(!file_exists($file_name)) //If the image does not exists i copy it to the cache.
+                        if($contents = file_get_contents($avatar_img))
+                            file_put_contents($file_name, $contents);
+
+                    $avatar_img = $file_name; //Return the new link to the image.
+                    if($check_im = imagecreatefromstring(file_get_contents($avatar_img)))
                     {
-                        if(mysql_select_db($database["$server_id"], $connection))
+                        $external_image = true;
+                        imagedestroy($check_im);
+                    }else unlink($avatar_img); //If the file isn't an image i delete it.
+                }
+
+                if(!$external_image)
+                {
+                    //The image shows the race and the class of the character.
+                    if(isset($_GET["type_image"]) && strtolower($_GET["type_image"]) == "race_class")
+                    {
+                        $is_gif = true;
+                        //The images are in the form "gender-race-class.gif".
+                        $avatar_img = $row["gender"] . '-' . $row["race"] . '-' . $row["class"] . ".gif";
+                        if($row["class"] == 6 || $row["level"] >= 80) //If level is 80 or race is Death Knight because Death Knight have got only level 80 avatars.
+                            $avatar_img = "Level_80_Forum_Avatars/$avatar_img";
+                        else if($row["level"] >= 70) //70 <= level <= 79, level 70 avatars.
+                            $avatar_img = "Level_70_Forum_Avatars/$avatar_img";
+                        else if($row["level"] >= 60) //60 <= level <= 69, level 60 avatars.
+                            $avatar_img = "Level_60_Forum_Avatars/$avatar_img";
+                        else $avatar_img = "Level_1_Forum_Avatars/$avatar_img"; //1 <= level <= 59, level 1 avatars.
+                    }else $avatar_img = $classes[$row["class"]]["img"] . ".png"; //Only character's class, refear to config file.
+                    $avatar_img = "images/classes/$avatar_img"; //Complete the avatar path.
+                }
+
+                //Guild and Rank.
+                $guild_query = "SELECT guild.name, guild_rank.rname FROM guild_member, guild, guild_rank WHERE guild_member.guildid = guild.guildid
+                                AND guild_member.rank = guild_rank.rid AND guild_rank.guildid = guild.guildid AND guild_member.guid = $pg_GUID;";
+                if($guild_row = $server_conn->query($guild_query, true))
+                    $string_guild = '"' . $guild_row["rname"] . "\" of <" . $guild_row["name"] . "> "; //"Rank" of <Nome Guild>
+                if($server_name != '' || $server_id != '') //[Server_Name Realm_Name]
+                {
+                    $string_guild .= "[$server_name";
+                    if($server_name!='' && $server_id!='') $string_guild .= ' ';
+                        $string_guild .= $realm_name["$server_id"] . ']';
+                }
+
+                //Stats (in an array).
+                $index = 0;
+                $show_stats = array();
+                $temp_string = '';
+                for($i = 1; $i < 6; ++$i) //Up to 5 stats of your choice.
+                {
+                    if(isset($_GET["custom_stat$i"]) && $_GET["custom_stat$i"] != '')
+                        $temp_string = substr(utf8_decode($_GET["custom_stat$i"]), 0, 20);
+                    else if(isset($_GET["stat$i"]) && $_GET["stat$i"] != '') //Check if there is a template of that stat.
+                    {
+                        $get_stat = strtolower($_GET["stat$i"]);
+
+                        //Achievements, i perform this operation only if required to save resources.
+                        if(($get_stat == "achievements" && !isset($row["achievements"])) || ($get_stat == "achievementpoints" && !isset($row["achievementPoints"])))
                         {
-                            //First uppercase, rest lowercase. Eg: TEST=>Test, test=>Test, tEsT=>Test.
-                            $pg_name = mysql_real_escape_string(ucfirst(strtolower($_GET["pg_name"]))); //Avoid SQL-Injections.
-
-                            //Name, Race, Class, Level, Title, Spec, Arena Points, Honor Points, PvP Kills.
-                            $query = "SELECT guid, name, race, class, gender, level, chosenTitle, activespec, arenaPoints, totalHonorPoints,
-                                        totalKills FROM characters WHERE name = '$pg_name';";
-                            if($result = mysql_query($query, $connection))
-                            {
-                                if($row = mysql_fetch_array($result, MYSQL_ASSOC))
+                            $ach_count = 0;
+                            $ach_points = 0;
+                            //Select only the achievements that give points, the rest are "Feats of Strength" or first kill.
+                            $achievements_result_id = $server_conn->query("SELECT achievement FROM character_achievement WHERE guid = $pg_GUID;");
+                            while($achievements_row = $server_conn->getNextResult($achievements_result_id))
+                                if($points = isValidAchievement($achievements_row["achievement"]))
                                 {
-                                    $pg_GUID = $row["guid"];
-                                    $pg_name = $row["name"];
-                                    $spec_id = $row["activespec"];
-                                    fill_stats($row, $connection); //Fill stats.
+                                    $ach_count++; //Increase the count of the obtained achievements.
+                                    $ach_points += $points; //Increase the points of the obtained achievements.
+                                }
+                            //Insert data obtained in the vector of stats.
+                            $row["achievements"]       = $ach_count;
+                            $row["achievementPoints"]  = $ach_points;
+                        }
 
-                                    //If the PG has a title (searching it in the site database) i insert it in the signature.
-                                    $name_string = $row["name"];
-                                    if($row["chosenTitle"] != 0)
-                                        if($site_connection = mysql_connect($site_host, $site_username, $site_password, true))
-                                        {
-                                            if(mysql_select_db($site_database, $site_connection))
-                                                if($site_result = mysql_query("SELECT nameString FROM chartitles WHERE titleId = " . $row["chosenTitle"] . ';', $site_connection))
-                                                {
-                                                    if($title_row = mysql_fetch_array($site_result, MYSQL_ASSOC))
-                                                        $name_string = str_replace("%s", $row["name"], $title_row["nameString"]);
-                                                    mysql_free_result($site_result);
-                                                }
-                                            mysql_close($site_connection);
-                                        }
+                        if(isset($stats["$get_stat"]["name"]))
+                        {
+                            $field_name = $stats["$get_stat"]["field_name"];
 
-                                    //Talents, do it for find the spec name.
-                                    $talents = array(0, 0, 0);
-                                    if($talents_result = mysql_query("SELECT spell FROM character_talent WHERE guid = $pg_GUID AND spec = $spec_id;", $connection))
-                                    {
-                                        while($talents_row = mysql_fetch_array($talents_result, MYSQL_ASSOC))
-                                            if($vet = getTalentInfo($talents_row["spell"]))
-                                                $talents[$vet["tabPage"]] += $vet["rankId"];
-                                        mysql_free_result($talents_result);
-                                    }
-                                    $row["talents"] = $talents[0] . '/' . $talents[1] . '/' . $talents[2]; //Talents in the form (x/x/x).
+                            if(is_numeric($row["$field_name"])) //I make the round-off only if the field is a number.
+                                $field_value = round($row["$field_name"], 2);
+                            else $field_value = $row["$field_name"];
 
-                                    //Spec name.
-                                    if($max_talent = max($talents[0], $talents[1], $talents[2]))
-                                        $spec_name .= ' ' . $tab_names[$row["class"]][array_search($max_talent, $talents)];
+                            //Replace the values to the template strings.
+                            $temp_string = str_replace("%s", $field_value, $stats["$get_stat"]["text"]);
+                        }
+                    }
 
-                                    //Level - Class - Race.
-                                    $string_info = "Level " . $row["level"] . ' ' . $races[$row["race"]] . ' ' . $classes[$row["class"]]["name"] . $spec_name;
-
-                                    //If is given the url of a valid PNG image i insert it, otherwise insert the default image.
-                                    if(isset($_GET["url_image"]) && $_GET["url_image"] != '')
-                                    {
-                                        $avatar_img  = utf8_decode($_GET["url_image"]);
-                                        $file_name   = "temp_images/" . sha1($avatar_img) . '.' . pathinfo($avatar_img, PATHINFO_EXTENSION); //Search the name of the image.
-
-                                        if(!file_exists($file_name)) //If the image does not exists i copy it to the cache.
-                                            if($contents = file_get_contents($avatar_img))
-                                                file_put_contents($file_name, $contents);
-
-                                        $avatar_img = $file_name; //Return the new link to the image.
-                                        if($check_im = imagecreatefromstring(file_get_contents($avatar_img)))
-                                        {
-                                            $external_image = true;
-                                            imagedestroy($check_im);
-                                        }else unlink($avatar_img); //If the file isn't an image i delete it.
-                                    }
-
-                                    if(!$external_image)
-                                    {
-                                        //The image shows the race and the class of the character.
-                                        if(isset($_GET["type_image"]) && strtolower($_GET["type_image"]) == "race_class")
-                                        {
-                                            $is_gif = true;
-                                            //The images are in the form "gender-race-class.gif".
-                                            $avatar_img = $row["gender"] . '-' . $row["race"] . '-' . $row["class"] . ".gif";
-                                            if($row["class"] == 6 || $row["level"] >= 80) //If level is 80 or race is Death Knight because Death Knight have got only level 80 avatars.
-                                                $avatar_img = "Level_80_Forum_Avatars/$avatar_img";
-                                            else if($row["level"] >= 70) //70 <= level <= 79, level 70 avatars.
-                                                $avatar_img = "Level_70_Forum_Avatars/$avatar_img";
-                                            else if($row["level"] >= 60) //60 <= level <= 69, level 60 avatars.
-                                                $avatar_img = "Level_60_Forum_Avatars/$avatar_img";
-                                            else $avatar_img = "Level_1_Forum_Avatars/$avatar_img"; //1 <= level <= 59, level 1 avatars.
-                                        }else $avatar_img = $classes[$row["class"]]["img"] . ".png"; //Only character's class, refear to config file.
-                                        $avatar_img = "images/classes/$avatar_img"; //Complete the avatar path.
-                                    }
-
-                                    //Guild and Rank.
-                                    $guild_query = "SELECT guild.name, guild_rank.rname FROM guild_member, guild, guild_rank WHERE guild_member.guildid = guild.guildid
-                                                    AND guild_member.rank = guild_rank.rid AND guild_rank.guildid = guild.guildid AND guild_member.guid = $pg_GUID;";
-                                    if($guild_result = mysql_query($guild_query, $connection))
-                                    {
-                                        if($guild_row = mysql_fetch_array($guild_result, MYSQL_ASSOC))
-                                            $string_guild = '"' . $guild_row["rname"] . "\" of <" . $guild_row["name"] . "> "; //"Rank" of <Nome Guild>
-                                        mysql_free_result($guild_result);
-                                    }
-                                    if($server_name != '' || $server_id != '') //[Server_Name Realm_Name]
-                                    {
-                                        $string_guild .= "[$server_name";
-                                        if($server_name!='' && $server_id!='') $string_guild .= ' ';
-                                        $string_guild .= $realm_name["$server_id"] . ']';
-                                    }
-
-                                    //Stats (in an array).
-                                    $index = 0;
-                                    $show_stats = array();
-                                    $temp_string = '';
-                                    for($i = 1; $i < 6; ++$i) //Up to 5 stats of your choice.
-                                    {
-                                        if(isset($_GET["custom_stat$i"]) && $_GET["custom_stat$i"] != '')
-                                            $temp_string = substr(utf8_decode($_GET["custom_stat$i"]), 0, 20);
-                                        else if(isset($_GET["stat$i"]) && $_GET["stat$i"] != '') //Check if there is a template of that stat.
-                                        {
-                                            $get_stat = strtolower($_GET["stat$i"]);
-
-                                            //Achievements, i perform this operation only if required to save resources.
-                                            if(($get_stat == "achievements" && !isset($row["achievements"])) || ($get_stat == "achievementpoints" && !isset($row["achievementPoints"])))
-                                            {
-                                                $ach_count = 0;
-                                                $ach_points = 0;
-                                                //Select only the achievements that give points, the rest are "Feats of Strength" or first kill.
-                                                if($achievements_result = mysql_query("SELECT achievement FROM character_achievement WHERE guid = $pg_GUID;", $connection))
-                                                {
-                                                    while($achievements_row = mysql_fetch_array($achievements_result, MYSQL_ASSOC))
-                                                        if($points = isValidAchievement($achievements_row["achievement"]))
-                                                        {
-                                                            $ach_count++; //Increase the count of the obtained achievements.
-                                                            $ach_points += $points; //Increase the points of the obtained achievements.
-                                                        }
-                                                    mysql_free_result($achievements_result);
-                                                }
-                                                //Insert data obtained in the vector of stats.
-                                                $row["achievements"]       = $ach_count;
-                                                $row["achievementPoints"]  = $ach_points;
-                                            }
-
-                                            if(isset($stats["$get_stat"]["name"]))
-                                            {
-                                                $field_name = $stats["$get_stat"]["field_name"];
-
-                                                if(is_numeric($row["$field_name"])) //I make the round-off only if the field is a number.
-                                                    $field_value = round($row["$field_name"], 2);
-                                                else $field_value = $row["$field_name"];
-
-                                                //Replace the values to the template strings.
-                                                $temp_string = str_replace("%s", $field_value, $stats["$get_stat"]["text"]);
-                                            }
-                                        }
-
-                                        //Check to make sure to avoid double stats.
-                                        if(!in_array($temp_string, $show_stats) && $temp_string != '')
-                                            $show_stats[$index++] = $temp_string;
-                                    }
-                                }else $do_next_step = false;
-                                mysql_free_result($result);
-                            }else $do_next_step = false;
-                        }else $do_next_step = false;
-                        mysql_close($connection);
-                    }else $do_next_step = false;
-                }else $do_next_step = false;
+                    //Check to make sure to avoid double stats.
+                    if(!in_array($temp_string, $show_stats) && $temp_string != '')
+                        $show_stats[$index++] = $temp_string;
+                }
             }else $do_next_step = false;
         }
     }
@@ -762,19 +649,12 @@
             //IMAGE RESIZING - END.
 
             //IMAGE SAVING - START.
-                if($connection = mysql_connect($site_host, $site_username, $site_password, true))
-                {
-                    if(mysql_select_db($site_database, $connection))
-                    {
-                        $realm_name = mysql_real_escape_string(strtoupper($_GET["server"])); //Avoid SQL-Injections.
-                        $img_save_name = $realm_name . "_$pg_name.png"; //SERVER_PgName.png.
-                        imagepng($im, "saved/$img_save_name"); //Save the image in the "saved" directory.
+                $realm_name = mysql_real_escape_string(strtoupper($_GET["server"])); //Avoid SQL-Injections.
+                $img_save_name = $realm_name . "_$pg_name.png"; //SERVER_PgName.png.
+                imagepng($im, "saved/$img_save_name"); //Save the image in the "saved" directory.
 
-                        //Save a identification record on DB.
-                        mysql_query("REPLACE INTO savedimages VALUES ($pg_GUID, '$realm_name', '" . getOrderQueryString($_SERVER["QUERY_STRING"]) . "', '$img_save_name', UNIX_TIMESTAMP(), UNIX_TIMESTAMP());", $connection);
-                    }
-                    mysql_close($connection);
-                }
+                //Save a identification record on DB.
+                $site_connection->query("REPLACE INTO savedimages VALUES ($pg_GUID, '$realm_name', '" . getOrderQueryString($_SERVER["QUERY_STRING"]) . "', '$img_save_name', UNIX_TIMESTAMP(), UNIX_TIMESTAMP());", true);
             //IMAGE SAVING - END.
 
             //COLOR DEALLOCATION - START.

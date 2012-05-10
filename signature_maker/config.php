@@ -2,6 +2,8 @@
     //Disable errors reporting.
     error_reporting(0);
 
+    include("mysql_connector.php");
+
     //Global array.
     $realm_name  = array();
     $host        = array();
@@ -290,6 +292,9 @@
     $stats_rating_div["hit"]          = 31;
     $stats_rating_div["haste"]        = 36;
 
+    $site_connection = new mysql_connector($site_host, $site_username, $site_password, $site_database);
+    $site_connection->connect();
+
     //Once every 24 hours are re-written information on achievements in the configuration file so you must not always read them from db.
     $time = file_get_contents("custom/check_day.lock");
     if($time == false || (time()-$time) >= (24*60*60))
@@ -298,17 +303,9 @@
 
         //Total number of achievements (extracted from db).
         $num_ach = 0;
-        if($conn = mysql_connect($site_host, $site_username, $site_password, true))
-        {
-            if(mysql_select_db($site_database, $conn))
-                if($result = mysql_query("SELECT COUNT(*) AS number FROM achievement WHERE points <> 0;", $conn))
-                {
-                    if($row = mysql_fetch_array($result, MYSQL_ASSOC)) //I select only the obtanible achievements (those that give points) and insert them into the vector $achievements.
-                        $num_ach = $row["number"];
-                    mysql_free_result($result);
-                }
-            mysql_close($conn);
-        }
+
+        if($row = $site_connection->query("SELECT COUNT(*) AS number FROM achievement WHERE points <> 0;", true))
+            $num_ach = $row["number"]; //I select only the obtanible achievements (those that give points) and insert them into the vector $achievements.
 
         //If there are achievements i put the last 2 entries for stat's configuring.
         if($num_ach)
@@ -335,21 +332,12 @@
     {
         file_put_contents("custom/check_clean.lock", time());
 
-        if($conn = mysql_connect($site_host, $site_username, $site_password, true))
-        {
-            if(mysql_select_db($site_database, $conn))
-            {
-                if($result = mysql_query("SELECT * FROM savedimages WHERE lastEdit < (UNIX_TIMESTAMP() - $image_expire_time);", $conn))
-                {
-                    while($row = mysql_fetch_array($result, MYSQL_ASSOC))
-                        if(file_exists("saved/" . $row["imageName"]))
-                            unlink("saved/" . $row["imageName"]);
-                    mysql_free_result($result);
-                }
-                mysql_query("DELETE FROM savedimages WHERE lastEdit < (UNIX_TIMESTAMP() - $image_expire_time);", $conn);
-            }
-            mysql_close($conn);
-        }
+        $num_query_clean = $site_connection->query("SELECT * FROM savedimages WHERE lastEdit < (UNIX_TIMESTAMP() - $image_expire_time);");
+        while($row = $site_connection->getNextResult($num_query_clean))
+            if(file_exists("saved/" . $row["imageName"]))
+                unlink("saved/" . $row["imageName"]);
+
+        $site_connection->query("DELETE FROM savedimages WHERE lastEdit < (UNIX_TIMESTAMP() - $image_expire_time);");
     }
 
 
