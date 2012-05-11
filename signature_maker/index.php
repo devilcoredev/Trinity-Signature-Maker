@@ -228,11 +228,10 @@
                 var armory_link = armory_template_link.replace("%s", armory_server_name).replace("%p", massimizzaTesto(nome_pg));
 
                 if($("#firma").attr("src") != absolute_link)
+                {
                     $("#firma").attr("src", absolute_link); //Modifico il path dell'immagine.
 
-                //Inserisco i link nelle caselle di testo.
-                if(!$("#firma").get(0).complete)
-                {
+                    //Inserisco i link nelle caselle di testo.
                     direct_link.val(absolute_link);
                     html_link.val("<img src=\"" + absolute_link + "\">");
                     html_armory_link.val("<a href=\"" + armory_link + "\"><img src=\"" + absolute_link + "\"></a>");
