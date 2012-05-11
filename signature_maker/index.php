@@ -26,6 +26,13 @@
                 eval("page" + id + ".creator = self;");
             }
 
+            function scroll()
+            {
+                $('html, body').animate({
+                    scrollTop: $(document).height()
+                }, 1000);
+            }
+
             //Funzione che trasforma il testo con la prima lettera maiuscola ed il resto minuscolo, es: test=>Test TEST=>Test tEsT=>Test.
             function massimizzaTesto(input)
             {
@@ -60,9 +67,7 @@
                     if($("#firma").width() == <?php print $w_dati_errati; ?> && $("#firma").height() == <?php print $h_dati_errati; ?>)
                         emptyFields();
 
-                    $('html, body').animate({
-                        scrollTop: $("#firma").offset().top
-                    }, 1000);
+                    scroll();
                 }
                 else
                 {
@@ -241,9 +246,7 @@
                 if(!$("#firma").get(0).complete)
                     switchImage(false);
 
-                $('html, body').animate({
-                    scrollTop: $(document).height()
-                }, 1000);
+                scroll();
 
                 return true;
             }
