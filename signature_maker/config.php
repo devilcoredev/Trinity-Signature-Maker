@@ -47,13 +47,20 @@
     $site_password  = "";
     $site_database  = "";
 
+    //w = width,
+    //h = height,
+    //t = type,
+    //a = attr.
+
     //Nome dell'immagine mostrata quando i dati inseriti sono errati.
     $dati_errati      = "dati_errati.png";
     $dim_dati_errati  = filesize("images/$dati_errati"); //Dimensione del file.
+    list($w_dati_errati, $h_dati_errati, $t_dati_errati, $a_dati_errati) = getimagesize("images/$dati_errati");
 
     //Nome dell'immagine mostrata quando la firma non viene caricata bene.
     $errore_caricamento      = "errore_caricamento.png";
     $dim_errore_caricamento  = filesize("images/$errore_caricamento"); //Dimensione del file.
+    list($w_errore_caricamento, $h_errore_caricamento, $t_errore_caricamento, $a_errore_caricamento) = getimagesize("images/$errore_caricamento");
 
     //Messaggio d'errore stampato in caso non venga inserito il nome del pg nell'apposito campo.
     $error_pg = "Inserire un nome valido di un personaggio!";
@@ -67,6 +74,13 @@
     //Dimensioni dell'immagine.
     $x = 500; //Larghezza.
     $y = 70;  //Altezza.
+
+    //Le dimensioni non devono coincidere con quelle delle immagini d'errore.
+    while(($x == $w_dati_errati && $y == $h_dati_errati) || ($x == $w_errore_caricamento && $y == $h_errore_caricamento))
+    {
+        $x--;
+        $y--;
+    }
 
     //Abilitazione ridimensionamento delle immagini (in proporzione) tramite query string.
     $image_resize_enabled = false;

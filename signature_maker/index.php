@@ -36,6 +36,15 @@
                 }else return '';
             }
 
+            function emptyFields()
+            {
+                $("#direct_link").val('');
+                $("#html_link").val('');
+                $("#html_armory_link").val('');
+                $("#bbcode_link").val('');
+                $("#bbcode_armory_link").val('');
+            }
+
             //Funzione che switcha firma<->caricamento, se posta a true passa da caricamento a firma, altrimenti da firma a caricamento.
             function switchImage(mode)
             {
@@ -44,6 +53,16 @@
                     $("#links").show();
                     $("#firma").show();
                     $("#caricamento").hide();
+
+                    //Se le dimensioni coincidono con quelle dei dati errati svuoto i campi.
+                    $("#firma").removeAttr("width");
+                    $("#firma").removeAttr("height");
+                    if($("#firma").width() == <?php print $w_dati_errati; ?> && $("#firma").height() == <?php print $h_dati_errati; ?>)
+                        emptyFields();
+
+                    $('html, body').animate({
+                        scrollTop: $("#firma").offset().top
+                    }, 1000);
                 }
                 else
                 {
@@ -57,11 +76,7 @@
             function showError(input)
             {
                 //Azzero gli input.
-                $("#direct_link").val('');
-                $("#html_link").val('');
-                $("#html_armory_link").val('');
-                $("#bbcode_link").val('');
-                $("#bbcode_armory_link").val('');
+                emptyFields();
 
                 //Sostituisco l'immagine con una d'errore.
                 $(input).attr("src", "images/<?php print $errore_caricamento; ?>");
@@ -176,87 +191,59 @@
                 var bbcode_link         = $("#bbcode_link");
                 var bbcode_armory_link  = $("#bbcode_armory_link");
 
-                //Trovo la dimensione del file d'errore (dato che è png sarà molto maggiore delle dimensioni delle firme).
-                var req;
-                var AJAX = true;
-                try { req = new ActiveXObject("Microsoft.XMLHTTP"); } // Internet Explorer
-                catch(e)
-                {
-                    try { req = new XMLHttpRequest(); } // Firefox, Opera 8.0+, Safari
-                    catch(e)
+                var armory_template_link = "<?php print $armory_template_link; ?>";
+
+                var server_keys          = new Array();
+                var server_armory_names  = new Array();
+
+                <?php
+                    $index = 0;
+                    foreach($armory_name as $i => $value)
                     {
-                        try { req = new ActiveXObject("MSXML2.XMLHTTP.3.0"); }
-                        catch(e)
+                        if($value != '')
                         {
-                            alert("Il tuo browser non supporta AJAX!\nPotrebbero esserci dei problemi di visualizzazione nella pagina.");
-                            AJAX = false;
+                            if($index) print "                    ";
+                            print "server_keys[$index]          = \"$i\";\r\n";
+                            print "                    ";
+                            print "server_armory_names[$index]  = \"$value\";\r\n";
+                            $index++;
                         }
                     }
-                }
+                ?>
 
-                if(AJAX)
+                var armory_server_name = '';
+
+                for(var i = 0; i < server_keys.length; ++i)
+                    if(server_keys[i] == server)
+                    {
+                        armory_server_name = server_armory_names[i];
+                        break;
+                    }
+
+                var armory_link = armory_template_link.replace("%s", armory_server_name).replace("%p", massimizzaTesto(nome_pg));
+
+                if($("#firma").attr("src") != absolute_link)
+                    $("#firma").attr("src", absolute_link); //Modifico il path dell'immagine.
+
+                //Inserisco i link nelle caselle di testo.
+                if(!$("#firma").get(0).complete)
                 {
-                    req.open("GET", absolute_link, false);
-                    req.send(null);
-                    var headers = req.getResponseHeader("Content-Length");
-                }
-
-                //Se la dimensione combacia con quella dell'immagine d'errore allora svuoto i campi, altrimenti la visualizzo normalmente.
-                if(!AJAX || headers != <?php print $dim_dati_errati; ?>)
-                {
-                    var armory_template_link = "<?php print $armory_template_link; ?>";
-
-                    var server_keys          = new Array();
-                    var server_armory_names  = new Array();
-
-                    <?php
-                        $index = 0;
-                        foreach($armory_name as $i => $value)
-                        {
-                            if($value != '')
-                            {
-                                if($index) print "                    ";
-                                print "server_keys[$index]          = \"$i\";\r\n";
-                                print "                    ";
-                                print "server_armory_names[$index]  = \"$value\";\r\n";
-                                $index++;
-                            }
-                        }
-                    ?>
-
-                    var armory_server_name = '';
-
-                    for(var i = 0; i < server_keys.length; ++i)
-                        if(server_keys[i] == server)
-                        {
-                            armory_server_name = server_armory_names[i];
-                            break;
-                        }
-
-                    var armory_link = armory_template_link.replace("%s", armory_server_name).replace("%p", massimizzaTesto(nome_pg));
-
-                    //Inserisco i link nelle caselle di testo.
                     direct_link.val(absolute_link);
                     html_link.val("<img src=\"" + absolute_link + "\">");
                     html_armory_link.val("<a href=\"" + armory_link + "\"><img src=\"" + absolute_link + "\"></a>");
                     bbcode_link.val("[img]" + absolute_link + "[/img]");
                     bbcode_armory_link.val("[url=" + armory_link + "][img]" + absolute_link + "[/img][/url]");
                 }
-                else
-                {
-                    direct_link.val('');
-                    html_link.val('');
-                    html_armory_link.val('');
-                    bbcode_link.val('');
-                    bbcode_armory_link.val('');
-                }
 
-                $("#firma").attr("src", absolute_link); //Modifico il path dell'immagine.
                 $("#output").show(); //Visualizzo l'output.
 
                 //Effettuo lo switch delle immagini solo se la firma non è stata già caricata.
                 if(!$("#firma").get(0).complete)
                     switchImage(false);
+
+                $('html, body').animate({
+                    scrollTop: $(document).height()
+                }, 1000);
 
                 return true;
             }
@@ -428,7 +415,7 @@
                 <br />
                 <div id="caricamento">
                     Elaborazione firma in corso...<br />
-                    <img src="images/loading.gif" /><br />
+                    <img src="images/loading.gif" />
                 </div>
                 <img id="firma" src="" style="display: none" onLoad="switchImage(true);" onError="showError(this);" onAbort="showError(this);" onContextMenu="return false;" /><br />
                 <table align="center" id="links" width="680" border="0" style="display: none">
