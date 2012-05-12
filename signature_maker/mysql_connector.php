@@ -30,7 +30,10 @@
                 return false;
 
             if(!mysql_select_db($this->database, $this->connection))
+            {
+                $this->connection = NULL;
                 return false;
+            }
 
             return true;
         }
