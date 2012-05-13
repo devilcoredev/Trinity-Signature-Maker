@@ -36,6 +36,15 @@
                 }else return '';
             }
 
+            function emptyFields()
+            {
+                $("#direct_link").val('');
+                $("#html_link").val('');
+                $("#html_armory_link").val('');
+                $("#bbcode_link").val('');
+                $("#bbcode_armory_link").val('');
+            }
+
             //Function that switches signature<->load, if set to true changes from loading to signature, else changes from signature to loading.
             function switchImage(mode)
             {
@@ -44,6 +53,16 @@
                     $("#links").show();
                     $("#signature").show();
                     $("#loading").hide();
+
+                    //If the dimension are equal with the incorrect data images empty the fields.
+                    $("#signature").removeAttr("width");
+                    $("#signature").removeAttr("height");
+                    if($("#signature").width() == <?php print $w_incorrect_data; ?> && $("#signature").height() == <?php print $h_incorrect_data; ?>)
+                        emptyFields();
+
+                    $('html, body').animate({
+                        scrollTop: $("#signature").offset().top
+                    }, 1000);
                 }
                 else
                 {
@@ -57,11 +76,7 @@
             function showError(input)
             {
                 //I reset inputs.
-                $("#direct_link").val('');
-                $("#html_link").val('');
-                $("#html_armory_link").val('');
-                $("#bbcode_link").val('');
-                $("#bbcode_armory_link").val('');
+                emptyFields();
 
                 //I replace the image with an error.
                 $(input).attr("src", "images/<?php print $charging_error; ?>");
@@ -176,65 +191,42 @@
                 var bbcode_link         = $("#bbcode_link");
                 var bbcode_armory_link  = $("#bbcode_armory_link");
 
-                //I find the size of the error file (PNG will be much larger than the size of signatures).
-                var req;
-                var AJAX = true;
-                try { req = new ActiveXObject("Microsoft.XMLHTTP"); } // Internet Explorer
-                catch(e)
-                {
-                    try { req = new XMLHttpRequest(); } // Firefox, Opera 8.0+, Safari
-                    catch(e)
+                var armory_template_link = "<?php print $armory_template_link; ?>";
+
+                var server_keys          = new Array();
+                var server_armory_names  = new Array();
+
+                <?php
+                    $index = 0;
+                    foreach($armory_name as $i => $value)
                     {
-                        try { req = new ActiveXObject("MSXML2.XMLHTTP.3.0"); }
-                        catch(e)
+                        if($value != '')
                         {
-                            alert("Your browser does not support AJAX!\nThere may be problems displaying the page.");
-                            AJAX = false;
+                            if($index) print "                        ";
+                            print "server_keys[$index]          = \"$i\";\r\n";
+                            print "                        ";
+                            print "server_armory_names[$index]  = \"$value\";\r\n";
+                            $index++;
                         }
                     }
-                }
+                ?>
 
-                if(AJAX)
+                var armory_server_name = '';
+
+                for(var i = 0; i < server_keys.length; ++i)
+                    if(server_keys[i] == server)
+                    {
+                        armory_server_name = server_armory_names[i];
+                        break;
+                    }
+
+                var armory_link = armory_template_link.replace("%s", armory_server_name).replace("%p", maximizeText(pg_name));
+
+                if($("#signature").attr("src") != absolute_link)
+                    $("#signature").attr("src", absolute_link); //I change the path of the image.
+
+                if(!$("#signature").get(0).complete)
                 {
-                    req.open("GET", absolute_link, false);
-                    req.send(null);
-                    var headers = req.getResponseHeader("Content-Length");
-                }
-
-                //If the size of the image matches that error then I empty fields, otherwise the normal view.
-                if(!AJAX || headers != <?php print $dim_incorrect_data; ?>)
-                {
-                    var armory_template_link = "<?php print $armory_template_link; ?>";
-
-                    var server_keys          = new Array();
-                    var server_armory_names  = new Array();
-
-                    <?php
-                        $index = 0;
-                        foreach($armory_name as $i => $value)
-                        {
-                            if($value != '')
-                            {
-                                if($index) print "                        ";
-                                print "server_keys[$index]          = \"$i\";\r\n";
-                                print "                        ";
-                                print "server_armory_names[$index]  = \"$value\";\r\n";
-                                $index++;
-                            }
-                        }
-                    ?>
-
-                    var armory_server_name = '';
-
-                    for(var i = 0; i < server_keys.length; ++i)
-                        if(server_keys[i] == server)
-                        {
-                            armory_server_name = server_armory_names[i];
-                            break;
-                        }
-
-                    var armory_link = armory_template_link.replace("%s", armory_server_name).replace("%p", maximizeText(pg_name));
-
                     //I put links in the text boxes.
                     direct_link.val(absolute_link);
                     html_link.val("<img src=\"" + absolute_link + "\">");
@@ -242,21 +234,16 @@
                     bbcode_link.val("[img]" + absolute_link + "[/img]");
                     bbcode_armory_link.val("[url=" + armory_link + "][img]" + absolute_link + "[/img][/url]");
                 }
-                else
-                {
-                    direct_link.val('');
-                    html_link.val('');
-                    html_armory_link.val('');
-                    bbcode_link.val('');
-                    bbcode_armory_link.val('');
-                }
 
-                $("#signature").attr("src", absolute_link); //I change the path of the image.
                 $("#output").show(); //Display the output.
 
                 //I do the switch images only if the signature is not already loaded.
                 if(!$("#signature").get(0).complete)
                     switchImage(false);
+
+                $('html, body').animate({
+                    scrollTop: $(document).height()
+                }, 1000);
 
                 return true;
             }
@@ -428,7 +415,7 @@
                 <br />
                 <div id="loading">
                     Signature processing in progress...<br />
-                    <img src="images/loading.gif" /><br />
+                    <img src="images/loading.gif" />
                 </div>
                 <img id="signature" src="" style="display: none" onLoad="switchImage(true);" onError="showError(this);" onAbort="showError(this);" onContextMenu="return false;" /><br />
                 <table align="center" id="links" width="680" border="0" style="display: none">

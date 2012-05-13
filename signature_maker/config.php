@@ -46,13 +46,20 @@
     $site_password  = "";
     $site_database  = "";
 
+    //w = width,
+    //h = height,
+    //t = type,
+    //a = attr.
+
     //Name of the image displayed when the data entered are incorrect.
     $incorrect_data      = "incorrect_data.png";
     $dim_incorrect_data  = filesize("images/$incorrect_data"); //File's size.
+    list($w_incorrect_data, $h_incorrect_data, $t_incorrect_data, $a_incorrect_data) = getimagesize("images/$incorrect_data");
 
     //Name of the image displayed when the signature doesn't load well.
     $charging_error      = "charging_error.png";
     $dim_charging_error  = filesize("images/$charging_error"); //File's size.
+    list($w_charging_error, $h_charging_error, $t_charging_error, $a_charging_error) = getimagesize("images/$charging_error");
 
     //Error message printed if you do not enter a valid PG's name.
     $error_pg = "Insert a valid PG name!";
@@ -66,6 +73,13 @@
     //Signature's size.
     $x = 500; //Width.
     $y = 70;  //Height.
+
+    //The dimension must be different of the error images.
+    while(($x == $w_incorrect_data && $y == $h_incorrect_data) || ($x == $w_charging_error && $y == $h_charging_error))
+    {
+        $x--;
+        $y--;
+    }
 
     //Enable resizing of images (in proportion) using query string.
     $image_resize_enabled = false;
