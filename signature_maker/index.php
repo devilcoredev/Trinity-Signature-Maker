@@ -26,6 +26,13 @@
                 eval("page" + id + ".creator = self;");
             }
 
+            function scroll()
+            {
+                $('html, body').animate({
+                    scrollTop: $(document).height()
+                }, 1000);
+            }
+
             //Function that transforms text with the first letter capitalized and the rest lowercase, eg: test=>Text TEXT=>Text tExT=>Test.
             function maximizeText(input)
             {
@@ -60,9 +67,7 @@
                     if($("#signature").width() == <?php print $w_incorrect_data; ?> && $("#signature").height() == <?php print $h_incorrect_data; ?>)
                         emptyFields();
 
-                    $('html, body').animate({
-                        scrollTop: $("#signature").offset().top
-                    }, 1000);
+                    scroll();
                 }
                 else
                 {
@@ -241,9 +246,7 @@
                 if(!$("#signature").get(0).complete)
                     switchImage(false);
 
-                $('html, body').animate({
-                    scrollTop: $(document).height()
-                }, 1000);
+                scroll();
 
                 return true;
             }
