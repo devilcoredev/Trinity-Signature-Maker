@@ -228,10 +228,9 @@
                 var armory_link = armory_template_link.replace("%s", armory_server_name).replace("%p", maximizeText(pg_name));
 
                 if($("#signature").attr("src") != absolute_link)
+                {
                     $("#signature").attr("src", absolute_link); //I change the path of the image.
 
-                if(!$("#signature").get(0).complete)
-                {
                     //I put links in the text boxes.
                     direct_link.val(absolute_link);
                     html_link.val("<img src=\"" + absolute_link + "\">");
