@@ -229,6 +229,10 @@
 
                 if($("#signature").attr("src") != absolute_link)
                 {
+                    $("#output").show(); //Display the output.
+
+                    switchImage(false); //Display "charging".
+
                     $("#signature").attr("src", absolute_link); //I change the path of the image.
 
                     //I put links in the text boxes.
@@ -237,15 +241,9 @@
                     html_armory_link.val("<a href=\"" + armory_link + "\"><img src=\"" + absolute_link + "\"></a>");
                     bbcode_link.val("[img]" + absolute_link + "[/img]");
                     bbcode_armory_link.val("[url=" + armory_link + "][img]" + absolute_link + "[/img][/url]");
+
+                    scroll();
                 }
-
-                $("#output").show(); //Display the output.
-
-                //I do the switch images only if the signature is not already loaded.
-                if(!$("#signature").get(0).complete)
-                    switchImage(false);
-
-                scroll();
 
                 return true;
             }
