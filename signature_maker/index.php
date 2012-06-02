@@ -229,6 +229,10 @@
 
                 if($("#firma").attr("src") != absolute_link)
                 {
+                    $("#output").show(); //Visualizzo l'output.
+
+                    switchImage(false); //Visualizzo "Caricamento in corso".
+
                     $("#firma").attr("src", absolute_link); //Modifico il path dell'immagine.
 
                     //Inserisco i link nelle caselle di testo.
@@ -237,15 +241,9 @@
                     html_armory_link.val("<a href=\"" + armory_link + "\"><img src=\"" + absolute_link + "\"></a>");
                     bbcode_link.val("[img]" + absolute_link + "[/img]");
                     bbcode_armory_link.val("[url=" + armory_link + "][img]" + absolute_link + "[/img][/url]");
+
+                    scroll();
                 }
-
-                $("#output").show(); //Visualizzo l'output.
-
-                //Effettuo lo switch delle immagini solo se la firma non è stata già caricata.
-                if(!$("#firma").get(0).complete)
-                    switchImage(false);
-
-                scroll();
 
                 return true;
             }
