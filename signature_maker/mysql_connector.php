@@ -54,17 +54,26 @@
 
         public function query($query, $get_result = false)
         {
-            if($this->isOpen())
-                if($result = mysql_query($query, $this->connection))
-                {
-                    $this->results[] = $result;
-                    if(!$get_result)
-                        return (count($this->results) - 1);
-                }
+            if(!$this->isOpen())
+                if($get_result)
+                    return false;
+                else return -1;
 
-            if($get_result)
-                return $this->getNextResult(count($this->results) - 1, true);
-            else return -1;
+            if($result = mysql_query($query, $this->connection))
+            {
+                $this->results[] = $result;
+
+                $query_id = count($this->results) - 1;
+                if(!$get_result)
+                    return $query_id;
+                else return $this->getNextResult($query_id, true);
+            }
+            else
+            {
+                if($get_result)
+                    return false;
+                else return -1;
+            }
         }
 
         public function getNextResult($query_number, $free_result = false)
