@@ -2,7 +2,7 @@
     //Disable errors reporting.
     error_reporting(0);
 
-    if(!defined("ARMOY_INCLUDED"))
+    if(!defined("ARMORY_INCLUDED"))
         return;
 
     include("mysql_connector.php");
