@@ -18,6 +18,7 @@
             <h3>Seleziona un font</h3>
             <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" borderColor="111111">
                 <?php
+                    define("ARMORY_INCLUDED", true);
                     include("/../config.php");
                     $count = 0;
                     foreach($fonts as $i => $value)

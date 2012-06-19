@@ -2,6 +2,9 @@
     //Disabilita tutti i logs d'errore.
     error_reporting(0);
 
+    if(!defined("ARMORY_INCLUDED"))
+        return;
+
     include("mysql_connector.php");
 
     //Array globali.

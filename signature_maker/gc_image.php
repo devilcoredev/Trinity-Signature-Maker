@@ -1,4 +1,5 @@
 <?php
+    define("ARMORY_INCLUDED", true);
     //Inclusioni librerie.
     include("config.php");
 ?>

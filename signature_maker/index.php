@@ -1,4 +1,5 @@
 <?php
+    define("ARMORY_INCLUDED", true);
     include("config.php");
 
     //Funzione che stampa un menu a tendina contente le stats supportate.
