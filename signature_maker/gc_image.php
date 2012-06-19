@@ -1,4 +1,5 @@
 <?php
+    define("ARMOY_INCLUDED", true);
     //Library inclusion.
     include("config.php");
 ?>

@@ -1,4 +1,5 @@
 <?php
+    define("ARMOY_INCLUDED", true);
     include("/../config.php");
     if(GDVersion() && isset($_GET["id_font"]) && $_GET["id_font"] != '')
     {

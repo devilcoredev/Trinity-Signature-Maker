@@ -1,4 +1,5 @@
 <?php
+    define("ARMOY_INCLUDED", true);
     include("config.php");
 
     //Function that prints a drop-down menu containing the supported stats.
