@@ -1,5 +1,5 @@
 <?php
-    define("ARMORY_INCLUDED", true);
+    define("TOOL_INCLUDED", true);
     include("config.php");
 
     //Function that prints a drop-down menu containing the supported stats.

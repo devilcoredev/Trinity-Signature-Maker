@@ -1,5 +1,5 @@
 <?php
-    define("ARMORY_INCLUDED", true);
+    define("TOOL_INCLUDED", true);
     //Library inclusion.
     include("config.php");
 ?>

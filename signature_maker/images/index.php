@@ -18,7 +18,7 @@
             <h3>Select an image</h3>
             <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" borderColor="111111">
                 <?php
-                    define("ARMORY_INCLUDED", true);
+                    define("TOOL_INCLUDED", true);
                     include("/../config.php");
                     foreach($backgrounds as $i => $value)
                     {
