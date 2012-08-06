@@ -269,6 +269,39 @@
                 }
             }
 
+            function isHexColor(sNum)
+            {
+                var strPattern = /(^#?[0-9A-F]{6}$)/i;
+                return strPattern.test(sNum);
+            }
+
+            function intToHex(d)
+            {
+                var hex = Number(d).toString(16);
+                hex = "00".substr(0, 2 - hex.length) + hex;
+                return hex;
+            }
+
+            function colorField(field)
+            {
+                var colorValue = $(field).val().replace('#', '');
+
+                if(isHexColor(colorValue))
+                {
+                    var r = intToHex(255 - parseInt(colorValue.substring(0, 2), 16));
+                    var g = intToHex(255 - parseInt(colorValue.substring(2, 4), 16));
+                    var b = intToHex(255 - parseInt(colorValue.substring(4, 6), 16));
+
+                    $(field).css("color", r + g + b);
+                    $(field).css("background-color", colorValue);
+                }
+                else
+                {
+                    $(field).css("color", "000000");
+                    $(field).css("background-color", "FFFFFF");
+                }
+            }
+
             $(window).load(function() {
                 for(var i = 1; i < 6; ++i)
                     switchStat(i);
@@ -305,11 +338,11 @@
                 </tr>
                 <tr>
                     <td>Seleziona uno sfondo: (seleziona un <a href="javascript:popUp('colori/index.php?field_edit=sfondo', 350, 500)">colore</a> oppure una <a href="javascript:popUp('images/index.php?field_edit=sfondo', 400, 830)">immagine</a>).</td>
-                    <td align="middle"><center><input type="text" id="sfondo" /></center></td>
+                    <td align="middle"><center><input type="text" id="sfondo" onKeyUp="colorField(this);" /></center></td>
                 </tr>
                 <tr>
                     <td>Seleziona il <a href="javascript:popUp('colori/index.php?field_edit=fine_sfondo', 350, 500)">colore</a> finale dello sfondo (opzionale):</td>
-                    <td align="middle"><center><input type="text" id="fine_sfondo" /></center></td>
+                    <td align="middle"><center><input type="text" id="fine_sfondo" onKeyUp="colorField(this);" /></center></td>
                 </tr>
                 <tr>
                     <td>Seleziona il metodo di sfumatura dello sfondo (opzionale):</td>
@@ -367,7 +400,7 @@
                 </tr>
                 <tr>
                     <td>Seleziona il <a href="javascript:popUp('colori/index.php?field_edit=colore_testo', 350, 500)">colore</a> del testo:</td>
-                    <td align="middle"><center><input type="text" id="colore_testo" /></center></td>
+                    <td align="middle"><center><input type="text" id="colore_testo" onKeyUp="colorField(this);" /></center></td>
                 </tr>
                 <tr>
                     <td>Seleziona il <a href="javascript:popUp('fonts/index.php?field_edit=text_font', 300, 420)">carattere</a> del testo:</td>
