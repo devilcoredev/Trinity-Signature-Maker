@@ -249,10 +249,10 @@
                 return true;
             }
 
-            function selectText(testo)
+            function selectText(text)
             {
-                testo.focus();
-                testo.select();
+                text.focus();
+                text.select();
             }
 
             function switchStat(index)
