@@ -3,27 +3,26 @@
         <title>HTML colors table</title>
         <script language="JavaScript" type="text/javascript" src="../jquery-1.7.1.min.js"></script>
         <script language="JavaScript">
-            function intToHex(d)
-            {
-                var hex = Number(d).toString(16);
-                hex = "00".substr(0, 2 - hex.length) + hex;
-                return hex;
-            }
-
             function selectButton(input)
             {
+                if(!opener)
+                    return;
+
                 var colorValue = input.bgColor.replace('#', '');
 
-                var r = 255 - parseInt(colorValue.substring(0, 2), 16);
-                var g = 255 - parseInt(colorValue.substring(2, 4), 16);
-                var b = 255 - parseInt(colorValue.substring(4, 6), 16);
+                var r = opener.intToHex(255 - parseInt(colorValue.substring(0, 2), 16));
+                var g = opener.intToHex(255 - parseInt(colorValue.substring(2, 4), 16));
+                var b = opener.intToHex(255 - parseInt(colorValue.substring(4, 6), 16));
 
                 $("#text_color").css("background-color", colorValue);
-                $("#text_color").html("<font size='2' color='" + intToHex(r) + intToHex(g) + intToHex(b) + "'><b>" + colorValue.toUpperCase() + "</b></font>");
+                $("#text_color").html("<font size='2' color='" + r + g + b + "'><b>" + colorValue.toUpperCase() + "</b></font>");
 
                 var field_edit = "<?php print $_GET["field_edit"]; ?>";
                 if(field_edit != '')
+                {
                     opener.$('#' + field_edit).val(colorValue);
+                    opener.colorField(opener.$('#' + field_edit));
+                }
             }
         </script>
     </head>

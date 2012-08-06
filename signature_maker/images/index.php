@@ -9,7 +9,10 @@
 
                 var field_edit = "<?php print $_GET["field_edit"]; ?>";
                 if(field_edit != '')
+                {
                     opener.$('#' + field_edit).val(input);
+                    opener.colorField(opener.$('#' + field_edit));
+                }
             }
         </script>
     </head>

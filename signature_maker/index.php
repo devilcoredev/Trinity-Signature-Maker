@@ -269,6 +269,39 @@
                 }
             }
 
+            function isHexColor(sNum)
+            {
+                var strPattern = /(^#?[0-9A-F]{6}$)/i;
+                return strPattern.test(sNum);
+            }
+
+            function intToHex(d)
+            {
+                var hex = Number(d).toString(16);
+                hex = "00".substr(0, 2 - hex.length) + hex;
+                return hex;
+            }
+
+            function colorField(field)
+            {
+                var colorValue = $(field).val().replace('#', '');
+
+                if(isHexColor(colorValue))
+                {
+                    var r = intToHex(255 - parseInt(colorValue.substring(0, 2), 16));
+                    var g = intToHex(255 - parseInt(colorValue.substring(2, 4), 16));
+                    var b = intToHex(255 - parseInt(colorValue.substring(4, 6), 16));
+
+                    $(field).css("color", r + g + b);
+                    $(field).css("background-color", colorValue);
+                }
+                else
+                {
+                    $(field).css("color", "000000");
+                    $(field).css("background-color", "FFFFFF");
+                }
+            }
+
             $(window).load(function() {
                 for(var i=1; i<6; ++i)
                     switchStat(i);
@@ -305,11 +338,11 @@
                 </tr>
                 <tr>
                     <td>Select a background: (select a <a href="javascript:popUp('colors/index.php?field_edit=background', 350, 500)">color</a> or an <a href="javascript:popUp('images/index.php?field_edit=background', 400, 830)">image</a>).</td>
-                    <td align="middle"><center><input type="text" id="background" /></center></td>
+                    <td align="middle"><center><input type="text" id="background" onKeyUp="colorField(this);" /></center></td>
                 </tr>
                 <tr>
                     <td>Select a end background <a href="javascript:popUp('colors/index.php?field_edit=end_background', 350, 500)">color</a> (optional):</td>
-                    <td align="middle"><center><input type="text" id="end_background" /></center></td>
+                    <td align="middle"><center><input type="text" id="end_background" onKeyUp="colorField(this);" /></center></td>
                 </tr>
                 <tr>
                     <td>Select a background color shade method (optional):</td>
@@ -367,7 +400,7 @@
                 </tr>
                 <tr>
                     <td>Select the text <a href="javascript:popUp('colors/index.php?field_edit=text_color', 350, 500)">color</a>:</td>
-                    <td align="middle"><center><input type="text" id="text_color" /></center></td>
+                    <td align="middle"><center><input type="text" id="text_color" onKeyUp="colorField(this);" /></center></td>
                 </tr>
                 <tr>
                     <td>Select the text <a href="javascript:popUp('fonts/index.php?field_edit=text_font', 300, 420)">font</a>:</td>
