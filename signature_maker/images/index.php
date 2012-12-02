@@ -22,7 +22,7 @@
             <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" borderColor="111111">
                 <?php
                     define("TOOL_INCLUDED", true);
-                    include("/../config.php");
+                    include("../config.php");
                     foreach($backgrounds as $i => $value)
                     {
                         if($i) print "                "; //Gli indici sono numeri, quindi non è necessario usare un altro contatore.
