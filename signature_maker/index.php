@@ -16,7 +16,7 @@
 <html>
     <head>
         <title>Create your signature!</title>
-        <script language="JavaScript" type="text/javascript" src="jquery-1.7.1.min.js"></script>
+        <script language="JavaScript" type="text/javascript" src="jquery-1.8.3.min.js"></script>
         <script language="JavaScript">
             //Function that opens a popup window size XxY and location URL.
             function popUp(URL, X, Y)
