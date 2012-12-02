@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>Seleziona un'immagine</title>
-        <script language="JavaScript" type="text/javascript" src="../jquery-1.7.1.min.js"></script>
+        <script language="JavaScript" type="text/javascript" src="../jquery-1.8.3.min.js"></script>
         <script language="JavaScript">
             function select(input)
             {

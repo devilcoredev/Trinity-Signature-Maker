@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>Seleziona un font</title>
-        <script language="JavaScript" type="text/javascript" src="../jquery-1.7.1.min.js"></script>
+        <script language="JavaScript" type="text/javascript" src="../jquery-1.8.3.min.js"></script>
         <script language="JavaScript">
             function copiaTesto(input)
             {
@@ -19,7 +19,7 @@
             <table cellSpacing="0" cellPadding="4" border="1" style="border-collapse: collapse" borderColor="111111">
                 <?php
                     define("TOOL_INCLUDED", true);
-                    include("/../config.php");
+                    include("../config.php");
                     $count = 0;
                     foreach($fonts as $i => $value)
                     {

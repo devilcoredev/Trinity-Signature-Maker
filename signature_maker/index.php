@@ -16,7 +16,7 @@
 <html>
     <head>
         <title>Crea la tua firma!</title>
-        <script language="JavaScript" type="text/javascript" src="jquery-1.7.1.min.js"></script>
+        <script language="JavaScript" type="text/javascript" src="jquery-1.8.3.min.js"></script>
         <script language="JavaScript">
             //Funzione che apre una finestra di popup di dimensione XxY e indirizzo URL.
             function popUp(URL, X, Y)
